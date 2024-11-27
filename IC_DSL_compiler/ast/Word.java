@@ -14,6 +14,10 @@ public class Word {
     }
 
     public String getContent() {
+        if (this.content.equals("AAVE_token")) {
+            return "AAVE";
+        }
+
         return this.content;
     }
 

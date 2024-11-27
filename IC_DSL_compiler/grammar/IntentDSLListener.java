@@ -1,6 +1,5 @@
-// Generated from C:/IC_DSL_compiler/grammar/grammar_design\IntentDSL.g4 by ANTLR 4.12.0
+// Generated from C:/IntentCentricDSL/Intent-Centric-DeFi-DSL/IC_DSL_compiler/grammar/grammar_design\IntentDSL.g4 by ANTLR 4.12.0
 package grammar;
-import grammar.IntentDSLParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -69,6 +68,16 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 */
 	void exitComparisonExpression(IntentDSLParser.ComparisonExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#comparisonElement}.
+	 * @param ctx the parse tree
+	 */
+	void enterComparisonElement(IntentDSLParser.ComparisonElementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#comparisonElement}.
+	 * @param ctx the parse tree
+	 */
+	void exitComparisonElement(IntentDSLParser.ComparisonElementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#binaryExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -98,16 +107,6 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitUnaryExpression(IntentDSLParser.UnaryExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link IntentDSLParser#binaryOrUnaryExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterBinaryOrUnaryExpression(IntentDSLParser.BinaryOrUnaryExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IntentDSLParser#binaryOrUnaryExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitBinaryOrUnaryExpression(IntentDSLParser.BinaryOrUnaryExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#primaryExpression}.
 	 * @param ctx the parse tree

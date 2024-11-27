@@ -188,8 +188,8 @@ public class Listener {
     }
 
     public Node.ComparisonExpression enterComparisonExpression(IntentDSLParser.ComparisonExpressionContext ctx) {
-        Node.BinaryExpression leftExp = enterBinaryExpression(ctx.binaryExpression(0));
-        Node.BinaryExpression rightExp = enterBinaryExpression(ctx.binaryExpression(1));
+        Node.ComparisonElement leftExp = enterComparisonElement(ctx.comparisonElement(0));
+        Node.ComparisonElement rightExp = enterComparisonElement(ctx.comparisonElement(1));
         Type comparisonOperator = null;
 
         if (ctx.comparisonOperator().getText().equals("==")) {
@@ -228,6 +228,29 @@ public class Listener {
         }
 
         return new Node.TimeCondition(timeOperator, time1, time2);
+    }
+
+    public Node.ComparisonElement enterComparisonElement(IntentDSLParser.ComparisonElementContext ctx) {
+        if (ctx.walletBalance() != null) {
+            return enterWalletBalance(ctx.walletBalance());
+        } else if (ctx.assetPrice() != null) {
+            return enterAssetPrice(ctx.assetPrice());
+        } else if (ctx.number() != null && ctx.asset() != null) {
+            Word number = enterNumber(ctx.number());
+            if (ctx.asset() != null) {
+                Word asset = new Word(ctx.asset().getText(), Type.ASSET);
+                return new Node.NumberAsset(number, asset);
+            }
+            return new Node.Number(number);
+        } else if (ctx.SLIPPAGE() != null) {
+            return new Node.Slippage();
+        } else if (ctx.FEE() != null) {
+            return new Node.Fee();
+        } else if (ctx.orExpression() != null) {
+            return enterOrExpression(ctx.orExpression());
+        }
+
+        return null;
     }
 
     public Node.BinaryExpression enterBinaryExpression(IntentDSLParser.BinaryExpressionContext ctx) {
@@ -297,23 +320,13 @@ public class Listener {
     }
 
     public Node.PrimaryExpression enterPrimaryExpression(IntentDSLParser.PrimaryExpressionContext ctx) {
-        if (ctx.walletBalance() != null) {
-            return enterWalletBalance(ctx.walletBalance());
-        } else if (ctx.assetPrice() != null) {
-            return enterAssetPrice(ctx.assetPrice());
-        } else if (ctx.number() != null) {
+        if (ctx.number() != null) {
             Word number = enterNumber(ctx.number());
-            if (ctx.asset() != null) {
-                Word asset = new Word(ctx.asset().getText(), Type.ASSET);
-                return new Node.NumberAsset(number, asset);
-            }
             return new Node.Number(number);
-        } else if (ctx.SLIPPAGE() != null) {
-            return new Node.Slippage();
-        } else if (ctx.FEE() != null) {
-            return new Node.Fee();
-        } else if (ctx.binaryOrUnaryExpression() != null) {
-            return enterBinaryOrUnaryExpression(ctx.binaryOrUnaryExpression());
+        } else if (ctx.binaryExpression() != null) {
+            return enterBinaryExpression(ctx.binaryExpression());
+        } else if (ctx.unaryExpression() != null) {
+            return enterUnaryExpression(ctx.unaryExpression());
         }
 
         return null;
@@ -339,14 +352,5 @@ public class Listener {
             return new Word(ctx.DEC_FLOAT().getText(), Type.DEC_FLOAT);
         }
     }
-
-    public Node.BinaryOrUnaryExpression enterBinaryOrUnaryExpression(IntentDSLParser.BinaryOrUnaryExpressionContext ctx) {
-        if (ctx.binaryExpression() != null) {
-            return enterBinaryExpression(ctx.binaryExpression());
-        } else {
-            return enterUnaryExpression(ctx.unaryExpression());
-        }
-    }
-
 
 }

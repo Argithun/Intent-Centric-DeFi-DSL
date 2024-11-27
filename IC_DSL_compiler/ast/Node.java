@@ -263,7 +263,7 @@ public class Node {
         }
     }
 
-    public static class OrExpression implements Condition {
+    public static class OrExpression implements Condition, ComparisonElement {
         private ArrayList<AndExpression> andExpressions;
 
         public OrExpression(ArrayList<AndExpression> andExpressions) {
@@ -291,22 +291,22 @@ public class Node {
     }
 
     public static class ComparisonExpression extends CmpOrTimeExpression {
-        private BinaryExpression leftExp;
-        private BinaryExpression rightExp;
+        private ComparisonElement leftExp;
+        private ComparisonElement rightExp;
 
         private Type comparisonOperator;
 
-        public ComparisonExpression(BinaryExpression leftExp, BinaryExpression rightExp, Type comparisonOperator) {
+        public ComparisonExpression(ComparisonElement leftExp, ComparisonElement rightExp, Type comparisonOperator) {
             this.leftExp = leftExp;
             this.rightExp = rightExp;
             this.comparisonOperator = comparisonOperator;
         }
 
-        public BinaryExpression getLeftExp() {
+        public ComparisonElement getLeftExp() {
             return leftExp;
         }
 
-        public BinaryExpression getRightExp() {
+        public ComparisonElement getRightExp() {
             return rightExp;
         }
 
@@ -342,10 +342,7 @@ public class Node {
         }
     }
 
-    public static class BinaryOrUnaryExpression implements PrimaryExpression {
-    }
-
-    public static class BinaryExpression extends BinaryOrUnaryExpression {
+    public static class BinaryExpression implements PrimaryExpression {
         private ArrayList<LowBinaryExpression> lowBinaryExpressions;
         private ArrayList<Type> highBinaryOperators;
 
@@ -363,7 +360,7 @@ public class Node {
         }
     }
 
-    public static class LowBinaryExpression implements Condition {
+    public static class LowBinaryExpression {
         private ArrayList<UnaryExpression> unaryExpressions;
         private ArrayList<Type> lowBinaryOperators;
 
@@ -381,7 +378,7 @@ public class Node {
         }
     }
 
-    public static class UnaryExpression extends BinaryOrUnaryExpression {
+    public static class UnaryExpression implements PrimaryExpression {
         private ArrayList<Type> unaryOperators;
         private PrimaryExpression primaryExpression;
 
@@ -399,10 +396,13 @@ public class Node {
         }
     }
 
-    public interface PrimaryExpression extends Condition {
+    public interface PrimaryExpression {
     }
 
-    public static class WalletBalance implements PrimaryExpression {
+    public interface ComparisonElement extends Condition {
+    }
+
+    public static class WalletBalance implements ComparisonElement {
         private Wallet wallet;
 
         public WalletBalance(Wallet wallet) {
@@ -426,7 +426,7 @@ public class Node {
         }
     }
 
-    public static class AssetPrice implements PrimaryExpression {
+    public static class AssetPrice implements ComparisonElement {
         private Word asset;
         private Word platform;
 
@@ -444,7 +444,7 @@ public class Node {
         }
     }
 
-    public static class NumberAsset implements PrimaryExpression {
+    public static class NumberAsset implements ComparisonElement {
         private Word number;
         private Word asset;
 
@@ -462,7 +462,7 @@ public class Node {
         }
     }
 
-    public static class Number implements PrimaryExpression {
+    public static class Number implements ComparisonElement, PrimaryExpression {
         private Word number;
 
         public Number(Word number) {
@@ -474,7 +474,7 @@ public class Node {
         }
     }
 
-    public static class Slippage implements PrimaryExpression {
+    public static class Slippage implements ComparisonElement {
         private final Type slippage = Type.SLIPPAGE;
 
         public Slippage() {
@@ -485,7 +485,7 @@ public class Node {
         }
     }
 
-    public static class Fee implements PrimaryExpression {
+    public static class Fee implements ComparisonElement {
         private final Type fee = Type.FEE;
 
         public Fee() {

@@ -1,8 +1,6 @@
-// Generated from C:/IC_DSL_compiler/grammar/grammar_design\IntentDSL.g4 by ANTLR 4.12.0
+// Generated from C:/IntentCentricDSL/Intent-Centric-DeFi-DSL/IC_DSL_compiler/grammar/grammar_design\IntentDSL.g4 by ANTLR 4.12.0
 package grammar;
 
-import grammar.IntentDSLListener;
-import grammar.IntentDSLParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -91,6 +89,18 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterComparisonElement(IntentDSLParser.ComparisonElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitComparisonElement(IntentDSLParser.ComparisonElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBinaryExpression(IntentDSLParser.BinaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -122,18 +132,6 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitUnaryExpression(IntentDSLParser.UnaryExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBinaryOrUnaryExpression(IntentDSLParser.BinaryOrUnaryExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBinaryOrUnaryExpression(IntentDSLParser.BinaryOrUnaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

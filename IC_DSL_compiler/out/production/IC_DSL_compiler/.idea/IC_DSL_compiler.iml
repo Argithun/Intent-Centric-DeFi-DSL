@@ -11,5 +11,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="antlr-4.12.0-complete" level="project" />
+    <orderEntry type="library" name="web3j.abi" level="project" />
+    <orderEntry type="library" name="web3j.core" level="project" />
+    <orderEntry type="library" name="json" level="project" />
   </component>
 </module>

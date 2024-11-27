@@ -6,7 +6,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/grammar/grammar_design/IntentDSL.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="C:\IC_DSL_compiler\grammar" />
+          <option name="outputDir" value="C:\IntentCentricDSL\Intent-Centric-DeFi-DSL\IC_DSL_compiler\grammar" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="" />

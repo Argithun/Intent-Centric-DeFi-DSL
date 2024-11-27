@@ -83,22 +83,27 @@ orExpression
 andExpression
     : (comparisonExpression | timeCondition)(LOGIC_AND (comparisonExpression| timeCondition))*;
 comparisonExpression
-    : binaryExpression (comparisonOperator binaryExpression)?;
+    : comparisonElement comparisonOperator comparisonElement;
+comparisonElement
+    : walletBalance
+    | assetPrice
+    | number asset
+    | number
+    | SLIPPAGE
+    | FEE;
+//    | LPARENT orExpression RPARENT;
+
+
 binaryExpression
     : lowBinaryExpression (highBinaryOperator lowBinaryExpression)*;
 lowBinaryExpression
     : unaryExpression (lowBinaryOperator unaryExpression)*;
 unaryExpression
     : (unaryOperator)* primaryExpression;
-binaryOrUnaryExpression : binaryExpression | unaryExpression;
 primaryExpression
-    : walletBalance
-    | assetPrice
-    | number asset
-    | SLIPPAGE
-    | FEE
-    | number
-    | LPARENT binaryOrUnaryExpression RPARENT;
+    : number
+    | LPARENT (binaryExpression | unaryExpression) RPARENT;
+
 
 logicalOperator
     : LOGIC_AND | LOGIC_OR;

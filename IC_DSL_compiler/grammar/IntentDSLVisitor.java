@@ -1,4 +1,4 @@
-// Generated from C:/IC_DSL_compiler/grammar/grammar_design\IntentDSL.g4 by ANTLR 4.12.0
+// Generated from C:/IntentCentricDSL/Intent-Centric-DeFi-DSL/IC_DSL_compiler/grammar/grammar_design\IntentDSL.g4 by ANTLR 4.12.0
 package grammar;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -47,6 +47,12 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitComparisonExpression(IntentDSLParser.ComparisonExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#comparisonElement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComparisonElement(IntentDSLParser.ComparisonElementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#binaryExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -64,12 +70,6 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitUnaryExpression(IntentDSLParser.UnaryExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link IntentDSLParser#binaryOrUnaryExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBinaryOrUnaryExpression(IntentDSLParser.BinaryOrUnaryExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#primaryExpression}.
 	 * @param ctx the parse tree

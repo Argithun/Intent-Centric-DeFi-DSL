@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="web3j.abi" type="repository">
+    <properties maven-id="org.web3j:abi:5.0.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/web3j/abi/5.0.0/abi-5.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/web3j/utils/5.0.0/utils-5.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/bouncycastle/bcprov-jdk15on/1.65/bcprov-jdk15on-1.65.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
