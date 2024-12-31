@@ -1,6 +1,7 @@
 package ast;
 
 import grammar.IntentDSLParser;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Listener {
                     triggerCondition = enterCondition(conditionContexts.get(0));
                     hasTriggerCondition = true;
                 } else {
-                    checkCondition = enterCondition(conditionContexts.get(1));
+                    checkCondition = enterCondition(conditionContexts.get(0));
                     hasCheckCondition = true;
                 }
             } else if (conditionContexts.size() == 2) {
@@ -66,6 +67,10 @@ public class Listener {
             return enterAddLiquidityStatement(ctx.addLiquidityStatement());
         } else if (ctx.removeLiquidityStatement() != null) {
             return enterRemoveLiquidityStatement(ctx.removeLiquidityStatement());
+        } else if (ctx.buyNFTStatement() != null) {
+            enterBuyNFTStatement(ctx.buyNFTStatement());
+        } else if (ctx.sellNFTStatement() != null) {
+            enterSellNFTStatement(ctx.sellNFTStatement());
         }
 
         return null;
@@ -100,9 +105,16 @@ public class Listener {
     public Node.Statement enterStakeStatement(IntentDSLParser.StakeStatementContext ctx) {
         Node.Amount amount = enterAmount(ctx.amount());
         Node.Wallet wallet = enterWallet(ctx.wallet());
-        Word platform = new Word(ctx.platform().getText(), Type.PLATFORM);
+        ArrayList<String> strategyQualifiers = new ArrayList<>();
 
-        return new Node.StakeStatement(amount, wallet, platform);
+        if (ctx.stakeStrategy() != null) {
+            for (IntentDSLParser.StakeStrategyQualifiersContext stakeStrategyQualifiersContext :
+                    ctx.stakeStrategy().stakeStrategyQualifiers()) {
+                strategyQualifiers.add(stakeStrategyQualifiersContext.getText());
+            }
+        }
+
+        return new Node.StakeStatement(amount, wallet, strategyQualifiers);
     }
 
     public Node.Statement enterSwapStatement(IntentDSLParser.SwapStatementContext ctx) {
@@ -123,9 +135,10 @@ public class Listener {
             amounts.add(enterAmount(amountContext));
         }
 
-        for (IntentDSLParser.WalletContext walletContext : ctx.wallet()) {
-            wallets.add(enterWallet(walletContext));
-        }
+//        for (IntentDSLParser.WalletContext walletContext : ctx.wallet()) {
+//            wallets.add(enterWallet(walletContext));
+//        }
+        wallets.add(enterWallet(ctx.wallet()));
 
         return new Node.AddLiquidityStatement(amounts, wallets, platform);
     }
@@ -139,11 +152,37 @@ public class Listener {
             amounts.add(enterAmount(amountContext));
         }
 
-        for (IntentDSLParser.WalletContext walletContext : ctx.wallet()) {
-            wallets.add(enterWallet(walletContext));
-        }
+//        for (IntentDSLParser.WalletContext walletContext : ctx.wallet()) {
+//            wallets.add(enterWallet(walletContext));
+//        }
+        wallets.add(enterWallet(ctx.wallet()));
 
         return new Node.RemoveLiquidityStatement(amounts, wallets, platform);
+    }
+
+    public Node.Statement enterBuyNFTStatement(IntentDSLParser.BuyNFTStatementContext ctx) {
+        Word NFTPlatform = new Word(ctx.NFTPlatform().getText(), Type.NFTPLATFORM);
+        Node.Amount budgetAmount = enterAmount(ctx.amount());
+        Node.Wallet budgetWallet = enterWallet(ctx.wallet());
+        ArrayList<String> NFTQualifiers = new ArrayList<>();
+
+        for (TerminalNode s : ctx.NFTQualifiers()) {
+            NFTQualifiers.add(s.getText());
+        }
+
+        return new Node.BuyNFTStatement(NFTQualifiers, NFTPlatform, budgetAmount, budgetWallet);
+    }
+
+    public Node.Statement enterSellNFTStatement(IntentDSLParser.SellNFTStatementContext ctx) {
+        Word NFTKey = new Word(ctx.KEY().getText(), Type.KEY);
+        ArrayList<String> strategy = new ArrayList<>();
+
+        for (IntentDSLParser.SellNFTStrategyQualifiersContext sellNFTStrategyQualifiersContext :
+                ctx.sellNFTStartegy().sellNFTStrategyQualifiers()) {
+            strategy.add(sellNFTStrategyQualifiersContext.getText());
+        }
+
+        return new Node.SellNFTStatement(NFTKey, strategy);
     }
 
     public Node.Amount enterAmount(IntentDSLParser.AmountContext ctx) {
@@ -190,6 +229,7 @@ public class Listener {
     public Node.ComparisonExpression enterComparisonExpression(IntentDSLParser.ComparisonExpressionContext ctx) {
         Node.ComparisonElement leftExp = enterComparisonElement(ctx.comparisonElement(0));
         Node.ComparisonElement rightExp = enterComparisonElement(ctx.comparisonElement(1));
+
         Type comparisonOperator = null;
 
         if (ctx.comparisonOperator().getText().equals("==")) {
@@ -235,7 +275,7 @@ public class Listener {
             return enterWalletBalance(ctx.walletBalance());
         } else if (ctx.assetPrice() != null) {
             return enterAssetPrice(ctx.assetPrice());
-        } else if (ctx.number() != null && ctx.asset() != null) {
+        } else if (ctx.number() != null) {
             Word number = enterNumber(ctx.number());
             if (ctx.asset() != null) {
                 Word asset = new Word(ctx.asset().getText(), Type.ASSET);
@@ -246,9 +286,10 @@ public class Listener {
             return new Node.Slippage();
         } else if (ctx.FEE() != null) {
             return new Node.Fee();
-        } else if (ctx.orExpression() != null) {
-            return enterOrExpression(ctx.orExpression());
         }
+//        else if (ctx.orExpression() != null) {
+//            return enterOrExpression(ctx.orExpression());
+//        }
 
         return null;
     }

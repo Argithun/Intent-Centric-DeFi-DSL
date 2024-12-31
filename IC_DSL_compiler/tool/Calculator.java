@@ -2,6 +2,7 @@ package tool;
 
 import ast.Node;
 import ast.Type;
+import org.web3j.abi.datatypes.generated.Bytes32;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -91,5 +92,11 @@ public class Calculator {
         }
     }
 
+//    public static Bytes32 stringToBytes32(String string) {
+//        byte[] byteValue = string.getBytes();
+//        byte[] byteValueNew = new byte[byteValue.length];
+//        System.arraycopy(byteValue, 0, byteValueNew, 0, byteValue.length);
+//        return new Bytes32(byteValueNew);
+//    }
 
 }

@@ -2,6 +2,26 @@ package infrastrcuture;
 
 import ast.Type;
 import ast.Word;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONObject;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Uint;
+import org.web3j.abi.datatypes.generated.Uint8;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthCall;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 
 public class Token {
@@ -11,9 +31,11 @@ public class Token {
 
         String tokenName = token.getContent();
 
-        assert (!tokenName.equals("ETH"));
+//        assert (!tokenName.equals("ETH"));
 
         switch (tokenName) {
+            case "ETH":
+                return "0x0000000000000000000000000000000000000000";
             case "USDT":
                 return "0xdAC17F958D2ee523a2206206994597C13D831ec7";
             case "USDC":
@@ -42,5 +64,68 @@ public class Token {
         }
     }
 
+    public static BigInteger getTokenDecimals(String tokenAddress) throws Exception {
+        Web3j web3j = Web3jBuilder.buildWeb3j();
 
+        // 构造获取 decimals() 方法的 Function
+        Function function = new Function(
+                "decimals",
+                Collections.emptyList(),
+                Arrays.asList(new TypeReference<Uint8>() {
+                })
+        );
+
+        String encodedFunction = FunctionEncoder.encode(function);
+
+        EthCall response = web3j.ethCall(
+                Transaction.createEthCallTransaction(
+                        "0x0000000000000000000000000000000000000000",     // Sender address (or any address, since we're just calling a view function)
+                        tokenAddress,               // Token contract address
+                        encodedFunction
+                ), DefaultBlockParameterName.LATEST).send();
+
+        if (response.getError() != null) {
+            System.out.println("Error Code: " + response.getError().getCode());
+            System.out.println("Error Message: " + response.getError().getMessage());
+            System.out.println("Error Data: " + response.getError().getData());
+        }
+
+        Uint decimals = (Uint) FunctionReturnDecoder.decode(response.getValue(), function.getOutputParameters()).get(0);
+        return decimals.getValue();
+    }
+
+    // 计算代币汇率
+    public static double calculateExchangeRate(Word from, Word to) {
+        double fromPrice = getTokenNumEqualOneUSDT(from);
+        double toPrice = getTokenNumEqualOneUSDT(to);
+        return toPrice / fromPrice;
+    }
+
+    private static double getTokenNumEqualOneUSDT(Word asset) {
+        if (asset.getContent().equals("USDT")) {
+            return 1.0;
+        } else {
+            String apiUrl = "https://api.binance.com/api/v3/ticker/price?symbol=" + asset.getContent() + "USDT";
+
+            Request request = new Request.Builder()
+                    .url(apiUrl)
+                    .build();
+
+            OkHttpClient client = Web3jBuilder.buildOkHttpClient();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = Objects.requireNonNull(response.body()).string();
+                    // System.out.println(responseBody);
+
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+                    return jsonResponse.getDouble("price");
+                } else {
+                    throw new IOException("Unexpected response: " + response);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error fetching price from Binance: " + e.getMessage(), e);
+            }
+        }
+    }
 }

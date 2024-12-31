@@ -281,18 +281,6 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStakeStatement(IntentDSLParser.StakeStatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStakeStatement(IntentDSLParser.StakeStatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterSwapStatement(IntentDSLParser.SwapStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -324,6 +312,90 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRemoveLiquidityStatement(IntentDSLParser.RemoveLiquidityStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStakeStatement(IntentDSLParser.StakeStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStakeStatement(IntentDSLParser.StakeStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStakeStrategy(IntentDSLParser.StakeStrategyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStakeStrategy(IntentDSLParser.StakeStrategyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStakeStrategyQualifiers(IntentDSLParser.StakeStrategyQualifiersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStakeStrategyQualifiers(IntentDSLParser.StakeStrategyQualifiersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBuyNFTStatement(IntentDSLParser.BuyNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBuyNFTStatement(IntentDSLParser.BuyNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSellNFTStatement(IntentDSLParser.SellNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSellNFTStatement(IntentDSLParser.SellNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSellNFTStartegy(IntentDSLParser.SellNFTStartegyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSellNFTStartegy(IntentDSLParser.SellNFTStartegyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSellNFTStrategyQualifiers(IntentDSLParser.SellNFTStrategyQualifiersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSellNFTStrategyQualifiers(IntentDSLParser.SellNFTStrategyQualifiersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

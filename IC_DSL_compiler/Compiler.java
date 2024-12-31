@@ -1,14 +1,21 @@
+import infrastrcuture.QueryService;
+
+
 public class Compiler {
-
     public static void main(String[] args) throws Exception {
-        //Node intentAst = AstBuilder.buildAst("main.ic");
+//        Node intentAst = AstBuilder.buildAst("main.ic");
+//        TransSubmitter.submitTransactions(intentAst);
 
-        // TODO intent ast to transaction
-        // System.out.println(Check.balanceCheck("0x388C818CA8B9251b393131C08a736A67ccB19297", BigInteger.ZERO, new Word("DAI", Type.ASSET), Type.GT));
-        // System.out.println(Check.timeCheck(new Word("2020-12-31T12:00:00", Type.TIME), null, Type.AFTER));
-        //System.out.println(Check.assetPriceCheck(new Word("ETH", Type.ASSET), Type.GT, new Word("1000", Type.DEC_INT)));
-        //System.out.println(AccountService.getNonce("0x388C818CA8B9251b393131C08a736A67ccB19297"));
-        //System.out.println(AccountService.getGasPrice());
+//        ArrayList<String> ret = QueryService.selectNFTCollection(new ArrayList<>());
+//        System.out.println(ret.get(0));
+//        System.out.println(ret.get(1));
+//        System.out.println(ret.get(2));
+//        System.out.println(ret.get(3));
+
+//        System.out.println(QueryService.getOpenseaSlug("ethereum", "0x1a17531d136a3a4e0ef05575867fc7c59dae3069"));
+
+//        System.out.println(QueryService.getCounter("0xd98eC7068456b34628744c6496a985B9b75D7086"));
+
     }
 
 

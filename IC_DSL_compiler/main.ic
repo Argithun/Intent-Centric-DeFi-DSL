@@ -1,1 +1,17 @@
-transfer 100 USDT from wallet[0xA] to wallet[0xB];
+// trigger time after 2024-12-08T10:25:00 and time before 2024-12-31T10:25:00 then
+// transfer 0 USDT from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] to wallet[0xd98eC7068456b34628744c6496a985B9b75D7086]
+// checking balance wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] == 1 USDT and balance wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] == 0 USDC;
+
+// borrow 1 USDT for wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] from Aave using 2 USDC from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] as collateral;
+
+// repay 1 USDT from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] to Aave checking fee < 400000;  todo
+
+// repay 1 USDT from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] to Aave;
+
+// stake 1 USDT from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] to Aave;
+
+// swap 1 USDT from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for USDC on Uniswap;
+
+// add liquidity 1 USDT, 1 USDC to Sushiswap receiving liquidity token to wallet[0xd98eC7068456b34628744c6496a985B9b75D7086];
+
+remove liquidity 1 USDT, 1 USDC from Sushiswap returning liquidity token from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086];

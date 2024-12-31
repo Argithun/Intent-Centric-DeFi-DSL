@@ -143,12 +143,6 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRepayBorrowStatement(IntentDSLParser.RepayBorrowStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IntentDSLParser#stakeStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStakeStatement(IntentDSLParser.StakeStatementContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#swapStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -166,6 +160,48 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRemoveLiquidityStatement(IntentDSLParser.RemoveLiquidityStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#stakeStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStakeStatement(IntentDSLParser.StakeStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#stakeStrategy}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStakeStrategy(IntentDSLParser.StakeStrategyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#stakeStrategyQualifiers}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStakeStrategyQualifiers(IntentDSLParser.StakeStrategyQualifiersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#buyNFTStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBuyNFTStatement(IntentDSLParser.BuyNFTStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#sellNFTStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSellNFTStatement(IntentDSLParser.SellNFTStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#sellNFTStartegy}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSellNFTStartegy(IntentDSLParser.SellNFTStartegyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#sellNFTStrategyQualifiers}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSellNFTStrategyQualifiers(IntentDSLParser.SellNFTStrategyQualifiersContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#walletBalance}.
 	 * @param ctx the parse tree

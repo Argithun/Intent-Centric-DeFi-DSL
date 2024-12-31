@@ -228,16 +228,6 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 */
 	void exitRepayBorrowStatement(IntentDSLParser.RepayBorrowStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IntentDSLParser#stakeStatement}.
-	 * @param ctx the parse tree
-	 */
-	void enterStakeStatement(IntentDSLParser.StakeStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IntentDSLParser#stakeStatement}.
-	 * @param ctx the parse tree
-	 */
-	void exitStakeStatement(IntentDSLParser.StakeStatementContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#swapStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -267,6 +257,76 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRemoveLiquidityStatement(IntentDSLParser.RemoveLiquidityStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#stakeStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStakeStatement(IntentDSLParser.StakeStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#stakeStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStakeStatement(IntentDSLParser.StakeStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#stakeStrategy}.
+	 * @param ctx the parse tree
+	 */
+	void enterStakeStrategy(IntentDSLParser.StakeStrategyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#stakeStrategy}.
+	 * @param ctx the parse tree
+	 */
+	void exitStakeStrategy(IntentDSLParser.StakeStrategyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#stakeStrategyQualifiers}.
+	 * @param ctx the parse tree
+	 */
+	void enterStakeStrategyQualifiers(IntentDSLParser.StakeStrategyQualifiersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#stakeStrategyQualifiers}.
+	 * @param ctx the parse tree
+	 */
+	void exitStakeStrategyQualifiers(IntentDSLParser.StakeStrategyQualifiersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#buyNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuyNFTStatement(IntentDSLParser.BuyNFTStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#buyNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuyNFTStatement(IntentDSLParser.BuyNFTStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#sellNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSellNFTStatement(IntentDSLParser.SellNFTStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#sellNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSellNFTStatement(IntentDSLParser.SellNFTStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#sellNFTStartegy}.
+	 * @param ctx the parse tree
+	 */
+	void enterSellNFTStartegy(IntentDSLParser.SellNFTStartegyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#sellNFTStartegy}.
+	 * @param ctx the parse tree
+	 */
+	void exitSellNFTStartegy(IntentDSLParser.SellNFTStartegyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#sellNFTStrategyQualifiers}.
+	 * @param ctx the parse tree
+	 */
+	void enterSellNFTStrategyQualifiers(IntentDSLParser.SellNFTStrategyQualifiersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#sellNFTStrategyQualifiers}.
+	 * @param ctx the parse tree
+	 */
+	void exitSellNFTStrategyQualifiers(IntentDSLParser.SellNFTStrategyQualifiersContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#walletBalance}.
 	 * @param ctx the parse tree

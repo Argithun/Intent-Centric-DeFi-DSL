@@ -27,6 +27,8 @@ public enum Type {
 
     PLATFORM("AAVE|UNISWAP|COMPOUND|YEARN|SUSHISWAP|CURVE|ONEINCH|POLYGON|AVAX", true),
 
+    NFTPLATFORM("OpenSea|Rarible|SuperRare|Foundation|Mintable|BakerySwap|LooksRare", true),
+
     BEFORE("before", true),
     AFTER("after", true),
     DURING("during", true),

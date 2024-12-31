@@ -133,11 +133,16 @@ statement
     : transferStatement
     | borrowStatement
     | repayBorrowStatement
-    | stakeStatement
     | swapStatement
     | addLiquidityStatement
     | removeLiquidityStatement
+//    | flashLoanArbitrageStatement
+    | stakeStatement
+    | buyNFTStatement
+    | sellNFTStatement
     ;
+
+
 
 transferStatement
     : 'transfer' amount 'from' wallet 'to' wallet;
@@ -148,17 +153,48 @@ borrowStatement
 repayBorrowStatement
     : 'repay' amount 'from' wallet 'to' platform;
 
-stakeStatement
-    : 'stake' amount 'from' wallet 'to' platform;
-
 swapStatement
     : 'swap' amount 'from' wallet 'for' asset 'on' platform;
 
 addLiquidityStatement
-    : 'add liquidity' amount 'from' wallet (','amount 'from' wallet)* 'to' platform;
+    : 'add liquidity' amount ',' amount 'to' platform 'receiving liquidity token to' wallet;
 
 removeLiquidityStatement
-    : 'remove liquidity' amount 'to' wallet (','amount 'to' wallet)* 'from' platform;
+    : 'remove liquidity' amount ',' amount 'from' platform 'returning liquidity token from' wallet;
+
+
+
+//flashLoanArbitrageStatement
+//    : 'flash loan' amount 'for' wallet 'then arbitrage for at least' amount 'profits';
+
+stakeStatement
+    : 'stake' amount 'from' wallet (stakeStrategy)?;
+
+stakeStrategy
+    : 'using' (stakeStrategyQualifiers)* 'strategy';
+
+stakeStrategyQualifiers
+    : 'low-risk' | 'middle-risk' | 'high-risk' | 'short-term' | 'middle-term' | 'long-term';
+
+buyNFTStatement
+    : 'buy' (NFTQualifiers)* 'NFT on' NFTPlatform 'using at most' amount 'from' wallet;
+
+NFTQualifiers
+    : 'mainstream' | 'popular' | 'rare' | 'inexpensive' | 'price-increasing' | 'price-decreaseing';
+
+NFTPlatform
+    : 'OpenSea' | 'Rarible' | 'SuperRare' | 'Foundation' | 'Mintable' | 'BakerySwap' | 'LooksRare';
+
+sellNFTStatement
+    : 'sell NFT' LBRACK KEY RBRACK (sellNFTStartegy)?;
+
+sellNFTStartegy
+    : 'using' (sellNFTStrategyQualifiers)* 'strategy';
+
+sellNFTStrategyQualifiers
+    : 'time-saving' | 'profitable';
+
+
 
 
 walletBalance

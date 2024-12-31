@@ -51,6 +51,28 @@ public class Node {
             }
             return checkCondition;
         }
+
+        public boolean isHasCheckCondition() {
+            return hasCheckCondition;
+        }
+
+        public boolean isHasTriggerCondition() {
+            return hasTriggerCondition;
+        }
+
+        @Override
+        public String toString() {
+            String ret = "";
+            if (hasTriggerCondition) {
+                ret = "trigger " + triggerCondition.toString() + " then\n";
+            }
+            ret += statement.toString();
+            if (hasCheckCondition) {
+                ret += "\nchecking " + checkCondition.toString();
+            }
+            ret += ";\n";
+            return ret;
+        }
     }
 
     public interface Condition {
@@ -80,6 +102,11 @@ public class Node {
 
         public Wallet getToWallet() {
             return toWallet;
+        }
+
+        @Override
+        public String toString() {
+            return "transfer " + amount.toString() + " from " + fromWallet.toString() + " to " + toWallet.toString();
         }
     }
 
@@ -117,6 +144,12 @@ public class Node {
         public Wallet getCollateralWallet() {
             return collateralWallet;
         }
+
+        @Override
+        public String toString() {
+            return "borrow " + borrowAmount.toString() + " for " + forWallet.toString() + " from " + platform.toString()
+                    + " using " + collateralAmount.toString() + " from " + collateralWallet.toString() + " as collateral";
+        }
     }
 
     public static class RepayBorrowStatement implements Statement {
@@ -141,29 +174,10 @@ public class Node {
         public Word getPlatform() {
             return platform;
         }
-    }
 
-    public static class StakeStatement implements Statement {
-        private Amount amount;
-        private Wallet wallet;
-        private Word platform;
-
-        public StakeStatement(Amount amount, Wallet wallet, Word platform) {
-            this.amount = amount;
-            this.wallet = wallet;
-            this.platform = platform;
-        }
-
-        public Amount getAmount() {
-            return amount;
-        }
-
-        public Wallet getWallet() {
-            return wallet;
-        }
-
-        public Word getPlatform() {
-            return platform;
+        @Override
+        public String toString() {
+            return "repay " + amount.toString() + " from " + wallet.toString() + " to " + platform.toString();
         }
     }
 
@@ -195,6 +209,11 @@ public class Node {
         public Word getPlatform() {
             return platform;
         }
+
+        @Override
+        public String toString() {
+            return "swap " + amount.toString() + " from " + wallet.toString() + " for " + asset.getContent() + " on " + platform.toString();
+        }
     }
 
     public static class AddLiquidityStatement implements Statement {
@@ -218,6 +237,12 @@ public class Node {
 
         public Word getPlatform() {
             return platform;
+        }
+
+        @Override
+        public String toString() {
+            return "add liquidity " + amounts.get(0).toString() + ", " + amounts.get(1).toString() +
+                    " to " + platform.toString() + " receiving liquidity token to " + wallets.get(0).toString();
         }
     }
 
@@ -243,6 +268,125 @@ public class Node {
         public Word getPlatform() {
             return platform;
         }
+
+        public String toString() {
+            return "remove liquidity " + amounts.get(0).toString() + ", " + amounts.get(1).toString() +
+                    " from " + platform.toString() + " returning liquidity token from " + wallets.get(0).toString();
+
+        }
+    }
+
+    public static class StakeStatement implements Statement {
+        private Amount amount;
+        private Wallet wallet;
+
+        private ArrayList<String> strategy;
+
+        public StakeStatement(Amount amount, Wallet wallet, ArrayList<String> strategy) {
+            this.amount = amount;
+            this.wallet = wallet;
+            this.strategy = strategy;
+        }
+
+        public Amount getAmount() {
+            return amount;
+        }
+
+        public Wallet getWallet() {
+            return wallet;
+        }
+
+        public ArrayList<String> getStrategy() {
+            return strategy;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder("stake " + amount.toString() + " from " + wallet.toString());
+            if (strategy != null && strategy.size() > 0) {
+                ret.append(" using ");
+                for (String s : strategy) {
+                    ret.append(s).append(" ");
+                }
+                ret.append("strategy");
+            }
+            return ret.toString();
+        }
+    }
+
+    public static class BuyNFTStatement implements Statement {
+        private ArrayList<String> NFTQualifiers;
+        private Word NFTPlatform;
+        private Amount budgetAmount;
+        private Wallet budgetWallet;
+
+        public BuyNFTStatement(ArrayList<String> NFTQualifiers, Word NFTPlatform, Amount budgetAmount, Wallet budgetWallet) {
+            this.NFTQualifiers = NFTQualifiers;
+            this.NFTPlatform = NFTPlatform;
+            this.budgetAmount = budgetAmount;
+            this.budgetWallet = budgetWallet;
+        }
+
+        public ArrayList<String> getNFTQualifiers() {
+            return NFTQualifiers;
+        }
+
+        public Word getNFTPlatform() {
+            return NFTPlatform;
+        }
+
+        public Amount getBudgetAmount() {
+            return budgetAmount;
+        }
+
+        public Wallet getBudgetWallet() {
+            return budgetWallet;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder("buy ");
+            if (NFTQualifiers != null && NFTQualifiers.size() > 0) {
+                for (String s : NFTQualifiers) {
+                    ret.append(s).append(" ");
+                }
+            }
+            ret.append("NFT on ").append(NFTPlatform.getContent()).append(" using at most ").
+                    append(budgetAmount.toString()).append(" from ").append(budgetWallet.toString());
+            return ret.toString();
+        }
+    }
+
+    public static class SellNFTStatement implements Statement {
+        private Word NFTKey;
+        private ArrayList<String> strategy;
+
+        public SellNFTStatement(Word NFTKey, ArrayList<String> startegy) {
+            this.NFTKey = NFTKey;
+            this.strategy = startegy;
+        }
+
+        public Word getNFTKey() {
+            return NFTKey;
+        }
+
+        public ArrayList<String> getStrategy() {
+            return strategy;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder("sell NFT [" + NFTKey.getContent() + "] ");
+            if (strategy != null && strategy.size() > 0) {
+                ret.append("using ");
+
+                for (String s : strategy) {
+                    ret.append(s).append(" ");
+                }
+                ret.append("strategy");
+            }
+            return ret.toString();
+        }
     }
 
     public static class Amount {
@@ -261,6 +405,11 @@ public class Node {
         public Word getAsset() {
             return asset;
         }
+
+        @Override
+        public String toString() {
+            return binaryExpression.toString() + " " + asset.getContent();
+        }
     }
 
     public static class OrExpression implements Condition, ComparisonElement {
@@ -273,6 +422,15 @@ public class Node {
         public ArrayList<AndExpression> getAndExpressions() {
             return andExpressions;
         }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder(andExpressions.get(0).toString());
+            for (int i = 1; i < andExpressions.size(); i++) {
+                ret.append(" or ").append(andExpressions.get(i).toString());
+            }
+            return ret.toString();
+        }
     }
 
     public static class AndExpression implements Condition {
@@ -284,6 +442,15 @@ public class Node {
 
         public ArrayList<CmpOrTimeExpression> getCmpOrTimeExpressions() {
             return cmpOrTimeExpressions;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder(cmpOrTimeExpressions.get(0).toString());
+            for (int i = 1; i < cmpOrTimeExpressions.size(); i++) {
+                ret.append(" and ").append(cmpOrTimeExpressions.get(i).toString());
+            }
+            return ret.toString();
         }
     }
 
@@ -313,6 +480,11 @@ public class Node {
         public Type getComparisonOperator() {
             return comparisonOperator;
         }
+
+        @Override
+        public String toString() {
+            return leftExp.toString() + " " + comparisonOperator.toString() + " " + rightExp.toString();
+        }
     }
 
     public static class TimeCondition extends CmpOrTimeExpression {
@@ -340,6 +512,17 @@ public class Node {
             }
             return null;
         }
+
+        @Override
+        public String toString() {
+            if (timeOperator.equals(Type.AFTER)) {
+                return "time after " + time1.getContent();
+            } else if (timeOperator.equals(Type.BEFORE)) {
+                return "time before " + time1.getContent();
+            } else {
+                return "time during " + time1.getContent() + " to " + time2.toString();
+            }
+        }
     }
 
     public static class BinaryExpression implements PrimaryExpression {
@@ -357,6 +540,15 @@ public class Node {
 
         public ArrayList<Type> getHighBinaryOperators() {
             return highBinaryOperators;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder("(" + lowBinaryExpressions.get(0).toString() + ")");
+            for (int i = 1; i < lowBinaryExpressions.size(); i++) {
+                ret.append(" ").append(highBinaryOperators.get(i - 1).toString()).append(" (").append(lowBinaryExpressions.get(i).toString()).append(")");
+            }
+            return ret.toString();
         }
     }
 
@@ -376,6 +568,15 @@ public class Node {
         public ArrayList<Type> getLowBinaryOperators() {
             return lowBinaryOperators;
         }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder("(" + unaryExpressions.get(0).toString() + ")");
+            for (int i = 1; i < unaryExpressions.size(); i++) {
+                ret.append(" ").append(lowBinaryOperators.get(i - 1).toString()).append(" (").append(unaryExpressions.get(i).toString()).append(")");
+            }
+            return ret.toString();
+        }
     }
 
     public static class UnaryExpression implements PrimaryExpression {
@@ -393,6 +594,16 @@ public class Node {
 
         public PrimaryExpression getPrimaryExpression() {
             return primaryExpression;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder ret = new StringBuilder();
+            for (Type op : unaryOperators) {
+                ret.append(unaryOperators.toString());
+            }
+            ret.append("(").append(primaryExpression.toString()).append(")");
+            return ret.toString();
         }
     }
 
@@ -412,6 +623,11 @@ public class Node {
         public Wallet getWallet() {
             return wallet;
         }
+
+        @Override
+        public String toString() {
+            return "balance " + wallet.toString();
+        }
     }
 
     public static class Wallet {
@@ -423,6 +639,11 @@ public class Node {
 
         public Word getKey() {
             return key;
+        }
+
+        @Override
+        public String toString() {
+            return "wallet[" + key.getContent() + "]";
         }
     }
 
@@ -442,6 +663,11 @@ public class Node {
         public Word getPlatform() {
             return platform;
         }
+
+        @Override
+        public String toString() {
+            return "price " + asset.getContent() + " on " + platform.toString();
+        }
     }
 
     public static class NumberAsset implements ComparisonElement {
@@ -460,6 +686,11 @@ public class Node {
         public Word getAsset() {
             return asset;
         }
+
+        @Override
+        public String toString() {
+            return number.getContent() + " " + asset.getContent();
+        }
     }
 
     public static class Number implements ComparisonElement, PrimaryExpression {
@@ -472,6 +703,11 @@ public class Node {
         public Word getNumber() {
             return number;
         }
+
+        @Override
+        public String toString() {
+            return number.getContent();
+        }
     }
 
     public static class Slippage implements ComparisonElement {
@@ -483,6 +719,11 @@ public class Node {
         public Type getSlippage() {
             return slippage;
         }
+
+        @Override
+        public String toString() {
+            return "slippage";
+        }
     }
 
     public static class Fee implements ComparisonElement {
@@ -493,6 +734,11 @@ public class Node {
 
         public Type getFee() {
             return fee;
+        }
+
+        @Override
+        public String toString() {
+            return "fee";
         }
     }
 

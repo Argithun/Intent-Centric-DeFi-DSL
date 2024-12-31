@@ -41,7 +41,7 @@ public class TriggerConditionCheck {
 
         if (leftEle instanceof Node.WalletBalance) {
             if (rightEle instanceof Node.NumberAsset) {
-                return ConditionCheck.balanceCheckAPI(((Node.WalletBalance) leftEle).getWallet().getKey().getContent(),
+                return ConditionCheckAPI.balanceCheckAPI(((Node.WalletBalance) leftEle).getWallet().getKey().getContent(),
                         new BigDecimal(((Node.NumberAsset) rightEle).getNumber().getContent()),
                         ((Node.NumberAsset) rightEle).getAsset(), cmpOperator);
             } else {
@@ -49,14 +49,14 @@ public class TriggerConditionCheck {
             }
         } else if (leftEle instanceof Node.AssetPrice) {
             if (rightEle instanceof Node.Number) {
-                return ConditionCheck.assetPriceCheckAPI(((Node.AssetPrice) leftEle).getAsset(),
+                return ConditionCheckAPI.assetPriceCheckAPI(((Node.AssetPrice) leftEle).getAsset(),
                         cmpOperator, ((Node.Number) rightEle).getNumber());
             } else {
                 throw new Exception("Invalid comparison element for check token price condition.");
             }
         } else if (leftEle instanceof Node.NumberAsset) {
             if (rightEle instanceof Node.WalletBalance) {
-                return ConditionCheck.balanceCheckAPI(((Node.WalletBalance) rightEle).getWallet().getKey().getContent(),
+                return ConditionCheckAPI.balanceCheckAPI(((Node.WalletBalance) rightEle).getWallet().getKey().getContent(),
                         new BigDecimal(((Node.NumberAsset) leftEle).getNumber().getContent()),
                         ((Node.NumberAsset) leftEle).getAsset(), getContaryCmpOp(cmpOperator));
             } else {
@@ -64,7 +64,7 @@ public class TriggerConditionCheck {
             }
         } else if (leftEle instanceof Node.Number) {
             if (rightEle instanceof Node.AssetPrice) {
-                return ConditionCheck.assetPriceCheckAPI(((Node.AssetPrice) rightEle).getAsset(),
+                return ConditionCheckAPI.assetPriceCheckAPI(((Node.AssetPrice) rightEle).getAsset(),
                         getContaryCmpOp(cmpOperator), ((Node.Number) leftEle).getNumber());
             } else if (rightEle instanceof Node.Number) {
                 BigDecimal leftNum = new BigDecimal(((Node.Number) leftEle).getNumber().getContent());
@@ -114,7 +114,7 @@ public class TriggerConditionCheck {
     }
 
     private static boolean checkTimeCondition(Node.TimeCondition timeCondition) {
-        return ConditionCheck.timeCheckAPI(timeCondition.getTime1(), timeCondition.getTime1(), timeCondition.getTimeOperator());
+        return ConditionCheckAPI.timeCheckAPI(timeCondition.getTime1(), timeCondition.getTime1(), timeCondition.getTimeOperator());
     }
 
 
