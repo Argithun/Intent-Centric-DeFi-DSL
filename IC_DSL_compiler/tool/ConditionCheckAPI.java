@@ -17,6 +17,7 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.generated.StaticArray2;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -234,38 +235,46 @@ public class ConditionCheckAPI {
 
     public static boolean checkEstimateFee(Transaction transaction, BigDecimal gasLimit, Type comparisonOperation) throws IOException {
         Web3j web3j = Web3jBuilder.buildWeb3j();
-        BigDecimal gasUsed = new BigDecimal(web3j.ethEstimateGas(transaction).send().getAmountUsed());
         boolean ret = false;
 
-        switch (comparisonOperation) {
-            case GT:
-                ret = gasUsed.compareTo(gasLimit) > 0;
-                break;
-            case GE:
-                ret = gasUsed.compareTo(gasLimit) >= 0;
-                break;
-            case LT:
-                ret = gasUsed.compareTo(gasLimit) < 0;
-                break;
-            case LE:
-                ret = gasUsed.compareTo(gasLimit) <= 0;
-                break;
-            case EQ:
-                ret = gasUsed.compareTo(gasLimit) == 0;
-                break;
-            case NEQ:
-                ret = gasUsed.compareTo(gasLimit) != 0;
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported comparison operation: " + comparisonOperation);
-        }
+        try {
+            BigDecimal gasUsed = new BigDecimal(web3j.ethEstimateGas(transaction).send().getAmountUsed());
 
-        if (!ret) {
-            System.out.println("[Warning] Transaction fee condition unreached!");
+            switch (comparisonOperation) {
+                case GT:
+                    ret = gasUsed.compareTo(gasLimit) > 0;
+                    break;
+                case GE:
+                    ret = gasUsed.compareTo(gasLimit) >= 0;
+                    break;
+                case LT:
+                    ret = gasUsed.compareTo(gasLimit) < 0;
+                    break;
+                case LE:
+                    ret = gasUsed.compareTo(gasLimit) <= 0;
+                    break;
+                case EQ:
+                    ret = gasUsed.compareTo(gasLimit) == 0;
+                    break;
+                case NEQ:
+                    ret = gasUsed.compareTo(gasLimit) != 0;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported comparison operation: " + comparisonOperation);
+            }
+
+            if (!ret) {
+                System.out.println("[Warning] Transaction fee condition unreached!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("[Error] Insufficient funds for gas fee!");
+            return false;
         }
 
         return ret;
     }
+
 
     public static boolean checkSlippage(Node.SwapStatement swapStatement, String routerAddress,
                                         Word userSlippage, Type comparisonOperation) throws Exception {

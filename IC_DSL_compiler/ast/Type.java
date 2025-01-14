@@ -23,7 +23,7 @@ public enum Type {
 //    MATIC("MATIC", true),
 //    COMP("COMP", true),
 
-    ASSET("USDT|USDC|ETH|DAI|BTC|WBTC|UNI|SUSHI|AAVE\\_token|MATIC|COMP", true),
+    ASSET("USDT|USDC|ETH|DAI|BTC|WBTC|WETH|UNI|SUSHI|AAVE\\_token|MATIC|COMP", true),
 
     PLATFORM("AAVE|UNISWAP|COMPOUND|YEARN|SUSHISWAP|CURVE|ONEINCH|POLYGON|AVAX", true),
 
@@ -34,6 +34,7 @@ public enum Type {
     DURING("during", true),
 
     TIME("[0-9][0-9][0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01]?[0-9]|2[0-3]):[0-5]?[0-9]:[0-5]?[0-9]", false),
+    PRIVATE_KEY("[(0-9)|(A-F)|(a-f)]+", false),
     KEY("0(x|X)[(0-9)|(A-F)|(a-f)]+", false),
     DEC_INT("0|([1-9][0-9]*)", false),
     DEC_FLOAT("([0-9]*\\.[0-9]*((p|P|e|E)(\\+|\\-)?[0-9]+)?)|" +

@@ -17,12 +17,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +50,7 @@ public class QueryService {
         }
     }
 
-    public static JSONArray getNFTCollectionIDsByTrade() {
+    public static JSONArray getNFTCollectionAddressByTrade() {
         try {
             // API 基础信息
             String baseUrl = "https://restapi.nftscan.com/api";
@@ -98,14 +97,17 @@ public class QueryService {
     }
 
     public static ArrayList<String> selectNFTCollection(ArrayList<String> NFTQualifiers) throws Exception {
-        JSONArray NFTs = getNFTCollectionIDsByTrade();
+        JSONArray NFTs = getNFTCollectionAddressByTrade();
+
+        if (NFTs == null) {
+            return null;
+        }
 
         List<Double> floorPrices = new ArrayList<>();
         List<Integer> itemsTotals = new ArrayList<>();
         List<Double> volumes = new ArrayList<>();
         List<Double> marketCaps = new ArrayList<>();
 
-        assert NFTs != null;
         int n = NFTs.length();
         for (int i = 0; i < n; i++) {
             JSONObject nft = NFTs.getJSONObject(i);
@@ -208,6 +210,8 @@ public class QueryService {
     }
 
     public static String getOpenseaSlug(String chain, String contractAddress) throws Exception {
+        // https://docs.nftscan.com/reference/evm/get-an-nft-collection can also get slug
+
         OkHttpClient client = Web3jBuilder.buildOkHttpClient();
         // 构造 URL
         String url = String.format("https://opensea.io/assets/%s/%s", chain, contractAddress);
@@ -222,7 +226,7 @@ public class QueryService {
         Response response = client.newCall(request).execute();
 
         // 检查响应是否成功
-        if (!response.isSuccessful()) {
+        if (!response.isSuccessful() || response.body() == null) {
             throw new Exception("Failed to fetch slug: HTTP response code " + response.code());
         }
 
@@ -236,7 +240,7 @@ public class QueryService {
         if (matcher.find()) {
             return matcher.group(1); // 返回匹配的 slug
         } else {
-            throw new Exception("Failed to extract slug: No matching pattern found");
+            throw new Exception("Failed to extract NFT slug: No matching pattern found");
         }
     }
 
@@ -250,6 +254,40 @@ public class QueryService {
         );
 
         return erc20.getCounter(offererAddress).send();
+    }
+
+    public static ArrayList<Double> getNFTCollectionInfoByAddress(String collectionAddress) {
+        OkHttpClient client = Web3jBuilder.buildOkHttpClient();
+        String apiUrl = "https://restapi.nftscan.com/api/v2/statistics/collection/"
+                + collectionAddress + "?show_hourly_statistics=true";
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .addHeader("X-API-KEY", Settings.NFTSCAN_API_KEY)
+                .get()
+                .build();
+
+        try {
+            // 发送请求并接收响应
+            Response response = client.newCall(request).execute();
+
+            // 检查响应是否成功
+            if (response.isSuccessful()) {
+                // 输出响应数据
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                JSONObject NFTdata = jsonObject.getJSONObject("data");
+                ArrayList<Double> ret = new ArrayList<>();
+                ret.add(NFTdata.getDouble("lowest_price_24h"));
+                ret.add(NFTdata.getDouble("average_price_24h"));
+                return ret;
+            } else {
+                System.out.println("Get NFT collection info request failed with code: " + response.code());
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

@@ -1,11 +1,13 @@
 package tool;
 
+import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SignatureException;
 import java.util.Arrays;
 
@@ -58,6 +60,19 @@ public class Signature {
         String parseAddress = "0x" + Keys.getAddress(publicKey);
         // 将钱包地址进行比对
         return parseAddress.equalsIgnoreCase(walletAddress);
+    }
+
+    public static String keccak256Hash(String input) {
+        Keccak.Digest256 keccak256 = new Keccak.Digest256();
+        byte[] hash = keccak256.digest(input.getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            hexString.append(String.format("%02x", b));
+        }
+
+        System.out.println(hexString);
+        return hexString.toString();
     }
 
 }

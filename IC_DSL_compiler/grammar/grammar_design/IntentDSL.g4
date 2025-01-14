@@ -38,6 +38,7 @@ ETH : 'ETH';
 DAI : 'DAI';
 BTC : 'BTC';
 WBTC : 'WBTC';
+WETH : 'WETH';
 UNI : 'UNI';
 SUSHI : 'SUSHI';
 AAVE_token : 'AAVE';
@@ -55,7 +56,7 @@ POLYGON : 'Polygon';
 AVAX : 'Avax';
 
 IDENTIFIER : [A-Za-z_][A-Za-z0-9_]*;
-
+PRIVATE_KEY : [A-Fa-f0-9_]+;
 KEY : '0'('x'|'X')[0-9A-Fa-f]+;
 
 DEC_INT : '0' | ([1-9][0-9]*);
@@ -130,7 +131,8 @@ triggerStatement
     : ('trigger' condition 'then')? statement ('checking' condition)? SEMI;
 
 statement
-    : transferStatement
+    : accountStatement
+    | transferStatement
     | borrowStatement
     | repayBorrowStatement
     | swapStatement
@@ -142,7 +144,8 @@ statement
     | sellNFTStatement
     ;
 
-
+accountStatement
+    : 'switch to account' LBRACK PRIVATE_KEY RBRACK;
 
 transferStatement
     : 'transfer' amount 'from' wallet 'to' wallet;
@@ -157,10 +160,11 @@ swapStatement
     : 'swap' amount 'from' wallet 'for' asset 'on' platform;
 
 addLiquidityStatement
-    : 'add liquidity' amount ',' amount 'to' platform 'receiving liquidity token to' wallet;
+    : 'add' amount ',' amount 'to' platform 'receiving liquidity token to' wallet;
 
 removeLiquidityStatement
-    : 'remove liquidity' amount ',' amount 'from' platform 'returning liquidity token from' wallet;
+    : 'remove' amount ',' amount 'from' platform 'returning' DEC_INT 'liquidity'
+    ('of token' LBRACK KEY RBRACK)? 'from' wallet;
 
 
 
@@ -177,7 +181,7 @@ stakeStrategyQualifiers
     : 'low-risk' | 'middle-risk' | 'high-risk' | 'short-term' | 'middle-term' | 'long-term';
 
 buyNFTStatement
-    : 'buy' (NFTQualifiers)* 'NFT on' NFTPlatform 'using at most' amount 'from' wallet;
+    : 'buy' (NFTQualifiers)* 'NFT using at most' amount 'from' wallet;
 
 NFTQualifiers
     : 'mainstream' | 'popular' | 'rare' | 'inexpensive' | 'price-increasing' | 'price-decreaseing';
@@ -186,7 +190,7 @@ NFTPlatform
     : 'OpenSea' | 'Rarible' | 'SuperRare' | 'Foundation' | 'Mintable' | 'BakerySwap' | 'LooksRare';
 
 sellNFTStatement
-    : 'sell NFT' LBRACK KEY RBRACK (sellNFTStartegy)?;
+    : 'sell NFT' LBRACK KEY RBRACK 'in collection' LBRACK KEY RBRACK 'from' wallet (sellNFTStartegy)?;
 
 sellNFTStartegy
     : 'using' (sellNFTStrategyQualifiers)* 'strategy';
@@ -207,7 +211,7 @@ amount
     : binaryExpression asset;
 
 asset
-    : USDT | USDC | ETH | DAI | BTC | WBTC | UNI | SUSHI | AAVE_token | MATIC | COMP;
+    : USDT | USDC | ETH | DAI | BTC | WBTC | UNI | SUSHI | AAVE_token | MATIC | COMP | WETH;
 
 pair
     : asset 'and' asset;

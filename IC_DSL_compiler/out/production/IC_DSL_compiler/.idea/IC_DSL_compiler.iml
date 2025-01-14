@@ -11,8 +11,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="antlr-4.12.0-complete" level="project" />
-    <orderEntry type="library" name="web3j.abi" level="project" />
-    <orderEntry type="library" name="web3j.core" level="project" />
     <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="bouncycastle.bcprov.jdk15on" level="project" />
+    <orderEntry type="library" name="web3j.tuples" level="project" />
+    <orderEntry type="library" name="web3j.core" level="project" />
+    <orderEntry type="library" name="web3j.abi" level="project" />
   </component>
 </module>

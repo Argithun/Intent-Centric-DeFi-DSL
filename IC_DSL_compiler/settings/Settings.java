@@ -5,8 +5,11 @@ import java.math.BigInteger;
 public class Settings {
     // TODO replace to your own settings
 
+    // Test on Sepolia
+    public static final boolean TEST_MODE = true;
+
     // Your Private Key (to sign the transaction)
-    public static final String ACCOUNT_PRIVATE_KEY = "e55ff0090b4e4e9a1071b03f331b71d98c43ada4c5001e0f5db92f56d59225f7";
+    public static String ACCOUNT_PRIVATE_KEY = "Please use switch account statement to set your own private key of account.";
 
     // Your Infura API Key
     public static final String INFURA_API_KEY = "ddae120beb6046179b8ac42d1fb79336";
@@ -26,6 +29,6 @@ public class Settings {
     public static final long WAIT_TIME_LIMIT = 3600000; // ms
 
     // Default Gas Limit
-    public static final BigInteger DEFAULT_GAS_LIMIT = new BigInteger("3000000");
+    public static final BigInteger DEFAULT_GAS_LIMIT = new BigInteger("500000");
 
 }

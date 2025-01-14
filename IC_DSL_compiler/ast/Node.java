@@ -81,6 +81,18 @@ public class Node {
     public interface Statement {
     }
 
+    public static class AccountStatement implements Statement {
+        private Word privateKey;
+
+        public AccountStatement(Word privateKey) {
+            this.privateKey = privateKey;
+        }
+
+        public Word getPrivateKey() {
+            return privateKey;
+        }
+    }
+
     public static class TransferStatement implements Statement {
         private Amount amount;
         private Wallet fromWallet;
@@ -250,11 +262,16 @@ public class Node {
         private ArrayList<Amount> amounts;
         private ArrayList<Wallet> wallets;
         private Word platform;
+        private String tokenId;
+        private String liquidityNum;
 
-        public RemoveLiquidityStatement(ArrayList<Amount> amounts, ArrayList<Wallet> wallets, Word platform) {
+        public RemoveLiquidityStatement(ArrayList<Amount> amounts, ArrayList<Wallet> wallets,
+                                        Word platform, String tokenId, String liquidityNum) {
             this.amounts = amounts;
             this.wallets = wallets;
             this.platform = platform;
+            this.tokenId = tokenId;
+            this.liquidityNum = liquidityNum;
         }
 
         public ArrayList<Amount> getAmounts() {
@@ -267,6 +284,14 @@ public class Node {
 
         public Word getPlatform() {
             return platform;
+        }
+
+        public String getTokenId() {
+            return tokenId;
+        }
+
+        public String getLiquidityNum() {
+            return liquidityNum;
         }
 
         public String toString() {
@@ -316,13 +341,13 @@ public class Node {
 
     public static class BuyNFTStatement implements Statement {
         private ArrayList<String> NFTQualifiers;
-        private Word NFTPlatform;
+//        private Word NFTPlatform;
         private Amount budgetAmount;
         private Wallet budgetWallet;
 
-        public BuyNFTStatement(ArrayList<String> NFTQualifiers, Word NFTPlatform, Amount budgetAmount, Wallet budgetWallet) {
+        public BuyNFTStatement(ArrayList<String> NFTQualifiers, Amount budgetAmount, Wallet budgetWallet) {
             this.NFTQualifiers = NFTQualifiers;
-            this.NFTPlatform = NFTPlatform;
+//            this.NFTPlatform = NFTPlatform;
             this.budgetAmount = budgetAmount;
             this.budgetWallet = budgetWallet;
         }
@@ -331,9 +356,9 @@ public class Node {
             return NFTQualifiers;
         }
 
-        public Word getNFTPlatform() {
-            return NFTPlatform;
-        }
+//        public Word getNFTPlatform() {
+//            return NFTPlatform;
+//        }
 
         public Amount getBudgetAmount() {
             return budgetAmount;
@@ -351,23 +376,35 @@ public class Node {
                     ret.append(s).append(" ");
                 }
             }
-            ret.append("NFT on ").append(NFTPlatform.getContent()).append(" using at most ").
+            ret.append("NFT using at most ").
                     append(budgetAmount.toString()).append(" from ").append(budgetWallet.toString());
             return ret.toString();
         }
     }
 
     public static class SellNFTStatement implements Statement {
-        private Word NFTKey;
+        private Word NFTTokenID;
+        private Word NFTCollectionID;
+        private Wallet fromWallet;
         private ArrayList<String> strategy;
 
-        public SellNFTStatement(Word NFTKey, ArrayList<String> startegy) {
-            this.NFTKey = NFTKey;
+        public SellNFTStatement(Word NFTTokenID, Word NFTCollectionID, Wallet wallet, ArrayList<String> startegy) {
+            this.NFTTokenID = NFTTokenID;
+            this.NFTCollectionID = NFTCollectionID;
+            this.fromWallet = wallet;
             this.strategy = startegy;
         }
 
-        public Word getNFTKey() {
-            return NFTKey;
+        public Word getNFTTokenID() {
+            return NFTTokenID;
+        }
+
+        public Word getNFTCollectionID() {
+            return NFTCollectionID;
+        }
+
+        public Wallet getFromWallet() {
+            return fromWallet;
         }
 
         public ArrayList<String> getStrategy() {
@@ -376,7 +413,8 @@ public class Node {
 
         @Override
         public String toString() {
-            StringBuilder ret = new StringBuilder("sell NFT [" + NFTKey.getContent() + "] ");
+            StringBuilder ret = new StringBuilder("sell NFT [" + NFTTokenID.getContent() +
+                    "] in collection[" + NFTCollectionID.getContent() + "] ");
             if (strategy != null && strategy.size() > 0) {
                 ret.append("using ");
 

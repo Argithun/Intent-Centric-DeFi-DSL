@@ -198,6 +198,16 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 */
 	void exitStatement(IntentDSLParser.StatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#accountStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAccountStatement(IntentDSLParser.AccountStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#accountStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAccountStatement(IntentDSLParser.AccountStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#transferStatement}.
 	 * @param ctx the parse tree
 	 */

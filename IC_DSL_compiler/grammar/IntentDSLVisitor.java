@@ -125,6 +125,12 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(IntentDSLParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#accountStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAccountStatement(IntentDSLParser.AccountStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#transferStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

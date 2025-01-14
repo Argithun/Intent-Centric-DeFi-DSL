@@ -245,6 +245,18 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAccountStatement(IntentDSLParser.AccountStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAccountStatement(IntentDSLParser.AccountStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTransferStatement(IntentDSLParser.TransferStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}

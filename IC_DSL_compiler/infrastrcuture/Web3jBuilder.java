@@ -10,7 +10,12 @@ import java.net.Proxy;
 
 public class Web3jBuilder {
     public static Web3j buildWeb3j() {
-        String infuraUrl = "https://mainnet.infura.io/v3/" + Settings.INFURA_API_KEY;
+        String infuraUrl;
+        if (Settings.TEST_MODE) {
+            infuraUrl = "https://sepolia.infura.io/v3/" + Settings.INFURA_API_KEY;
+        } else {
+            infuraUrl = "https://mainnet.infura.io/v3/" + Settings.INFURA_API_KEY;
+        }
 
         if (Settings.IF_USE_PROXY) {
             OkHttpClient okHttpClient = buildOkHttpClient();
