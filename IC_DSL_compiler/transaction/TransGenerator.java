@@ -1,31 +1,8 @@
 package transaction;
 
 import ast.Node;
-import ast.Word;
-import infrastrcuture.QueryService;
-import infrastrcuture.Token;
-import infrastrcuture.Web3jBuilder;
-import okhttp3.*;
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.datatypes.*;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.generated.StaticArray2;
-import org.web3j.abi.datatypes.generated.Uint160;
-import org.web3j.abi.datatypes.generated.Uint24;
-import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.RawTransaction;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthCall;
-import settings.Settings;
-import settings.ContractAddress;
-import tool.Calculator;
-import tool.Signature;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
 
 import static transaction.ops.AddLiquidityTransaction.genAddLiquidityTransaction;
 import static transaction.ops.BorrowTransaction.genBorrowTransaction;
@@ -40,23 +17,31 @@ import static transaction.ops.TransferTransaction.genTransferTransaction;
 
 public class TransGenerator {
     private final Node.Statement statement;
-    private RawTransaction preRawTransaction;
+    private String privateKey;
+    private RawTransaction preRawTransaction_1;
+    private RawTransaction preRawTransaction_2;
     private RawTransaction rawTransaction;
     private Transaction transaction;
     private String routerAddress;
     private boolean constructSuccess;
 
-    public TransGenerator(Node.Statement statement) {
+    public TransGenerator(Node.Statement statement, String privateKey) {
         this.statement = statement;
-        this.preRawTransaction = null;
+        this.privateKey = privateKey;
+        this.preRawTransaction_1 = null;
+        this.preRawTransaction_2 = null;
         this.rawTransaction = null;
         this.transaction = null;
         this.routerAddress = null;
         this.constructSuccess = true;
     }
 
-    public RawTransaction getPreRawTransaction() {
-        return preRawTransaction;
+    public RawTransaction getPreRawTransaction_1() {
+        return preRawTransaction_1;
+    }
+
+    public RawTransaction getPreRawTransaction_2() {
+        return preRawTransaction_2;
     }
 
     public RawTransaction getRawTransaction() {
@@ -75,8 +60,12 @@ public class TransGenerator {
         return constructSuccess;
     }
 
-    public void setPreRawTransaction(RawTransaction preRawTransaction) {
-        this.preRawTransaction = preRawTransaction;
+    public void setPreRawTransaction_1(RawTransaction preRawTransaction_1) {
+        this.preRawTransaction_1 = preRawTransaction_1;
+    }
+
+    public void setPreRawTransaction_2(RawTransaction preRawTransaction_2) {
+        this.preRawTransaction_2 = preRawTransaction_2;
     }
 
     public void setRawTransaction(RawTransaction rawTransaction) {
@@ -107,9 +96,9 @@ public class TransGenerator {
         } else if (statement instanceof Node.StakeStatement) {
             this.constructSuccess = genStakeTransaction(statement, this);
         } else if (statement instanceof Node.SellNFTStatement) {
-            this.constructSuccess = genSellNFTTransaction(statement);
+            this.constructSuccess = genSellNFTTransaction(statement, this.privateKey);
         } else if (statement instanceof Node.BuyNFTStatement) {
-            this.constructSuccess = genBuyNFTTransaction(statement);
+            this.constructSuccess = genBuyNFTTransaction(statement, this.privateKey);
         } else {
             System.out.println("Unsupported type of transaction statement: " + statement);
             this.constructSuccess = false;

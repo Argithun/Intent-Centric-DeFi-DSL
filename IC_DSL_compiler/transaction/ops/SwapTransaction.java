@@ -4,7 +4,6 @@ import ast.Node;
 import ast.Word;
 import infrastrcuture.QueryService;
 import infrastrcuture.Token;
-import infrastrcuture.Web3jBuilder;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Int128;
@@ -12,14 +11,10 @@ import org.web3j.abi.datatypes.generated.Uint160;
 import org.web3j.abi.datatypes.generated.Uint24;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.RawTransaction;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthCall;
 import settings.ContractAddress;
 import settings.Settings;
 import tool.Calculator;
-import tool.Signature;
 import transaction.TransGenerator;
 
 import java.math.BigDecimal;
@@ -44,8 +39,10 @@ public class SwapTransaction extends BasicOp {
         BigInteger gasPrice = QueryService.getGasPrice();
         BigInteger gasLimit = Settings.DEFAULT_GAS_LIMIT;
 
-        RawTransaction rawTransaction = constructRawTransaction(walletAddress, gasPrice, gasLimit, WETH_ADDRESS, ETHAmount, depositData);
-        Transaction transaction = constructFuncCallTransaction(walletAddress, gasPrice, gasLimit, WETH_ADDRESS, depositData);
+        RawTransaction rawTransaction = constructRawTransaction(walletAddress, gasPrice, gasLimit,
+                WETH_ADDRESS, ETHAmount, depositData);
+        Transaction transaction = constructFuncCallTransaction(walletAddress, gasPrice, gasLimit,
+                WETH_ADDRESS, depositData);
         transGenerator.setRawTransaction(rawTransaction);
         transGenerator.setTransaction(transaction);
     }
@@ -63,8 +60,10 @@ public class SwapTransaction extends BasicOp {
         BigInteger gasPrice = QueryService.getGasPrice();
         BigInteger gasLimit = Settings.DEFAULT_GAS_LIMIT;
 
-        RawTransaction rawTransaction = constructRawTransaction(walletAddress, gasPrice, gasLimit, WETH_ADDRESS, BigInteger.ZERO, withdrawData);
-        Transaction transaction = constructFuncCallTransaction(walletAddress, gasPrice, gasLimit, WETH_ADDRESS, withdrawData);
+        RawTransaction rawTransaction = constructRawTransaction(walletAddress, gasPrice, gasLimit,
+                WETH_ADDRESS, BigInteger.ZERO, withdrawData);
+        Transaction transaction = constructFuncCallTransaction(walletAddress, gasPrice, gasLimit,
+                WETH_ADDRESS, withdrawData);
         transGenerator.setRawTransaction(rawTransaction);
         transGenerator.setTransaction(transaction);
     }
@@ -164,6 +163,10 @@ public class SwapTransaction extends BasicOp {
             String routerAddress = Settings.TEST_MODE ? ContractAddress.UNISWAP_ROUTER_V3_Sepolia : ContractAddress.UNISWAP_ROUTER_V3;
             transGenerator.setRouterAddress(routerAddress);
 
+            RawTransaction preRawTransaction = Token.approveToken(wallet, routerAddress, inTokenAddress,
+                    inTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
+
             ExactInputSingleParams params = new ExactInputSingleParams(
                     new Address(inTokenAddress),
                     new Address(outTokenAddress),
@@ -186,14 +189,20 @@ public class SwapTransaction extends BasicOp {
 //            System.out.println(swapData);
 //            Signature.keccak256Hash("exactInputSingle((address,address,uint24,address,uint256,uint256,uint256,uint160))");
 
-            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit, routerAddress, BigInteger.ZERO, swapData);
-            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit, routerAddress, swapData);
+            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit,
+                    routerAddress, BigInteger.ZERO, swapData);
+            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit,
+                    routerAddress, swapData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else if (platform.equals("Sushiswap")) {
             // Sushiswap: 使用 swapExactTokensForTokens 方法
             String routerAddress = ContractAddress.SUSHISWAP_ROUTER;
             transGenerator.setRouterAddress(routerAddress);
+
+            RawTransaction preRawTransaction = Token.approveToken(wallet, routerAddress, inTokenAddress,
+                    inTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
 
             List<Type> swapParameters = Arrays.asList(
                     new Uint256(inTokenAmount),
@@ -211,8 +220,10 @@ public class SwapTransaction extends BasicOp {
 
             String swapData = FunctionEncoder.encode(swapFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit, routerAddress, BigInteger.ZERO, swapData);
-            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit, routerAddress, swapData);
+            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit,
+                    routerAddress, BigInteger.ZERO, swapData);
+            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit,
+                    routerAddress, swapData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else if (platform.equals("Curve")) {
@@ -221,6 +232,10 @@ public class SwapTransaction extends BasicOp {
             String routerAddress = curvePoolAddress;
             transGenerator.setRouterAddress(routerAddress);
 
+            RawTransaction preRawTransaction = Token.approveToken(wallet, routerAddress, inTokenAddress,
+                    inTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
+
             ArrayList<String> coins = new ArrayList<>();
             coins.add("DAI");
             coins.add("USDC");
@@ -228,7 +243,7 @@ public class SwapTransaction extends BasicOp {
 
             int inTokenIndex = coins.indexOf(swapStatement.getAmount().getAsset().getContent()); // 代币索引（需要根据具体池的配置确认）
             int outTokenIndex = coins.indexOf(swapStatement.getAsset().getContent()); // 目标代币索引
-            if(inTokenIndex < 0 || outTokenIndex < 0) {
+            if (inTokenIndex < 0 || outTokenIndex < 0) {
                 System.out.println("Sorry, Curve on this platform only support DAI/USDC/USDT");
                 return false;
             }
@@ -245,8 +260,10 @@ public class SwapTransaction extends BasicOp {
             );
             String exchangeData = FunctionEncoder.encode(exchangeFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit, curvePoolAddress, BigInteger.ZERO, exchangeData);
-            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit, curvePoolAddress, exchangeData);
+            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit,
+                    curvePoolAddress, BigInteger.ZERO, exchangeData);
+            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit,
+                    curvePoolAddress, exchangeData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else {
@@ -254,6 +271,10 @@ public class SwapTransaction extends BasicOp {
             String oneInchRouterAddress = ContractAddress.ONEINCH_ROUTER; // 1inch Router 地址
             String routerAddress = oneInchRouterAddress;
             transGenerator.setRouterAddress(routerAddress);
+
+            RawTransaction preRawTransaction = Token.approveToken(wallet, routerAddress, inTokenAddress,
+                    inTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
 
             OneInchSwapParams oneInchSwapParams = new OneInchSwapParams(
                     new Address(inTokenAddress),
@@ -278,8 +299,10 @@ public class SwapTransaction extends BasicOp {
             );
             String oneInchSwapData = FunctionEncoder.encode(oneInchSwapFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit, oneInchRouterAddress, BigInteger.ZERO, oneInchSwapData);
-            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit, oneInchRouterAddress, oneInchSwapData);
+            RawTransaction rawTransaction = constructRawTransaction(wallet, gasPrice, gasLimit,
+                    oneInchRouterAddress, BigInteger.ZERO, oneInchSwapData);
+            Transaction transaction = constructFuncCallTransaction(wallet, gasPrice, gasLimit,
+                    oneInchRouterAddress, oneInchSwapData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         }

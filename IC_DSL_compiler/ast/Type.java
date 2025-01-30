@@ -23,9 +23,9 @@ public enum Type {
 //    MATIC("MATIC", true),
 //    COMP("COMP", true),
 
-    ASSET("USDT|USDC|ETH|DAI|BTC|WBTC|WETH|UNI|SUSHI|AAVE\\_token|MATIC|COMP", true),
+    ASSET("USDT|USDC|ETH|DAI|BTC|WBTC|WETH|UNI|SUSHI|AAVE|MATIC|COMP", true),
 
-    PLATFORM("AAVE|UNISWAP|COMPOUND|YEARN|SUSHISWAP|CURVE|ONEINCH|POLYGON|AVAX", true),
+    PLATFORM("Aave|Uniswap|Compound|Yearn|Sushiswap|Curve|1inch|Polygon|Avax", true),
 
     NFTPLATFORM("OpenSea|Rarible|SuperRare|Foundation|Mintable|BakerySwap|LooksRare", true),
 

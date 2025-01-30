@@ -91,6 +91,11 @@ public class Node {
         public Word getPrivateKey() {
             return privateKey;
         }
+
+        @Override
+        public String toString() {
+            return "switch to account[" + privateKey + "]";
+        }
     }
 
     public static class TransferStatement implements Statement {
@@ -126,15 +131,11 @@ public class Node {
         private Amount borrowAmount;
         private Wallet forWallet;
         private Word platform;
-        private Amount collateralAmount;
-        private Wallet collateralWallet;
 
-        public BorrowStatement(Amount borrowAmount, Wallet forWallet, Word platform, Amount collateralAmount, Wallet collateralWallet) {
+        public BorrowStatement(Amount borrowAmount, Wallet forWallet, Word platform) {
             this.borrowAmount = borrowAmount;
             this.forWallet = forWallet;
             this.platform = platform;
-            this.collateralAmount = collateralAmount;
-            this.collateralWallet = collateralWallet;
         }
 
         public Amount getBorrowAmount() {
@@ -149,18 +150,10 @@ public class Node {
             return platform;
         }
 
-        public Amount getCollateralAmount() {
-            return collateralAmount;
-        }
-
-        public Wallet getCollateralWallet() {
-            return collateralWallet;
-        }
-
         @Override
         public String toString() {
-            return "borrow " + borrowAmount.toString() + " for " + forWallet.toString() + " from " + platform.toString()
-                    + " using " + collateralAmount.toString() + " from " + collateralWallet.toString() + " as collateral";
+            return "borrow " + borrowAmount.toString() + " for " + forWallet.toString() +
+                    " from " + platform.toString();
         }
     }
 
@@ -341,7 +334,7 @@ public class Node {
 
     public static class BuyNFTStatement implements Statement {
         private ArrayList<String> NFTQualifiers;
-//        private Word NFTPlatform;
+        //        private Word NFTPlatform;
         private Amount budgetAmount;
         private Wallet budgetWallet;
 

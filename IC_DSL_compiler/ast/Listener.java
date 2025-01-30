@@ -93,13 +93,11 @@ public class Listener {
     }
 
     public Node.Statement enterBorrowStatement(IntentDSLParser.BorrowStatementContext ctx) {
-        Node.Amount borrowAmount = enterAmount(ctx.amount(0));
-        Node.Wallet forWallet = enterWallet(ctx.wallet(0));
+        Node.Amount borrowAmount = enterAmount(ctx.amount());
+        Node.Wallet forWallet = enterWallet(ctx.wallet());
         Word platform = new Word(ctx.platform().getText(), Type.PLATFORM);
-        Node.Amount collateralAmount = enterAmount(ctx.amount(1));
-        Node.Wallet collateralWallet = enterWallet(ctx.wallet(1));
 
-        return new Node.BorrowStatement(borrowAmount, forWallet, platform, collateralAmount, collateralWallet);
+        return new Node.BorrowStatement(borrowAmount, forWallet, platform);
     }
 
     public Node.Statement enterRepayBorrowStatement(IntentDSLParser.RepayBorrowStatementContext ctx) {

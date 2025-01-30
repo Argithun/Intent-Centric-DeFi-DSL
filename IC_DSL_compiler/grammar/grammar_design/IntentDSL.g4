@@ -55,14 +55,14 @@ ONEINCH : '1inch';
 POLYGON : 'Polygon';
 AVAX : 'Avax';
 
-IDENTIFIER : [A-Za-z_][A-Za-z0-9_]*;
-PRIVATE_KEY : [A-Fa-f0-9_]+;
-KEY : '0'('x'|'X')[0-9A-Fa-f]+;
-
+// IDENTIFIER : [A-Za-z_][A-Za-z0-9_]*;
 DEC_INT : '0' | ([1-9][0-9]*);
 DEC_FLOAT
     : [0-9]*'.'[0-9]*(('p'|'P'|'e'|'E')('+'|'-')?[0-9]+)?
     | [0-9]+[.]?[0-9]*('p'|'P'|'e'|'E')(('+'|'-')?[0-9]+)?;
+
+PRIVATE_KEY : [A-Fa-f0-9]+;
+KEY : '0'('x'|'X')[0-9A-Fa-f]+;
 
 TIME : [0-9][0-9][0-9][0-9] '-' ('0'[1-9] | '1'[0-2]) '-' ('0'[1-9] | [12][0-9] | '3'[01]) 'T' ([01]?[0-9] | '2'[0-3]) ':' [0-5]?[0-9] ':' [0-5]?[0-9];
 
@@ -138,7 +138,6 @@ statement
     | swapStatement
     | addLiquidityStatement
     | removeLiquidityStatement
-//    | flashLoanArbitrageStatement
     | stakeStatement
     | buyNFTStatement
     | sellNFTStatement
@@ -151,7 +150,7 @@ transferStatement
     : 'transfer' amount 'from' wallet 'to' wallet;
 
 borrowStatement
-    : 'borrow' amount 'for' wallet 'from' platform 'using' amount 'from' wallet 'as collateral';
+    : 'borrow' amount 'for' wallet 'from' platform;
 
 repayBorrowStatement
     : 'repay' amount 'from' wallet 'to' platform;
@@ -166,11 +165,6 @@ removeLiquidityStatement
     : 'remove' amount ',' amount 'from' platform 'returning' DEC_INT 'liquidity'
     ('of token' LBRACK KEY RBRACK)? 'from' wallet;
 
-
-
-//flashLoanArbitrageStatement
-//    : 'flash loan' amount 'for' wallet 'then arbitrage for at least' amount 'profits';
-
 stakeStatement
     : 'stake' amount 'from' wallet (stakeStrategy)?;
 
@@ -182,6 +176,9 @@ stakeStrategyQualifiers
 
 buyNFTStatement
     : 'buy' (NFTQualifiers)* 'NFT using at most' amount 'from' wallet;
+
+//flashLoanArbitrageStatement
+//    : 'flash loan' amount 'for' wallet 'then arbitrage for at least' amount 'profits';
 
 NFTQualifiers
     : 'mainstream' | 'popular' | 'rare' | 'inexpensive' | 'price-increasing' | 'price-decreaseing';

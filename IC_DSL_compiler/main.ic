@@ -1,4 +1,4 @@
-switch to account[e55ff0090b4e4e9a1071b03f331b71d98c43ada4c5001e0f5db92f56d59225f7]
+// switch to account[e55ff0090b4e4e9a1071b03f331b71d98c43ada4c5001e0f5db92f56d59225f7];
 
 // trigger time after 2024-12-08T10:25:00 and time before 2024-12-31T10:25:00 then  √
 
@@ -12,18 +12,18 @@ switch to account[e55ff0090b4e4e9a1071b03f331b71d98c43ada4c5001e0f5db92f56d59225
 
 // repay 1 USDT from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] to Aave;
 
-// swap 0.001 ETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for WETH on Uniswap;  √
+// swap 0.01 ETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for WETH on Uniswap; √
 
-swap 0.0005 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for USDC on Uniswap;
+// swap 0.0005 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for USDC on Uniswap; √
 
-// swap 0.001 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for ETH on Uniswap;  √
+// swap 0.005 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for ETH on Uniswap; √
 
 // add liquidity 1 USDT, 1 USDC to Sushiswap receiving liquidity token to wallet[0xd98eC7068456b34628744c6496a985B9b75D7086];
 
 // remove liquidity 1 USDT, 1 USDC from Sushiswap returning liquidity token from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086];
 
-// stake 0.0001 ETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] using low-risk strategy;
+// stake 0.0001 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] using low-risk strategy; √
 
-// stake 0.0001 ETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] using middle-risk strategy;
+// stake 0.0001 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] using middle-risk strategy;
 
-// stake 0.0001 ETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] using high-risk strategy;
+// stake 0.0001 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] using high-risk strategy;

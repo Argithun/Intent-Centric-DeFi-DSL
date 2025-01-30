@@ -84,6 +84,10 @@ public class StakeTransaction extends BasicOp {
             // AAVE: 调用 LendingPool 的 deposit 方法进行质押
             String lendingPoolAddress = ContractAddress.AAVE_LENDING_POOL; // AAVE LendingPool 地址（Mainnet）
 
+            RawTransaction preRawTransaction = Token.approveToken(stakeWallet, lendingPoolAddress,
+                    stakeTokenAddress, stakeTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
+
             Function depositFunction = new Function(
                     "deposit",
                     Arrays.asList(
@@ -96,8 +100,10 @@ public class StakeTransaction extends BasicOp {
             );
             String depositData = FunctionEncoder.encode(depositFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit, lendingPoolAddress, BigInteger.ZERO, depositData);
-            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit, lendingPoolAddress, depositData);
+            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit,
+                    lendingPoolAddress, BigInteger.ZERO, depositData);
+            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit,
+                    lendingPoolAddress, depositData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else if (strategy.contains("middle-risk")) {
@@ -108,6 +114,10 @@ public class StakeTransaction extends BasicOp {
 
             // MakerDAO: 调用 DSR（Dai Savings Rate）合约的 join 方法进行质押
             String dsrContractAddress = ContractAddress.MAKERDAO_DSR; // 替换为实际 DSR 合约地址
+
+            RawTransaction preRawTransaction = Token.approveToken(stakeWallet, dsrContractAddress,
+                    stakeTokenAddress, stakeTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
 
             // 调用 MakerDAO 的 join 方法
             Function joinFunction = new Function(
@@ -120,8 +130,10 @@ public class StakeTransaction extends BasicOp {
             );
             String joinData = FunctionEncoder.encode(joinFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit, dsrContractAddress, BigInteger.ZERO, joinData);
-            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit, dsrContractAddress, joinData);
+            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit,
+                    dsrContractAddress, BigInteger.ZERO, joinData);
+            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit,
+                    dsrContractAddress, joinData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else if (strategy.contains("high-risk")) {
@@ -134,18 +146,9 @@ public class StakeTransaction extends BasicOp {
             }
 
             // 步骤 1: 调用原始资产的 approve 方法，授权 cToken 合约提取资产
-            Function approveFunction = new Function(
-                    "approve",
-                    Arrays.asList(
-                            new Address(cTokenAddress),
-                            new Uint256(stakeTokenAmount)
-                    ),
-                    Collections.emptyList()
-            );
-            String approveData = FunctionEncoder.encode(approveFunction);
-
-            RawTransaction preRawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit, stakeTokenAddress, BigInteger.ZERO, approveData);
-            transGenerator.setPreRawTransaction(preRawTransaction);
+            RawTransaction preRawTransaction = Token.approveToken(stakeWallet, cTokenAddress,
+                    stakeTokenAddress, stakeTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
 
             // 步骤 2: 调用 cToken 合约的 mint 方法进行质押
             Function mintFunction = new Function(
@@ -157,13 +160,19 @@ public class StakeTransaction extends BasicOp {
             );
             String mintData = FunctionEncoder.encode(mintFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit, cTokenAddress, BigInteger.ZERO, mintData, BigInteger.ONE);
-            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit, cTokenAddress, mintData);
+            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit,
+                    cTokenAddress, BigInteger.ZERO, mintData);
+            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit,
+                    cTokenAddress, mintData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else {
             // AAVE: 调用 LendingPool 的 deposit 方法进行质押
             String lendingPoolAddress = ContractAddress.AAVE_LENDING_POOL;  // AAVE LendingPool 地址（Mainnet）
+
+            RawTransaction preRawTransaction = Token.approveToken(stakeWallet, lendingPoolAddress,
+                    stakeTokenAddress, stakeTokenAmount, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
 
             Function depositFunction = new Function(
                     "deposit",
@@ -177,8 +186,10 @@ public class StakeTransaction extends BasicOp {
             );
             String depositData = FunctionEncoder.encode(depositFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit, lendingPoolAddress, BigInteger.ZERO, depositData);
-            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit, lendingPoolAddress, depositData);
+            RawTransaction rawTransaction = constructRawTransaction(stakeWallet, gasPrice, gasLimit,
+                    lendingPoolAddress, BigInteger.ZERO, depositData);
+            Transaction transaction = constructFuncCallTransaction(stakeWallet, gasPrice, gasLimit,
+                    lendingPoolAddress, depositData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         }

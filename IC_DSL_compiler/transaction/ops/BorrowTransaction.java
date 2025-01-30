@@ -54,9 +54,6 @@ public class BorrowTransaction extends BasicOp {
         BigDecimal borrowTokenNum = Calculator.calBinaryExp(borrowStatement.getBorrowAmount().getBinaryExpression());
         String borrowForWallet = borrowStatement.getForWallet().getKey().getContent();
         String platform = borrowStatement.getPlatform().getContent();
-        String collateralTokenAddress = Token.getContractAddressByToken(borrowStatement.getCollateralAmount().getAsset());
-        BigDecimal collateralTokenNum = Calculator.calBinaryExp(borrowStatement.getCollateralAmount().getBinaryExpression());
-        String collateralWallet = borrowStatement.getCollateralWallet().getKey().getContent();
 
         if (!platform.equals("Aave") && !platform.equals("Compound")) {
             System.out.println("Unsupported platform for borrowing: " + platform);
@@ -66,8 +63,9 @@ public class BorrowTransaction extends BasicOp {
         // Convert borrow and collateral amounts to smallest units
         BigInteger borrowAmount = borrowTokenNum.multiply(
                 new BigDecimal(Token.getTokenDecimals(borrowTokenAddress))).toBigInteger();
-        BigInteger collateralAmount = collateralTokenNum.multiply(
-                new BigDecimal(Token.getTokenDecimals(collateralTokenAddress))).toBigInteger();
+
+        BigInteger gasPrice = QueryService.getGasPrice();
+        BigInteger gasLimit = Settings.DEFAULT_GAS_LIMIT;
 
         // Prepare transaction data based on the platform
         if (platform.equals("Aave")) {
@@ -89,10 +87,10 @@ public class BorrowTransaction extends BasicOp {
             );
             String encodedFunction = FunctionEncoder.encode(borrowFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(collateralWallet, QueryService.getGasPrice(),
-                    Settings.DEFAULT_GAS_LIMIT, ContractAddress.AAVE_LENDING_POOL, BigInteger.ZERO, encodedFunction);
-            Transaction transaction = constructFuncCallTransaction(collateralWallet, QueryService.getGasPrice(),
-                    Settings.DEFAULT_GAS_LIMIT, ContractAddress.AAVE_LENDING_POOL, encodedFunction);
+            RawTransaction rawTransaction = constructRawTransaction(borrowForWallet, gasPrice,
+                    gasLimit, ContractAddress.AAVE_LENDING_POOL, BigInteger.ZERO, encodedFunction);
+            Transaction transaction = constructFuncCallTransaction(borrowForWallet, gasPrice,
+                    gasLimit, ContractAddress.AAVE_LENDING_POOL, encodedFunction);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
         } else {
@@ -111,9 +109,9 @@ public class BorrowTransaction extends BasicOp {
             );
             String encodedFunction = FunctionEncoder.encode(borrowFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(collateralWallet, QueryService.getGasPrice(),
+            RawTransaction rawTransaction = constructRawTransaction(borrowForWallet, QueryService.getGasPrice(),
                     Settings.DEFAULT_GAS_LIMIT, borrowTokenAddress, BigInteger.ZERO, encodedFunction);
-            Transaction transaction = constructFuncCallTransaction(collateralWallet, QueryService.getGasPrice(),
+            Transaction transaction = constructFuncCallTransaction(borrowForWallet, QueryService.getGasPrice(),
                     Settings.DEFAULT_GAS_LIMIT, borrowTokenAddress, encodedFunction);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);

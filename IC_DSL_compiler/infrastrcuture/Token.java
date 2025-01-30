@@ -9,9 +9,12 @@ import org.json.JSONObject;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Uint;
+import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint8;
+import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -23,6 +26,8 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
+
+import static tool.NonceManager.getNonceByAccount;
 
 
 public class Token {
@@ -103,7 +108,8 @@ public class Token {
 
     public static BigInteger getTokenDecimals(String tokenAddress) throws Exception {
         if (tokenAddress.equals("0x0000000000000000000000000000000000000000") ||
-                tokenAddress.equals("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")) {
+                tokenAddress.equals("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") ||
+                tokenAddress.equals("0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14")) {
             return BigInteger.valueOf(10).pow(18);  // ETH
         }
 
@@ -170,4 +176,43 @@ public class Token {
             }
         }
     }
+
+    public static RawTransaction approveToken(String fromWallet, String approveToWho,
+                                              String tokenAddress, BigInteger tokenAmount,
+                                              BigInteger gasPrice, BigInteger gasLimit) throws Exception {
+        Function approveFunction = new Function(
+                "approve",
+                Arrays.asList(
+                        new Address(approveToWho),
+                        new Uint256(tokenAmount)
+                ),
+                Collections.emptyList()
+        );
+        String approveData = FunctionEncoder.encode(approveFunction);
+        return constructRawTransaction(fromWallet, gasPrice, gasLimit, tokenAddress, BigInteger.ZERO, approveData);
+    }
+
+    private static RawTransaction constructRawTransaction(
+            String from, BigInteger gasPrice, BigInteger gasLimit,
+            String to, BigInteger value, String data) throws Exception {
+        if (data == null) {
+            return RawTransaction.createEtherTransaction(
+                    getNonceByAccount(from),
+                    gasPrice,
+                    gasLimit,
+                    to,
+                    value
+            );
+        } else {
+            return RawTransaction.createTransaction(
+                    getNonceByAccount(from),
+                    gasPrice,
+                    gasLimit,
+                    to,
+                    value,
+                    data
+            );
+        }
+    }
+
 }

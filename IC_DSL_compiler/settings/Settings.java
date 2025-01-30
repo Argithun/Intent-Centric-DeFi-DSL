@@ -8,9 +8,6 @@ public class Settings {
     // Test on Sepolia
     public static final boolean TEST_MODE = true;
 
-    // Your Private Key (to sign the transaction)
-    public static String ACCOUNT_PRIVATE_KEY = "Please use switch account statement to set your own private key of account.";
-
     // Your Infura API Key
     public static final String INFURA_API_KEY = "ddae120beb6046179b8ac42d1fb79336";
 

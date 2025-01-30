@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class BuyNFTTransaction extends BasicOp {
 
-    public static boolean genBuyNFTTransaction(Node.Statement statement) throws Exception {
+    public static boolean genBuyNFTTransaction(Node.Statement statement, String privateKey) throws Exception {
         // https://docs.opensea.io/reference/post_criteria_offer_v2
         // 提取 BuyNFTStatement 中的相关信息
         Node.BuyNFTStatement buyNFTStatement = (Node.BuyNFTStatement) statement;
@@ -107,11 +107,7 @@ public class BuyNFTTransaction extends BasicOp {
                 counter
         );
 
-        if (!PrivateKeyManager.checkPrivateKeyFormat(Settings.ACCOUNT_PRIVATE_KEY)) {
-            System.out.println("Please use switch account statement to set your own private key of account.");
-            return false;
-        }
-        String signature = Signature.signPrefixedMessage(protocol_data_parameters, Settings.ACCOUNT_PRIVATE_KEY);
+        String signature = Signature.signPrefixedMessage(protocol_data_parameters, privateKey);
 
         String requestBody = String.format(
                 "{"

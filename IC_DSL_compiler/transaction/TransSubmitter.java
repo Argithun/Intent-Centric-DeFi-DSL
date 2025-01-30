@@ -40,8 +40,12 @@ public class TransSubmitter {
     }
 
     public static boolean submitSingleStatements(Node.TriggerStatement triggerStatement) throws Exception {
-        // 交易发生前置条件检查
+        if (triggerStatement.getStatement() instanceof Node.AccountStatement) {
+            return true;
+        }
+
         long startTime = System.currentTimeMillis();
+        String privateKey = PrivateKeyManager.statementToPrivateKey.get(triggerStatement);
 
         while (triggerStatement.isHasTriggerCondition() &&
                 !TriggerConditionCheck.checkTriggerCondition(triggerStatement.getTriggerCondition())) {
@@ -50,7 +54,7 @@ public class TransSubmitter {
                 return false;
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return false;
@@ -59,17 +63,11 @@ public class TransSubmitter {
 
         System.out.println("[Notice] Trigger condition reached! Start constructing rawTransaction ...");
 
-        if (triggerStatement.getStatement() instanceof Node.AccountStatement) {
-            PrivateKeyManager.switchAccount(((Node.AccountStatement) triggerStatement.getStatement()).
-                    getPrivateKey().getContent());
-            return true;
-        }
-
         // 生成交易
-        TransGenerator transGenerator = new TransGenerator(triggerStatement.getStatement());
+        TransGenerator transGenerator = new TransGenerator(triggerStatement.getStatement(), privateKey);
         transGenerator.genTransaction();
         RawTransaction rawTransaction = transGenerator.getRawTransaction();
-        Boolean constructSuccess = transGenerator.getConstructSuccess();
+        boolean constructSuccess = transGenerator.getConstructSuccess();
 
         if (constructSuccess) {
             System.out.println("[Notice] Constructing rawTransaction succeed.");
@@ -84,23 +82,35 @@ public class TransSubmitter {
                 System.out.println("[Notice] Transaction condition reached! Start submitting rawTransaction ...");
 
 
-                if (transGenerator.getPreRawTransaction() != null) {
-                    String transHash = submitSingleTransaction(transGenerator.getPreRawTransaction());
+                if (transGenerator.getPreRawTransaction_1() != null) {
+                    String transHash = submitSingleTransaction(transGenerator.getPreRawTransaction_1(), privateKey);
                     if (transHash == null) {
-                        System.out.println("[Notice] Stake rawTransaction's approve operation failed.");
+                        System.out.println("[Notice] Token approve operation failed.");
                         return false;
                     } else {
-                        System.out.println("[Notice] Stake rawTransaction's approve operation succeed.");
+                        System.out.println("[Notice] Token approve operation succeed.");
                         waitForTransactionConfirmation(transHash);
-                        return isTransactionSuccessful(transHash);
+                        if (!isTransactionSuccessful(transHash)) {
+                            return false;
+                        }
                     }
                 }
 
-//                if (!simulateTransaction(transGenerator.getTransaction())) {
-//                    return false;
-//                }
+                if (transGenerator.getPreRawTransaction_2() != null) {
+                    String transHash = submitSingleTransaction(transGenerator.getPreRawTransaction_2(), privateKey);
+                    if (transHash == null) {
+                        System.out.println("[Notice] Token approve operation failed.");
+                        return false;
+                    } else {
+                        System.out.println("[Notice] Token approve operation succeed.");
+                        waitForTransactionConfirmation(transHash);
+                        if (!isTransactionSuccessful(transHash)) {
+                            return false;
+                        }
+                    }
+                }
 
-                String transHash = submitSingleTransaction(rawTransaction);
+                String transHash = submitSingleTransaction(rawTransaction, privateKey);
                 if (transHash == null) {
                     return false;
                 } else {
@@ -132,15 +142,10 @@ public class TransSubmitter {
         return true;
     }
 
-    public static String submitSingleTransaction(RawTransaction rawTransaction) throws Exception {
+    public static String submitSingleTransaction(RawTransaction rawTransaction, String privateKey) throws Exception {
         Web3j web3j = Web3jBuilder.buildWeb3j();
 
-        if (!PrivateKeyManager.checkPrivateKeyFormat(Settings.ACCOUNT_PRIVATE_KEY)) {
-            System.out.println("Please use switch account statement to set your own private key of account.");
-            return null;
-        }
-
-        Credentials credentials = Credentials.create(Settings.ACCOUNT_PRIVATE_KEY);
+        Credentials credentials = Credentials.create(privateKey);
 
         // 对交易进行签名
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);

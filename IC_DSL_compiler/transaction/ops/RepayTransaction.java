@@ -109,7 +109,7 @@ public class RepayTransaction extends BasicOp {
             );
             String approveData = FunctionEncoder.encode(approve);
             RawTransaction preRawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, repayTokenAddress, BigInteger.ZERO, approveData);
-            transGenerator.setPreRawTransaction(preRawTransaction);
+            transGenerator.setPreRawTransaction_1(preRawTransaction);
 
             // COMPOUND: 调用 cToken 的 repayBorrow 方法进行偿还
             Function repayBorrowFunction = new Function(
@@ -119,7 +119,7 @@ public class RepayTransaction extends BasicOp {
             );
             String repayData = FunctionEncoder.encode(repayBorrowFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, repayCtokenAddress, BigInteger.ZERO, repayData, BigInteger.ONE);
+            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, repayCtokenAddress, BigInteger.ZERO, repayData);
             Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit, repayCtokenAddress, repayData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);

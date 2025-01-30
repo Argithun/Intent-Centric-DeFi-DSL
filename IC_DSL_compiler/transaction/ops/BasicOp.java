@@ -6,13 +6,15 @@ import org.web3j.protocol.core.methods.request.Transaction;
 
 import java.math.BigInteger;
 
+import static tool.NonceManager.getNonceByAccount;
+
 public class BasicOp {
     protected static RawTransaction constructRawTransaction(
             String from, BigInteger gasPrice, BigInteger gasLimit,
             String to, BigInteger value, String data) throws Exception {
         if (data == null) {
             return RawTransaction.createEtherTransaction(
-                    QueryService.getNonce(from),
+                    getNonceByAccount(from),
                     gasPrice,
                     gasLimit,
                     to,
@@ -20,30 +22,7 @@ public class BasicOp {
             );
         } else {
             return RawTransaction.createTransaction(
-                    QueryService.getNonce(from),
-                    gasPrice,
-                    gasLimit,
-                    to,
-                    value,
-                    data
-            );
-        }
-    }
-
-    protected static RawTransaction constructRawTransaction(
-            String from, BigInteger gasPrice, BigInteger gasLimit,
-            String to, BigInteger value, String data, BigInteger nonceAdd) throws Exception {
-        if (data == null) {
-            return RawTransaction.createEtherTransaction(
-                    QueryService.getNonce(from).add(nonceAdd),
-                    gasPrice,
-                    gasLimit,
-                    to,
-                    value
-            );
-        } else {
-            return RawTransaction.createTransaction(
-                    QueryService.getNonce(from).add(nonceAdd),
+                    getNonceByAccount(from),
                     gasPrice,
                     gasLimit,
                     to,

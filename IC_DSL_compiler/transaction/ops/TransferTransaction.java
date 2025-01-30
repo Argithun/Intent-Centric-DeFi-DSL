@@ -42,15 +42,19 @@ public class TransferTransaction extends BasicOp {
         String encodedFunction = FunctionEncoder.encode(function);
 
         if (transferStatement.getAmount().getAsset().getContent().equals("ETH")) {
-            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, toWallet, tokenAmount, null);
-            Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit, toWallet, encodedFunction);
+            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit,
+                    toWallet, tokenAmount, null);
+            Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit,
+                    toWallet, encodedFunction);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
             return true;
         }
 
-        RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, tokenAddress, BigInteger.ZERO, encodedFunction);
-        Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit, tokenAddress, encodedFunction);
+        RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit,
+                tokenAddress, BigInteger.ZERO, encodedFunction);
+        Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit,
+                tokenAddress, encodedFunction);
         transGenerator.setRawTransaction(rawTransaction);
         transGenerator.setTransaction(transaction);
 

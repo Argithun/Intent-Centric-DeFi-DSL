@@ -5,6 +5,7 @@ import ast.Type;
 import ast.Word;
 
 import infrastrcuture.ContractFuncService;
+import infrastrcuture.QueryService;
 import infrastrcuture.Token;
 import infrastrcuture.Web3jBuilder;
 import okhttp3.OkHttpClient;
@@ -46,6 +47,7 @@ public class ConditionCheckAPI {
         Web3j web3j = Web3jBuilder.buildWeb3j();
 
         String tokenName = token.getContent();
+        String tokenAddress = Token.getContractAddressByToken(token);
 
         try {
             // 获取 walletKey 对应账户的 tokenName 代币余额，并使用 comparisonOperation 操作符与 threshold 比较
@@ -53,9 +55,8 @@ public class ConditionCheckAPI {
 
             if (tokenName.equals("ETH")) {
                 EthGetBalance ethGetBalance = web3j.ethGetBalance(walletKey, DefaultBlockParameterName.LATEST).send();
-                balance = new BigDecimal(ethGetBalance.getBalance());  // 将余额从 BigInteger 转为 BigDecimal
+                balance = new BigDecimal(ethGetBalance.getBalance());
             } else {
-                String tokenAddress = Token.getContractAddressByToken(token);
                 if (tokenAddress == null) {
                     throw new IllegalArgumentException("Unknown token: " + tokenName);
                 }
@@ -71,10 +72,10 @@ public class ConditionCheckAPI {
                 balance = new BigDecimal(tokenBalance);  // 将余额从 BigInteger 转为 BigDecimal
             }
 
-            // 以太坊使用18位精度，统一处理
-            balance = balance.divide(BigDecimal.TEN.pow(18), 18, RoundingMode.DOWN);  // 除以 10^18，以太坊的标准精度
-            boolean ret = false;
+            // 精度统一处理
+            threshold = threshold.multiply(new BigDecimal(Token.getTokenDecimals(tokenAddress)));
 
+            boolean ret = false;
             // balance op threshold
             switch (comparisonOperation) {
                 case GT:

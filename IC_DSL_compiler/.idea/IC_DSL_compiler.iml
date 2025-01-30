@@ -16,5 +16,7 @@
     <orderEntry type="library" name="web3j.tuples" level="project" />
     <orderEntry type="library" name="web3j.core" level="project" />
     <orderEntry type="library" name="web3j.abi" level="project" />
+    <orderEntry type="library" name="danilopianini.graphstream.gs.core" level="project" />
+    <orderEntry type="library" name="danilopianini.graphstream.gs.ui.swing" level="project" />
   </component>
 </module>

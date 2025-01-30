@@ -1,18 +1,37 @@
 import ast.AstBuilder;
 import ast.Node;
-import infrastrcuture.QueryService;
-import infrastrcuture.Token;
-import tool.Signature;
+import optimize.dependency.DependencyAnalysis;
+import optimize.dependency.DependencyGraph;
+import tool.NonceManager;
+import tool.PrivateKeyManager;
 import transaction.TransSubmitter;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
 
 
 public class Compiler {
     public static void main(String[] args) throws Exception {
-        Node intentAst = AstBuilder.buildAst("main.ic");
-        TransSubmitter.submitTransactions(intentAst);
+        Node intentAst = AstBuilder.buildAst("graph.ic");
+        PrivateKeyManager.setPrivateKey(intentAst);
+        NonceManager.initAccountToNonce(intentAst);
+        DependencyGraph dependencyGraph = DependencyAnalysis.genDependencyGraph(intentAst);
+
+
+        // TransSubmitter.submitTransactions(intentAst);
+
+// ------------------------------------- for test ---------------------------------- //
+
+//        Web3j web3j = Web3jBuilder.buildWeb3j();
+//        EthGetBalance ethGetBalance = web3j.ethGetBalance("0xd98eC7068456b34628744c6496a985B9b75D7086", DefaultBlockParameterName.LATEST).send();
+//        System.out.println(ethGetBalance.getBalance());
+
+//        Web3j web3j = Web3jBuilder.buildWeb3j();
+//        ContractFuncService erc20 = new ContractFuncService(
+//                "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+//                web3j,
+//                new ReadonlyTransactionManager(web3j, "0xd98eC7068456b34628744c6496a985B9b75D7086"),
+//                new DefaultGasProvider()
+//        );
+//        System.out.println(erc20.balanceOf("0xd98eC7068456b34628744c6496a985B9b75D7086").send());
+//        System.out.println(Token.getTokenDecimals("0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8"));
 
 //        Signature.keccak256Hash("decreaseLiquidity((uint256,uint128,uint256,uint256,uint256))");
 //        Signature.keccak256Hash("removeLiquidity(address,address,uint256,uint256,uint256,address,uint256)");

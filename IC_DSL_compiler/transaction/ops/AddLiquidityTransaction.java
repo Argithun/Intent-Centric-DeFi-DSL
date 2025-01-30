@@ -102,6 +102,14 @@ public class AddLiquidityTransaction extends BasicOp {
         if (platform.equals("Uniswap")) {
             String contractAddress = ContractAddress.UNISWAP_V3_POSITION_NFT;
 
+            RawTransaction preRawTransaction_1 = Token.approveToken(fromWallet, contractAddress, token0,
+                    amount0, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction_1);
+
+            RawTransaction preRawTransaction_2 = Token.approveToken(fromWallet, contractAddress, token1,
+                    amount1, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_2(preRawTransaction_2);
+
             MintParams mintParams = new MintParams(
                     new Address(token0),
                     new Address(token1),
@@ -127,13 +135,23 @@ public class AddLiquidityTransaction extends BasicOp {
             );
             String encodedData = FunctionEncoder.encode(mintFunction);
 
-            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, contractAddress, BigInteger.ZERO, encodedData);
-            Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit, contractAddress, encodedData);
+            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit,
+                    contractAddress, BigInteger.ZERO, encodedData);
+            Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit,
+                    contractAddress, encodedData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
             return true;
         } else if (platform.equals("Sushiswap")) {
             String contractAddress = ContractAddress.SUSHISWAP_ROUTER;
+
+            RawTransaction preRawTransaction_1 = Token.approveToken(fromWallet, contractAddress, token0,
+                    amount0, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_1(preRawTransaction_1);
+
+            RawTransaction preRawTransaction_2 = Token.approveToken(fromWallet, contractAddress, token1,
+                    amount1, gasPrice, gasLimit);
+            transGenerator.setPreRawTransaction_2(preRawTransaction_2);
 
             Function addLiquidityFunction = new Function(
                     "addLiquidity",
@@ -158,8 +176,10 @@ public class AddLiquidityTransaction extends BasicOp {
             );
 
             String encodedData = FunctionEncoder.encode(addLiquidityFunction);
-            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit, contractAddress, BigInteger.ZERO, encodedData);
-            Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit, contractAddress, encodedData);
+            RawTransaction rawTransaction = constructRawTransaction(fromWallet, gasPrice, gasLimit,
+                    contractAddress, BigInteger.ZERO, encodedData);
+            Transaction transaction = constructFuncCallTransaction(fromWallet, gasPrice, gasLimit,
+                    contractAddress, encodedData);
             transGenerator.setRawTransaction(rawTransaction);
             transGenerator.setTransaction(transaction);
             return true;

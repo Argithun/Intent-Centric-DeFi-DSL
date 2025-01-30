@@ -14,13 +14,12 @@ import java.util.Arrays;
 public class Signature {
     public static String signPrefixedMessage(String content, String privateKey) {
 
-        // todo 如果验签不成功，就不需要Hash.sha3 直接content.getBytes()就可以了
+        // 如果验签不成功，就不需要 Hash.sha3 直接 content.getBytes()就可以了
         // 原文信息字节数组
-//        byte[] contentHashBytes = Hash.sha3(content.getBytes());
+        // byte[] contentHashBytes = Hash.sha3(content.getBytes());
         byte[] contentHashBytes = content.getBytes();
         // 根据私钥获取凭证对象
         Credentials credentials = Credentials.create(privateKey);
-        //
         Sign.SignatureData signMessage = Sign.signPrefixedMessage(contentHashBytes, credentials.getEcKeyPair());
 
         byte[] r = signMessage.getR();
@@ -38,9 +37,9 @@ public class Signature {
         if (content == null) {
             return false;
         }
-        // todo 如果验签不成功，就不需要Hash.sha3 直接content.getBytes()就可以了
+        // 如果验签不成功，就不需要Hash.sha3 直接content.getBytes()就可以了
         // 原文字节数组
-//        byte[] msgHash = Hash.sha3(content.getBytes());
+        // byte[] msgHash = Hash.sha3(content.getBytes());
         byte[] msgHash = content.getBytes();
         // 签名数据
         byte[] signatureBytes = Numeric.hexStringToByteArray(signature);
