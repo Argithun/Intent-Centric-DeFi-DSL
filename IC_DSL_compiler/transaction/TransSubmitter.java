@@ -2,6 +2,7 @@ package transaction;
 
 import ast.Node;
 import infrastrcuture.Web3jBuilder;
+import optimize.dependency.DependencyGraph;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
@@ -13,33 +14,53 @@ import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Numeric;
-import settings.Settings;
 import tool.AfterConditionCheck;
 import tool.PrivateKeyManager;
 import tool.TriggerConditionCheck;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static settings.Settings.WAIT_TIME_LIMIT;
 
 public class TransSubmitter {
 
-    public static void submitTransactions(Node root) throws Exception {
+    private static Set<Node.TriggerStatement> notExecuted = new HashSet<>();
+
+    public static void submitTransactions(Node root, DependencyGraph dependencyGraph) throws Exception {
+        notExecuted = new HashSet<>();
+
         for (Node.TriggerStatement triggerStatement : root.getTriggerStatements()) {
-            boolean isSuccess = submitSingleStatements(triggerStatement);
+            if (notExecuted.contains(triggerStatement)) {
+                System.out.println("[SKIP]\n" + triggerStatement.toString() +
+                        "due to transaction which it depends on failed.");
+                continue;
+            }
+
+            boolean isSuccess = submitSingleStatement(triggerStatement);
             if (isSuccess) {
                 System.out.println("[SUCCESS]\n" + triggerStatement.toString());
             } else {
                 System.out.println("[FAIL] Sorry, the statement:\n" +
                         triggerStatement.toString() +
-                        "failed! And transactions after it won't be executed.");
-                break;
+                        "failed! And transactions which depend on it won't be executed.");
+
+                DependencyGraph.GraphNode graphNode = dependencyGraph.getTriggerStatementToNode().get(triggerStatement);
+                gatherNotExecuted(graphNode);
             }
             System.out.println("------------------------------------------------");
         }
     }
 
-    public static boolean submitSingleStatements(Node.TriggerStatement triggerStatement) throws Exception {
+    private static void gatherNotExecuted(DependencyGraph.GraphNode graphNode) {
+        notExecuted.add(graphNode.getSelf());
+        for (DependencyGraph.GraphNode son : graphNode.getDominateOver()) {
+            gatherNotExecuted(son);
+        }
+    }
+
+    private static boolean submitSingleStatement(Node.TriggerStatement triggerStatement) throws Exception {
         if (triggerStatement.getStatement() instanceof Node.AccountStatement) {
             return true;
         }
@@ -54,7 +75,7 @@ public class TransSubmitter {
                 return false;
             }
             try {
-                Thread.sleep(2000);
+                Thread.sleep(30000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return false;
@@ -128,7 +149,7 @@ public class TransSubmitter {
         }
     }
 
-    public static boolean simulateTransaction(Transaction transaction) throws IOException {
+    private static boolean simulateTransaction(Transaction transaction) throws IOException {
         Web3j web3j = Web3jBuilder.buildWeb3j();
         EthCall response = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
 
@@ -142,7 +163,7 @@ public class TransSubmitter {
         return true;
     }
 
-    public static String submitSingleTransaction(RawTransaction rawTransaction, String privateKey) throws Exception {
+    private static String submitSingleTransaction(RawTransaction rawTransaction, String privateKey) throws Exception {
         Web3j web3j = Web3jBuilder.buildWeb3j();
 
         Credentials credentials = Credentials.create(privateKey);
@@ -165,7 +186,7 @@ public class TransSubmitter {
         return response.getTransactionHash();
     }
 
-    public static void waitForTransactionConfirmation(String transactionHash) throws Exception {
+    private static void waitForTransactionConfirmation(String transactionHash) throws Exception {
         Web3j web3j = Web3jBuilder.buildWeb3j();
         while (true) {
             EthGetTransactionReceipt receipt = web3j.ethGetTransactionReceipt(transactionHash).send();
@@ -182,7 +203,7 @@ public class TransSubmitter {
         }
     }
 
-    public static boolean isTransactionSuccessful(String transactionHash) {
+    private static boolean isTransactionSuccessful(String transactionHash) {
         try {
             Web3j web3j = Web3jBuilder.buildWeb3j();
             EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();

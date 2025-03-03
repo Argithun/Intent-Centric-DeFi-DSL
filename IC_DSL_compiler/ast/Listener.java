@@ -70,9 +70,9 @@ public class Listener {
         } else if (ctx.removeLiquidityStatement() != null) {
             return enterRemoveLiquidityStatement(ctx.removeLiquidityStatement());
         } else if (ctx.buyNFTStatement() != null) {
-            enterBuyNFTStatement(ctx.buyNFTStatement());
+            return enterBuyNFTStatement(ctx.buyNFTStatement());
         } else if (ctx.sellNFTStatement() != null) {
-            enterSellNFTStatement(ctx.sellNFTStatement());
+            return enterSellNFTStatement(ctx.sellNFTStatement());
         }
 
         return null;

@@ -2,20 +2,29 @@ import ast.AstBuilder;
 import ast.Node;
 import optimize.dependency.DependencyAnalysis;
 import optimize.dependency.DependencyGraph;
+import settings.Settings;
 import tool.NonceManager;
 import tool.PrivateKeyManager;
 import transaction.TransSubmitter;
+import transaction.TransSubmitterParallel;
+
+import java.io.File;
 
 
 public class Compiler {
     public static void main(String[] args) throws Exception {
-        Node intentAst = AstBuilder.buildAst("graph.ic");
+        System.out.println("Current working directory: " + new File(".").getAbsolutePath());
+//        Node intentAst = AstBuilder.buildAst("graph.ic");
+        Node intentAst = AstBuilder.buildAst("main.ic");
         PrivateKeyManager.setPrivateKey(intentAst);
         NonceManager.initAccountToNonce(intentAst);
         DependencyGraph dependencyGraph = DependencyAnalysis.genDependencyGraph(intentAst);
 
-
-        // TransSubmitter.submitTransactions(intentAst);
+//        if (Settings.PARALLEL_MODE) {
+//            TransSubmitterParallel.submitTransactionsParallel(dependencyGraph);
+//        } else {
+//            TransSubmitter.submitTransactions(intentAst, dependencyGraph);
+//        }
 
 // ------------------------------------- for test ---------------------------------- //
 

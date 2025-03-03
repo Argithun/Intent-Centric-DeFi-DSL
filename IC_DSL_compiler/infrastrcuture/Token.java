@@ -153,7 +153,10 @@ public class Token {
         if (asset.getContent().equals("USDT")) {
             return 1.0;
         } else {
-            String apiUrl = "https://api.binance.com/api/v3/ticker/price?symbol=" + asset.getContent() + "USDT";
+            // todo may need more repair
+            String assetName = asset.getContent().equals("WETH") ? "ETH" : asset.getContent();
+
+            String apiUrl = "https://api.binance.com/api/v3/ticker/price?symbol=" + assetName + "USDT";
 
             Request request = new Request.Builder()
                     .url(apiUrl)

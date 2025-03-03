@@ -8,6 +8,9 @@ public class Settings {
     // Test on Sepolia
     public static final boolean TEST_MODE = true;
 
+    // Parallel Mode to Submit Transaction
+    public static final boolean PARALLEL_MODE = false;
+
     // Your Infura API Key
     public static final String INFURA_API_KEY = "ddae120beb6046179b8ac42d1fb79336";
 
@@ -20,6 +23,9 @@ public class Settings {
     // Your Computer Web Proxy
     public static final boolean IF_USE_PROXY = true;
     public static final String PROXY_HOST_NAME = "127.0.0.1";
+//    public static final String PROXY_HOST_NAME = "192.168.50.82";
+
+
     public static final int PROXY_PORT = 7890;
 
     // Transaction Wait Time Limit

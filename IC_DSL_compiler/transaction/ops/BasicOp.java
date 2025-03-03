@@ -1,6 +1,5 @@
 package transaction.ops;
 
-import infrastrcuture.QueryService;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.core.methods.request.Transaction;
 

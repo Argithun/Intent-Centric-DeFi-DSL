@@ -24,19 +24,22 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
+import static optimize.dependency.DependencyGraph.*;
+
 public class DependencyAnalysis {
 
     public static DependencyGraph genDependencyGraph(Node rootNode) throws Exception {
         DependencyGraph dependencyGraph = genDependencyGraphPrimarily(rootNode);
         DependencyGraph optimizedGraph = optimizeDependencyGraph(dependencyGraph);
         DependencyGraph repairedGraph = repairPossibleDependency(optimizedGraph);
-        graphVisualize(repairedGraph);
+//        graphVisualize(repairedGraph);
         return repairedGraph;
     }
 
     private static DependencyGraph genDependencyGraphPrimarily(Node rootNode) throws Exception {
         ArrayList<DependencyGraph.GraphNode> roots = new ArrayList<>();
         ArrayList<DependencyGraph.GraphNode> allNodes = new ArrayList<>();
+        HashMap<Node.TriggerStatement, DependencyGraph.GraphNode> triggerStatementToNode = new HashMap<>();
 
         HashMap<String, ArrayList<DependencyGraph.GraphNode>> walletAssetToIncrease = new HashMap<>();
         HashMap<String, ArrayList<DependencyGraph.GraphNode>> walletAssetToDecrease = new HashMap<>();
@@ -76,6 +79,7 @@ public class DependencyAnalysis {
                 walletAssetToIncrease.computeIfAbsent(toWallet + asset, k -> new ArrayList<>());
                 walletAssetToIncrease.get(toWallet + asset).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.BorrowStatement) {
                 Node.BorrowStatement borrowStatement = (Node.BorrowStatement) statement;
@@ -95,6 +99,7 @@ public class DependencyAnalysis {
                 walletAssetToIncrease.computeIfAbsent(forWallet + asset, k -> new ArrayList<>());
                 walletAssetToIncrease.get(forWallet + asset).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.RepayBorrowStatement) {
                 Node.RepayBorrowStatement repayBorrowStatement = (Node.RepayBorrowStatement) statement;
@@ -122,6 +127,7 @@ public class DependencyAnalysis {
                 walletAssetToDecrease.computeIfAbsent(repayWallet + asset, k -> new ArrayList<>());
                 walletAssetToDecrease.get(repayWallet + asset).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.SwapStatement) {
                 Node.SwapStatement swapStatement = (Node.SwapStatement) statement;
@@ -157,6 +163,7 @@ public class DependencyAnalysis {
                 walletAssetToIncrease.computeIfAbsent(wallet + toAsset, k -> new ArrayList<>());
                 walletAssetToIncrease.get(wallet + toAsset).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.AddLiquidityStatement) {
                 Node.AddLiquidityStatement addLiquidityStatement = (Node.AddLiquidityStatement) statement;
@@ -197,6 +204,7 @@ public class DependencyAnalysis {
                 walletAssetToDecrease.computeIfAbsent(wallet + asset2, k -> new ArrayList<>());
                 walletAssetToDecrease.get(wallet + asset2).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.RemoveLiquidityStatement) {
                 Node.RemoveLiquidityStatement removeLiquidityStatement = (Node.RemoveLiquidityStatement) statement;
@@ -223,6 +231,7 @@ public class DependencyAnalysis {
                 walletAssetToIncrease.computeIfAbsent(wallet + asset2, k -> new ArrayList<>());
                 walletAssetToIncrease.get(wallet + asset2).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.StakeStatement) {
                 Node.StakeStatement stakeStatement = (Node.StakeStatement) statement;
@@ -250,6 +259,7 @@ public class DependencyAnalysis {
                 walletAssetToDecrease.computeIfAbsent(wallet + asset, k -> new ArrayList<>());
                 walletAssetToDecrease.get(wallet + asset).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.BuyNFTStatement) {
                 Node.BuyNFTStatement buyNFTStatement = (Node.BuyNFTStatement) statement;
@@ -277,39 +287,41 @@ public class DependencyAnalysis {
                 walletAssetToDecrease.computeIfAbsent(wallet + asset, k -> new ArrayList<>());
                 walletAssetToDecrease.get(wallet + asset).add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else if (statement instanceof Node.SellNFTStatement) {
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
                         triggerStatement, new ArrayList<>(), new ArrayList<>());
                 roots.add(graphNode);
                 allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
 
             } else {
                 throw new RuntimeException("Unknown statement.");
             }
         }
 
-        return new DependencyGraph(roots, allNodes);
+        return new DependencyGraph(roots, allNodes, triggerStatementToNode);
     }
 
-    private static HashMap<String, BigInteger> mergeMapsAdd(HashMap<String, BigInteger> map1, HashMap<String, BigInteger> map2) {
-        HashMap<String, BigInteger> mergedMap = new HashMap<>(map1);
+    private static void mergeMapsAdd(HashMap<String, BigInteger> map1,
+                                     HashMap<String, BigInteger> map2) {
 
         for (Map.Entry<String, BigInteger> entry : map2.entrySet()) {
-            mergedMap.merge(entry.getKey(), entry.getValue(), BigInteger::add);
+            map1.merge(entry.getKey(), entry.getValue(), BigInteger::add);
         }
-
-        return mergedMap;
     }
 
-    private static HashMap<String, BigInteger> mergeMapsSub(HashMap<String, BigInteger> map1, HashMap<String, BigInteger> map2) {
-        HashMap<String, BigInteger> mergedMap = new HashMap<>(map1);
+    private static void mergeMapsSub(HashMap<String, BigInteger> map1,
+                                     HashMap<String, BigInteger> map2) {
 
         for (Map.Entry<String, BigInteger> entry : map2.entrySet()) {
-            mergedMap.merge(entry.getKey(), entry.getValue(), BigInteger::subtract);
+            if (map1.get(entry.getKey()) != null) {
+                map1.put(entry.getKey(), map1.get(entry.getKey()).subtract(entry.getValue()));
+            } else {
+                map1.put(entry.getKey(), BigInteger.ZERO.subtract(entry.getValue()));
+            }
         }
-
-        return mergedMap;
     }
 
     private static BigInteger balanceOfAccount(String wallet, String asset) throws Exception {
@@ -328,28 +340,6 @@ public class DependencyAnalysis {
         return erc20.balanceOf(wallet).send();
     }
 
-//    private static void estimateAssetOfSingleNode(DependencyGraph.GraphNode graphNode) {
-//        ArrayList<DependencyGraph.GraphNode> dependOn = graphNode.getDependOn();
-//        ArrayList<DependencyGraph.GraphNode> dominateOver = graphNode.getDominateOver();
-//        HashMap<String, BigInteger> assetIncrease = graphNode.getAssetIncrease();
-//        HashMap<String, BigInteger> assetDecrease = graphNode.getAssetDecrease();
-//
-//        HashMap<String, BigInteger> estimatedAsset = new HashMap<>();
-//
-//        for (DependencyGraph.GraphNode dependNode : dependOn) {
-//            estimatedAsset = mergeMapsAdd(estimatedAsset, dependNode.getEstimatedAsset());
-//        }
-//
-//        estimatedAsset = mergeMapsAdd(estimatedAsset, assetIncrease);
-//        estimatedAsset = mergeMapsSub(estimatedAsset, assetDecrease);
-//
-//        graphNode.setEstimatedAsset(estimatedAsset);
-//
-//        for (DependencyGraph.GraphNode dominateNode : dominateOver) {
-//            estimateAssetOfSingleNode(dominateNode);
-//        }
-//    }
-
     private static void collectAncestorChanges(DependencyGraph.GraphNode node,
                                                HashMap<String, BigInteger> estimatedAsset,
                                                Set<DependencyGraph.GraphNode> visited) {
@@ -358,8 +348,8 @@ public class DependencyAnalysis {
         }
         visited.add(node);
 
-        estimatedAsset = mergeMapsAdd(estimatedAsset, node.getAssetIncrease());
-        estimatedAsset = mergeMapsSub(estimatedAsset, node.getAssetDecrease());
+        mergeMapsAdd(estimatedAsset, node.getAssetIncrease());
+        mergeMapsSub(estimatedAsset, node.getAssetDecrease());
 
         for (DependencyGraph.GraphNode dependOnNode : node.getDependOn()) {
             collectAncestorChanges(dependOnNode, estimatedAsset, visited);
@@ -379,8 +369,8 @@ public class DependencyAnalysis {
             collectAncestorChanges(dependOnNode, estimatedAsset, visited);
         }
 
-        estimatedAsset = mergeMapsAdd(estimatedAsset, assetIncrease);
-        estimatedAsset = mergeMapsSub(estimatedAsset, assetDecrease);
+        mergeMapsAdd(estimatedAsset, assetIncrease);
+        mergeMapsSub(estimatedAsset, assetDecrease);
 
         graphNode.setEstimatedAsset(estimatedAsset);
     }
@@ -394,53 +384,24 @@ public class DependencyAnalysis {
         }
 
         // 初始资产
+        HashMap<String, BigInteger> initAsset = new HashMap<>();
         for (DependencyGraph.GraphNode graphNode : allNodes) {
             HashMap<String, BigInteger> estimatedAsset = graphNode.getEstimatedAsset();
             for (String walletAsset : estimatedAsset.keySet()) {
+                if (initAsset.get(walletAsset) != null) {
+                    continue;
+                }
                 String wallet = walletAsset.substring(0, 42);
                 String asset = walletAsset.substring(42);
-
-                estimatedAsset.put(walletAsset, estimatedAsset.get(walletAsset).
-                        add(balanceOfAccount(wallet, asset)));
+                initAsset.put(walletAsset, balanceOfAccount(wallet, asset));
             }
+        }
+        for (DependencyGraph.GraphNode graphNode : allNodes) {
+            HashMap<String, BigInteger> estimatedAsset = graphNode.getEstimatedAsset();
+            mergeMapsAdd(estimatedAsset, initAsset);
             graphNode.setEstimatedAsset(estimatedAsset);
         }
-    }
 
-
-    private static void calHeightOfSingleNode(DependencyGraph.GraphNode graphNode, int height,
-                                              HashMap<Integer, ArrayList<DependencyGraph.GraphNode>> heightToNodes) {
-        heightToNodes.computeIfAbsent(height, k -> new ArrayList<>());
-        ArrayList<DependencyGraph.GraphNode> graphNodesOnHeight = heightToNodes.get(height);
-
-        if (graphNodesOnHeight.contains(graphNode)) {
-            return;
-        }
-        graphNodesOnHeight.add(graphNode);
-
-        if (graphNode.getDependOn() == null) {
-            return;
-        }
-        for (DependencyGraph.GraphNode fathers : graphNode.getDependOn()) {
-            calHeightOfSingleNode(fathers, height + 1, heightToNodes);
-        }
-    }
-
-    private static HashMap<Integer, ArrayList<DependencyGraph.GraphNode>> calHeightOfNodes(
-            ArrayList<DependencyGraph.GraphNode> allNodes) {
-        HashMap<Integer, ArrayList<DependencyGraph.GraphNode>> heightToNodes = new HashMap<>();
-        ArrayList<DependencyGraph.GraphNode> zeroHeightNode = new ArrayList<>();
-
-        for (DependencyGraph.GraphNode graphNode : allNodes) {
-            if (graphNode.getDominateOver() == null || graphNode.getDominateOver().size() == 0) {
-                zeroHeightNode.add(graphNode);
-            }
-        }
-        for (DependencyGraph.GraphNode graphNode : zeroHeightNode) {
-            calHeightOfSingleNode(graphNode, 0, heightToNodes);
-        }
-
-        return heightToNodes;
     }
 
     private static ArrayList<DependencyGraph.GraphNode> knapsack(
@@ -455,8 +416,13 @@ public class DependencyAnalysis {
         Map<String, ArrayList<DependencyGraph.GraphNode>> selectedPackages = new HashMap<>();
 
         // 初始化：容量为最大时，未选择包裹
-        dp.put(createKey(capacities), BigInteger.ZERO);
-        selectedPackages.put(createKey(capacities), new ArrayList<>());
+        HashMap<String, BigInteger> initCapacities = new HashMap<>();
+        for (String itemType : capacities.keySet()) {
+            initCapacities.put(itemType, BigInteger.ZERO);
+        }
+
+        dp.put(createKey(initCapacities), BigInteger.ZERO);
+        selectedPackages.put(createKey(initCapacities), new ArrayList<>());
 
         // 遍历每个包裹（GraphNode）
         for (DependencyGraph.GraphNode packageItem : packages) {
@@ -563,6 +529,7 @@ public class DependencyAnalysis {
 
                     ArrayList<DependencyGraph.GraphNode> fatherToAbort = knapsack(
                             fathers, estimatedAssetOfCurNode, assetToDecrease);
+
                     if (fatherToAbort != null && fatherToAbort.size() > 0) {
                         changed = true;
                     } else {
@@ -582,8 +549,7 @@ public class DependencyAnalysis {
                             }
                         }
 
-                        graphNode.setEstimatedAsset(mergeMapsSub(
-                                graphNode.getEstimatedAsset(), father.getAssetIncrease()));
+                        mergeMapsSub(graphNode.getEstimatedAsset(), father.getAssetIncrease());
 
                         for (DependencyGraph.GraphNode son : graphNode.getDominateOver()) {
                             if (!son.getDependOn().contains(father)) {
@@ -593,6 +559,18 @@ public class DependencyAnalysis {
                                 father.getDominateOver().add(son);
                             }
                         }
+                    }
+
+                    // father 和 father 支配的节点（需要是不受 graphNode 支配的节点）减去 graphNode 可能消耗的资产
+                    HashSet<DependencyGraph.GraphNode> toCutDown = gatherSonOfNodes(fatherToAbort);
+                    toCutDown.addAll(fatherToAbort);
+                    HashSet<DependencyGraph.GraphNode> notToCutDown = gatherSonOfSingleNode(graphNode);
+                    notToCutDown.add(graphNode);
+                    for (GraphNode downNode : toCutDown) {
+                        if (notToCutDown.contains(downNode)) {
+                            continue;
+                        }
+                        mergeMapsSub(downNode.getEstimatedAsset(), graphNode.getAssetDecrease());
                     }
 
                 }
@@ -605,14 +583,19 @@ public class DependencyAnalysis {
     private static DependencyGraph repairPossibleDependency(DependencyGraph dependencyGraph) {
         ArrayList<DependencyGraph.GraphNode> allNodes = dependencyGraph.getAllNodes();
 
-        for (DependencyGraph.GraphNode graphNode : allNodes) {
+        for (int i = 0; i < allNodes.size(); i++) {
+            DependencyGraph.GraphNode graphNode = allNodes.get(i);
             Node.Statement statement = graphNode.getSelf().getStatement();
-            if (statement instanceof Node.BorrowStatement borrowStatement) {
+            if (statement instanceof Node.BorrowStatement) {
+                Node.BorrowStatement borrowStatement = (Node.BorrowStatement) statement;
                 String borrowForWallet = borrowStatement.getForWallet().getKey().getContent();
 
-                for (DependencyGraph.GraphNode anotherNode : allNodes) {
+                for (int j = 0; j < i; j++) {
+                    DependencyGraph.GraphNode anotherNode = allNodes.get(j);
                     Node.Statement anotherStatement = anotherNode.getSelf().getStatement();
-                    if (anotherStatement instanceof Node.StakeStatement stakeStatement) {
+                    if (anotherStatement instanceof Node.StakeStatement) {
+                        Node.StakeStatement stakeStatement = (Node.StakeStatement) anotherStatement;
+
                         if (anotherNode.getDependOn().contains(graphNode)) {
                             // Situation: borrow tokens to stake
                             continue;
