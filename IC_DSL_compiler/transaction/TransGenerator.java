@@ -10,6 +10,9 @@ import static transaction.ops.BuyNFTTransaction.genBuyNFTTransaction;
 import static transaction.ops.RemoveLiquidityTransaction.genRemoveLiquidityTransaction;
 import static transaction.ops.RepayTransaction.genRepayTransaction;
 import static transaction.ops.SellNFTTransaction.genSellNFTTransaction;
+import static transaction.ops.SimpleBuyNFTTransaction.genSimpleBuyNFTTransaction;
+import static transaction.ops.SimpleSellNFTTransaction.genSimpleSellNFTTransaction;
+import static transaction.ops.SimpleStakeTransaction.genSimpleStakeTransaction;
 import static transaction.ops.StakeTransaction.genStakeTransaction;
 import static transaction.ops.SwapTransaction.genSwapTransaction;
 import static transaction.ops.TransferTransaction.genTransferTransaction;
@@ -93,10 +96,16 @@ public class TransGenerator {
             this.constructSuccess = genAddLiquidityTransaction(statement, this);
         } else if (statement instanceof Node.RemoveLiquidityStatement) {
             this.constructSuccess = genRemoveLiquidityTransaction(statement, this);
+        } else if (statement instanceof Node.SimpleStakeStatement) {
+            this.constructSuccess = genSimpleStakeTransaction(statement, this);
         } else if (statement instanceof Node.StakeStatement) {
             this.constructSuccess = genStakeTransaction(statement, this);
+        } else if (statement instanceof Node.SimpleSellNFTStatement) {
+            this.constructSuccess = genSimpleSellNFTTransaction(statement, this.privateKey);
         } else if (statement instanceof Node.SellNFTStatement) {
             this.constructSuccess = genSellNFTTransaction(statement, this.privateKey);
+        } else if (statement instanceof Node.SimpleBuyNFTStatement) {
+            this.constructSuccess = genSimpleBuyNFTTransaction(statement, this.privateKey);
         } else if (statement instanceof Node.BuyNFTStatement) {
             this.constructSuccess = genBuyNFTTransaction(statement, this.privateKey);
         } else {

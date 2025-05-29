@@ -167,6 +167,24 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRemoveLiquidityStatement(IntentDSLParser.RemoveLiquidityStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#simpleStakeStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimpleStakeStatement(IntentDSLParser.SimpleStakeStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#simpleBuyNFTStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimpleBuyNFTStatement(IntentDSLParser.SimpleBuyNFTStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IntentDSLParser#simpleSellNFTStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimpleSellNFTStatement(IntentDSLParser.SimpleSellNFTStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#stakeStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -232,12 +250,6 @@ public interface IntentDSLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAsset(IntentDSLParser.AssetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link IntentDSLParser#pair}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPair(IntentDSLParser.PairContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IntentDSLParser#wallet}.
 	 * @param ctx the parse tree

@@ -21,15 +21,16 @@ public class IntentDSLParser extends Parser {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, LPARENT=38, 
-		RPARENT=39, LBRACK=40, RBRACK=41, LOGIC_AND=42, LOGIC_OR=43, LOGIC_NOT=44, 
-		EQ=45, NEQ=46, LT=47, GT=48, LE=49, GE=50, ADD=51, SUB=52, MUL=53, DIV=54, 
-		MOD=55, BALANCE=56, PRICE=57, SLIPPAGE=58, FEE=59, WALLET=60, USDT=61, 
-		USDC=62, ETH=63, DAI=64, BTC=65, WBTC=66, WETH=67, UNI=68, SUSHI=69, AAVE_token=70, 
-		MATIC=71, COMP=72, AAVE=73, UNISWAP=74, COMPOUND=75, YEARN=76, SUSHISWAP=77, 
-		CURVE=78, ONEINCH=79, POLYGON=80, AVAX=81, DEC_INT=82, DEC_FLOAT=83, PRIVATE_KEY=84, 
-		KEY=85, TIME=86, SEMI=87, LINE_COMMENT=88, COMMENT=89, BLANK=90, NFTQualifiers=91, 
-		NFTPlatform=92;
+		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
+		T__38=39, T__39=40, LPARENT=41, RPARENT=42, LBRACK=43, RBRACK=44, LOGIC_AND=45, 
+		LOGIC_OR=46, LOGIC_NOT=47, EQ=48, NEQ=49, LT=50, GT=51, LE=52, GE=53, 
+		ADD=54, SUB=55, MUL=56, DIV=57, MOD=58, BALANCE=59, PRICE=60, SLIPPAGE=61, 
+		FEE=62, WALLET=63, USDT=64, USDC=65, ETH=66, DAI=67, BTC=68, WBTC=69, 
+		WETH=70, UNI=71, SUSHI=72, AAVE_token=73, MATIC=74, COMP=75, AAVE=76, 
+		UNISWAP=77, COMPOUND=78, YEARN=79, SUSHISWAP=80, CURVE=81, ONEINCH=82, 
+		POLYGON=83, AVAX=84, DEC_INT=85, DEC_FLOAT=86, PRIVATE_KEY=87, KEY=88, 
+		TIME=89, SEMI=90, LINE_COMMENT=91, COMMENT=92, BLANK=93, NFTQualifiers=94, 
+		NFTPlatform=95;
 	public static final int
 		RULE_program = 0, RULE_condition = 1, RULE_timeCondition = 2, RULE_orExpression = 3, 
 		RULE_andExpression = 4, RULE_comparisonExpression = 5, RULE_comparisonElement = 6, 
@@ -39,10 +40,11 @@ public class IntentDSLParser extends Parser {
 		RULE_number = 16, RULE_triggerStatement = 17, RULE_statement = 18, RULE_accountStatement = 19, 
 		RULE_transferStatement = 20, RULE_borrowStatement = 21, RULE_repayBorrowStatement = 22, 
 		RULE_swapStatement = 23, RULE_addLiquidityStatement = 24, RULE_removeLiquidityStatement = 25, 
-		RULE_stakeStatement = 26, RULE_stakeStrategy = 27, RULE_stakeStrategyQualifiers = 28, 
-		RULE_buyNFTStatement = 29, RULE_sellNFTStatement = 30, RULE_sellNFTStartegy = 31, 
-		RULE_sellNFTStrategyQualifiers = 32, RULE_walletBalance = 33, RULE_assetPrice = 34, 
-		RULE_amount = 35, RULE_asset = 36, RULE_pair = 37, RULE_wallet = 38, RULE_platform = 39;
+		RULE_simpleStakeStatement = 26, RULE_simpleBuyNFTStatement = 27, RULE_simpleSellNFTStatement = 28, 
+		RULE_stakeStatement = 29, RULE_stakeStrategy = 30, RULE_stakeStrategyQualifiers = 31, 
+		RULE_buyNFTStatement = 32, RULE_sellNFTStatement = 33, RULE_sellNFTStartegy = 34, 
+		RULE_sellNFTStrategyQualifiers = 35, RULE_walletBalance = 36, RULE_assetPrice = 37, 
+		RULE_amount = 38, RULE_asset = 39, RULE_wallet = 40, RULE_platform = 41;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"program", "condition", "timeCondition", "orExpression", "andExpression", 
@@ -51,9 +53,10 @@ public class IntentDSLParser extends Parser {
 			"highBinaryOperator", "lowBinaryOperator", "unaryOperator", "number", 
 			"triggerStatement", "statement", "accountStatement", "transferStatement", 
 			"borrowStatement", "repayBorrowStatement", "swapStatement", "addLiquidityStatement", 
-			"removeLiquidityStatement", "stakeStatement", "stakeStrategy", "stakeStrategyQualifiers", 
+			"removeLiquidityStatement", "simpleStakeStatement", "simpleBuyNFTStatement", 
+			"simpleSellNFTStatement", "stakeStatement", "stakeStrategy", "stakeStrategyQualifiers", 
 			"buyNFTStatement", "sellNFTStatement", "sellNFTStartegy", "sellNFTStrategyQualifiers", 
-			"walletBalance", "assetPrice", "amount", "asset", "pair", "wallet", "platform"
+			"walletBalance", "assetPrice", "amount", "asset", "wallet", "platform"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -63,13 +66,14 @@ public class IntentDSLParser extends Parser {
 			null, "'time before'", "'time after'", "'time during'", "'to'", "'trigger'", 
 			"'then'", "'checking'", "'switch to account'", "'transfer'", "'from'", 
 			"'borrow'", "'for'", "'repay'", "'swap'", "'on'", "'add'", "','", "'receiving liquidity token to'", 
-			"'remove'", "'returning'", "'liquidity'", "'of token'", "'stake'", "'using'", 
-			"'strategy'", "'low-risk'", "'middle-risk'", "'high-risk'", "'short-term'", 
-			"'middle-term'", "'long-term'", "'buy'", "'NFT using at most'", "'sell NFT'", 
-			"'in collection'", "'time-saving'", "'profitable'", "'('", "')'", "'['", 
-			"']'", "'and'", "'or'", "'not'", "'=='", "'!='", "'<'", "'>'", "'<='", 
-			"'>='", "'+'", "'-'", "'*'", "'/'", "'%'", "'balance'", "'price'", "'slippage'", 
-			"'fee'", "'wallet'", "'USDT'", "'USDC'", "'ETH'", "'DAI'", "'BTC'", "'WBTC'", 
+			"'remove'", "'returning'", "'liquidity'", "'of token'", "'stake'", "'buy NFT'", 
+			"'in collection'", "'using at most'", "'sell NFT'", "'for at least'", 
+			"'using'", "'strategy'", "'low-risk'", "'middle-risk'", "'high-risk'", 
+			"'short-term'", "'middle-term'", "'long-term'", "'buy'", "'NFT using at most'", 
+			"'time-saving'", "'profitable'", "'('", "')'", "'['", "']'", "'and'", 
+			"'or'", "'not'", "'=='", "'!='", "'<'", "'>'", "'<='", "'>='", "'+'", 
+			"'-'", "'*'", "'/'", "'%'", "'balance'", "'price'", "'slippage'", "'fee'", 
+			"'wallet'", "'USDT'", "'USDC'", "'ETH'", "'DAI'", "'BTC'", "'WBTC'", 
 			"'WETH'", "'UNI'", "'SUSHI'", "'AAVE'", "'MATIC'", "'COMAP'", "'Aave'", 
 			"'Uniswap'", "'Compound'", "'Yearn'", "'Sushiswap'", "'Curve'", "'1inch'", 
 			"'Polygon'", "'Avax'", null, null, null, null, null, "';'"
@@ -81,14 +85,14 @@ public class IntentDSLParser extends Parser {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, "LPARENT", "RPARENT", "LBRACK", "RBRACK", "LOGIC_AND", "LOGIC_OR", 
-			"LOGIC_NOT", "EQ", "NEQ", "LT", "GT", "LE", "GE", "ADD", "SUB", "MUL", 
-			"DIV", "MOD", "BALANCE", "PRICE", "SLIPPAGE", "FEE", "WALLET", "USDT", 
-			"USDC", "ETH", "DAI", "BTC", "WBTC", "WETH", "UNI", "SUSHI", "AAVE_token", 
-			"MATIC", "COMP", "AAVE", "UNISWAP", "COMPOUND", "YEARN", "SUSHISWAP", 
-			"CURVE", "ONEINCH", "POLYGON", "AVAX", "DEC_INT", "DEC_FLOAT", "PRIVATE_KEY", 
-			"KEY", "TIME", "SEMI", "LINE_COMMENT", "COMMENT", "BLANK", "NFTQualifiers", 
-			"NFTPlatform"
+			null, null, null, null, null, "LPARENT", "RPARENT", "LBRACK", "RBRACK", 
+			"LOGIC_AND", "LOGIC_OR", "LOGIC_NOT", "EQ", "NEQ", "LT", "GT", "LE", 
+			"GE", "ADD", "SUB", "MUL", "DIV", "MOD", "BALANCE", "PRICE", "SLIPPAGE", 
+			"FEE", "WALLET", "USDT", "USDC", "ETH", "DAI", "BTC", "WBTC", "WETH", 
+			"UNI", "SUSHI", "AAVE_token", "MATIC", "COMP", "AAVE", "UNISWAP", "COMPOUND", 
+			"YEARN", "SUSHISWAP", "CURVE", "ONEINCH", "POLYGON", "AVAX", "DEC_INT", 
+			"DEC_FLOAT", "PRIVATE_KEY", "KEY", "TIME", "SEMI", "LINE_COMMENT", "COMMENT", 
+			"BLANK", "NFTQualifiers", "NFTPlatform"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -176,20 +180,20 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(81); 
+			setState(85); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(80);
+				setState(84);
 				triggerStatement();
 				}
 				}
-				setState(83); 
+				setState(87); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 21483842336L) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 137598954272L) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -233,7 +237,7 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(85);
+			setState(89);
 			orExpression();
 			}
 		}
@@ -277,37 +281,37 @@ public class IntentDSLParser extends Parser {
 		TimeConditionContext _localctx = new TimeConditionContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_timeCondition);
 		try {
-			setState(95);
+			setState(99);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(87);
+				setState(91);
 				match(T__0);
-				setState(88);
+				setState(92);
 				match(TIME);
 				}
 				break;
 			case T__1:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(89);
+				setState(93);
 				match(T__1);
-				setState(90);
+				setState(94);
 				match(TIME);
 				}
 				break;
 			case T__2:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(91);
+				setState(95);
 				match(T__2);
-				setState(92);
+				setState(96);
 				match(TIME);
-				setState(93);
+				setState(97);
 				match(T__3);
-				setState(94);
+				setState(98);
 				match(TIME);
 				}
 				break;
@@ -364,21 +368,21 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(97);
+			setState(101);
 			andExpression();
-			setState(102);
+			setState(106);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==LOGIC_OR) {
 				{
 				{
-				setState(98);
+				setState(102);
 				match(LOGIC_OR);
-				setState(99);
+				setState(103);
 				andExpression();
 				}
 				}
-				setState(104);
+				setState(108);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -439,7 +443,7 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(107);
+			setState(111);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BALANCE:
@@ -449,7 +453,7 @@ public class IntentDSLParser extends Parser {
 			case DEC_INT:
 			case DEC_FLOAT:
 				{
-				setState(105);
+				setState(109);
 				comparisonExpression();
 				}
 				break;
@@ -457,22 +461,22 @@ public class IntentDSLParser extends Parser {
 			case T__1:
 			case T__2:
 				{
-				setState(106);
+				setState(110);
 				timeCondition();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(116);
+			setState(120);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==LOGIC_AND) {
 				{
 				{
-				setState(109);
+				setState(113);
 				match(LOGIC_AND);
-				setState(112);
+				setState(116);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case BALANCE:
@@ -482,7 +486,7 @@ public class IntentDSLParser extends Parser {
 				case DEC_INT:
 				case DEC_FLOAT:
 					{
-					setState(110);
+					setState(114);
 					comparisonExpression();
 					}
 					break;
@@ -490,7 +494,7 @@ public class IntentDSLParser extends Parser {
 				case T__1:
 				case T__2:
 					{
-					setState(111);
+					setState(115);
 					timeCondition();
 					}
 					break;
@@ -499,7 +503,7 @@ public class IntentDSLParser extends Parser {
 				}
 				}
 				}
-				setState(118);
+				setState(122);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -552,11 +556,11 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(119);
+			setState(123);
 			comparisonElement();
-			setState(120);
+			setState(124);
 			comparisonOperator();
-			setState(121);
+			setState(125);
 			comparisonElement();
 			}
 		}
@@ -610,50 +614,50 @@ public class IntentDSLParser extends Parser {
 		ComparisonElementContext _localctx = new ComparisonElementContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_comparisonElement);
 		try {
-			setState(131);
+			setState(135);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(123);
+				setState(127);
 				walletBalance();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(124);
+				setState(128);
 				assetPrice();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(125);
+				setState(129);
 				number();
-				setState(126);
+				setState(130);
 				asset();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(128);
+				setState(132);
 				number();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(129);
+				setState(133);
 				match(SLIPPAGE);
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(130);
+				setState(134);
 				match(FEE);
 				}
 				break;
@@ -710,21 +714,21 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(133);
+			setState(137);
 			lowBinaryExpression();
-			setState(139);
+			setState(143);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 63050394783186944L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 504403158265495552L) != 0)) {
 				{
 				{
-				setState(134);
+				setState(138);
 				highBinaryOperator();
-				setState(135);
+				setState(139);
 				lowBinaryExpression();
 				}
 				}
-				setState(141);
+				setState(145);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -781,21 +785,21 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(142);
+			setState(146);
 			unaryExpression();
-			setState(148);
+			setState(152);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==ADD || _la==SUB) {
 				{
 				{
-				setState(143);
+				setState(147);
 				lowBinaryOperator();
-				setState(144);
+				setState(148);
 				unaryExpression();
 				}
 				}
-				setState(150);
+				setState(154);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -849,21 +853,21 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(154);
+			setState(158);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 6772991627100160L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 54183933016801280L) != 0)) {
 				{
 				{
-				setState(151);
+				setState(155);
 				unaryOperator();
 				}
 				}
-				setState(156);
+				setState(160);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(157);
+			setState(161);
 			primaryExpression();
 			}
 		}
@@ -914,39 +918,39 @@ public class IntentDSLParser extends Parser {
 		PrimaryExpressionContext _localctx = new PrimaryExpressionContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_primaryExpression);
 		try {
-			setState(167);
+			setState(171);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case DEC_INT:
 			case DEC_FLOAT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(159);
+				setState(163);
 				number();
 				}
 				break;
 			case LPARENT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(160);
+				setState(164);
 				match(LPARENT);
-				setState(163);
+				setState(167);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
 				case 1:
 					{
-					setState(161);
+					setState(165);
 					binaryExpression();
 					}
 					break;
 				case 2:
 					{
-					setState(162);
+					setState(166);
 					unaryExpression();
 					}
 					break;
 				}
-				setState(165);
+				setState(169);
 				match(RPARENT);
 				}
 				break;
@@ -995,7 +999,7 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(169);
+			setState(173);
 			_la = _input.LA(1);
 			if ( !(_la==LOGIC_AND || _la==LOGIC_OR) ) {
 			_errHandler.recoverInline(this);
@@ -1052,9 +1056,9 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(171);
+			setState(175);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 2216615441596416L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 17732923532771328L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -1106,9 +1110,9 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(173);
+			setState(177);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 63050394783186944L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 504403158265495552L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -1159,7 +1163,7 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(175);
+			setState(179);
 			_la = _input.LA(1);
 			if ( !(_la==ADD || _la==SUB) ) {
 			_errHandler.recoverInline(this);
@@ -1213,9 +1217,9 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(177);
+			setState(181);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 6772991627100160L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 54183933016801280L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -1266,7 +1270,7 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(179);
+			setState(183);
 			_la = _input.LA(1);
 			if ( !(_la==DEC_INT || _la==DEC_FLOAT) ) {
 			_errHandler.recoverInline(this);
@@ -1327,35 +1331,35 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(185);
+			setState(189);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__4) {
 				{
-				setState(181);
+				setState(185);
 				match(T__4);
-				setState(182);
+				setState(186);
 				condition();
-				setState(183);
+				setState(187);
 				match(T__5);
 				}
 			}
 
-			setState(187);
+			setState(191);
 			statement();
-			setState(190);
+			setState(194);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__6) {
 				{
-				setState(188);
+				setState(192);
 				match(T__6);
-				setState(189);
+				setState(193);
 				condition();
 				}
 			}
 
-			setState(192);
+			setState(196);
 			match(SEMI);
 			}
 		}
@@ -1402,6 +1406,15 @@ public class IntentDSLParser extends Parser {
 		public SellNFTStatementContext sellNFTStatement() {
 			return getRuleContext(SellNFTStatementContext.class,0);
 		}
+		public SimpleStakeStatementContext simpleStakeStatement() {
+			return getRuleContext(SimpleStakeStatementContext.class,0);
+		}
+		public SimpleBuyNFTStatementContext simpleBuyNFTStatement() {
+			return getRuleContext(SimpleBuyNFTStatementContext.class,0);
+		}
+		public SimpleSellNFTStatementContext simpleSellNFTStatement() {
+			return getRuleContext(SimpleSellNFTStatementContext.class,0);
+		}
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1425,81 +1438,100 @@ public class IntentDSLParser extends Parser {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 36, RULE_statement);
 		try {
-			setState(204);
+			setState(211);
 			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case T__7:
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(194);
+				setState(198);
 				accountStatement();
 				}
 				break;
-			case T__8:
+			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(195);
+				setState(199);
 				transferStatement();
 				}
 				break;
-			case T__10:
+			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(196);
+				setState(200);
 				borrowStatement();
 				}
 				break;
-			case T__12:
+			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(197);
+				setState(201);
 				repayBorrowStatement();
 				}
 				break;
-			case T__13:
+			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(198);
+				setState(202);
 				swapStatement();
 				}
 				break;
-			case T__15:
+			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(199);
+				setState(203);
 				addLiquidityStatement();
 				}
 				break;
-			case T__18:
+			case 7:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(200);
+				setState(204);
 				removeLiquidityStatement();
 				}
 				break;
-			case T__22:
+			case 8:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(201);
+				setState(205);
 				stakeStatement();
 				}
 				break;
-			case T__31:
+			case 9:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(202);
+				setState(206);
 				buyNFTStatement();
 				}
 				break;
-			case T__33:
+			case 10:
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(203);
+				setState(207);
 				sellNFTStatement();
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
+			case 11:
+				enterOuterAlt(_localctx, 11);
+				{
+				setState(208);
+				simpleStakeStatement();
+				}
+				break;
+			case 12:
+				enterOuterAlt(_localctx, 12);
+				{
+				setState(209);
+				simpleBuyNFTStatement();
+				}
+				break;
+			case 13:
+				enterOuterAlt(_localctx, 13);
+				{
+				setState(210);
+				simpleSellNFTStatement();
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -1543,13 +1575,13 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(206);
+			setState(213);
 			match(T__7);
-			setState(207);
+			setState(214);
 			match(LBRACK);
-			setState(208);
+			setState(215);
 			match(PRIVATE_KEY);
-			setState(209);
+			setState(216);
 			match(RBRACK);
 			}
 		}
@@ -1600,17 +1632,17 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(211);
+			setState(218);
 			match(T__8);
-			setState(212);
+			setState(219);
 			amount();
-			setState(213);
+			setState(220);
 			match(T__9);
-			setState(214);
+			setState(221);
 			wallet();
-			setState(215);
+			setState(222);
 			match(T__3);
-			setState(216);
+			setState(223);
 			wallet();
 			}
 		}
@@ -1661,17 +1693,17 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(218);
+			setState(225);
 			match(T__10);
-			setState(219);
+			setState(226);
 			amount();
-			setState(220);
+			setState(227);
 			match(T__11);
-			setState(221);
+			setState(228);
 			wallet();
-			setState(222);
+			setState(229);
 			match(T__9);
-			setState(223);
+			setState(230);
 			platform();
 			}
 		}
@@ -1722,17 +1754,17 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(225);
+			setState(232);
 			match(T__12);
-			setState(226);
+			setState(233);
 			amount();
-			setState(227);
+			setState(234);
 			match(T__9);
-			setState(228);
+			setState(235);
 			wallet();
-			setState(229);
+			setState(236);
 			match(T__3);
-			setState(230);
+			setState(237);
 			platform();
 			}
 		}
@@ -1786,21 +1818,21 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(232);
-			match(T__13);
-			setState(233);
-			amount();
-			setState(234);
-			match(T__9);
-			setState(235);
-			wallet();
-			setState(236);
-			match(T__11);
-			setState(237);
-			asset();
-			setState(238);
-			match(T__14);
 			setState(239);
+			match(T__13);
+			setState(240);
+			amount();
+			setState(241);
+			match(T__9);
+			setState(242);
+			wallet();
+			setState(243);
+			match(T__11);
+			setState(244);
+			asset();
+			setState(245);
+			match(T__14);
+			setState(246);
 			platform();
 			}
 		}
@@ -1854,21 +1886,21 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(241);
-			match(T__15);
-			setState(242);
-			amount();
-			setState(243);
-			match(T__16);
-			setState(244);
-			amount();
-			setState(245);
-			match(T__3);
-			setState(246);
-			platform();
-			setState(247);
-			match(T__17);
 			setState(248);
+			match(T__15);
+			setState(249);
+			amount();
+			setState(250);
+			match(T__16);
+			setState(251);
+			amount();
+			setState(252);
+			match(T__3);
+			setState(253);
+			platform();
+			setState(254);
+			match(T__17);
+			setState(255);
 			wallet();
 			}
 		}
@@ -1927,44 +1959,265 @@ public class IntentDSLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(250);
-			match(T__18);
-			setState(251);
-			amount();
-			setState(252);
-			match(T__16);
-			setState(253);
-			amount();
-			setState(254);
-			match(T__9);
-			setState(255);
-			platform();
-			setState(256);
-			match(T__19);
 			setState(257);
-			match(DEC_INT);
+			match(T__18);
 			setState(258);
-			match(T__20);
+			amount();
+			setState(259);
+			match(T__16);
+			setState(260);
+			amount();
+			setState(261);
+			match(T__9);
+			setState(262);
+			platform();
 			setState(263);
+			match(T__19);
+			setState(264);
+			match(DEC_INT);
+			setState(265);
+			match(T__20);
+			setState(270);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__21) {
 				{
-				setState(259);
+				setState(266);
 				match(T__21);
-				setState(260);
+				setState(267);
 				match(LBRACK);
-				setState(261);
+				setState(268);
 				match(KEY);
-				setState(262);
+				setState(269);
 				match(RBRACK);
 				}
 			}
 
-			setState(265);
+			setState(272);
 			match(T__9);
-			setState(266);
+			setState(273);
 			wallet();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class SimpleStakeStatementContext extends ParserRuleContext {
+		public AmountContext amount() {
+			return getRuleContext(AmountContext.class,0);
+		}
+		public WalletContext wallet() {
+			return getRuleContext(WalletContext.class,0);
+		}
+		public PlatformContext platform() {
+			return getRuleContext(PlatformContext.class,0);
+		}
+		public SimpleStakeStatementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_simpleStakeStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).enterSimpleStakeStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).exitSimpleStakeStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof IntentDSLVisitor ) return ((IntentDSLVisitor<? extends T>)visitor).visitSimpleStakeStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final SimpleStakeStatementContext simpleStakeStatement() throws RecognitionException {
+		SimpleStakeStatementContext _localctx = new SimpleStakeStatementContext(_ctx, getState());
+		enterRule(_localctx, 52, RULE_simpleStakeStatement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(275);
+			match(T__22);
+			setState(276);
+			amount();
+			setState(277);
+			match(T__9);
+			setState(278);
+			wallet();
+			setState(279);
+			match(T__14);
+			setState(280);
+			platform();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class SimpleBuyNFTStatementContext extends ParserRuleContext {
+		public List<TerminalNode> LBRACK() { return getTokens(IntentDSLParser.LBRACK); }
+		public TerminalNode LBRACK(int i) {
+			return getToken(IntentDSLParser.LBRACK, i);
+		}
+		public TerminalNode DEC_INT() { return getToken(IntentDSLParser.DEC_INT, 0); }
+		public List<TerminalNode> RBRACK() { return getTokens(IntentDSLParser.RBRACK); }
+		public TerminalNode RBRACK(int i) {
+			return getToken(IntentDSLParser.RBRACK, i);
+		}
+		public TerminalNode KEY() { return getToken(IntentDSLParser.KEY, 0); }
+		public AmountContext amount() {
+			return getRuleContext(AmountContext.class,0);
+		}
+		public WalletContext wallet() {
+			return getRuleContext(WalletContext.class,0);
+		}
+		public SimpleBuyNFTStatementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_simpleBuyNFTStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).enterSimpleBuyNFTStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).exitSimpleBuyNFTStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof IntentDSLVisitor ) return ((IntentDSLVisitor<? extends T>)visitor).visitSimpleBuyNFTStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final SimpleBuyNFTStatementContext simpleBuyNFTStatement() throws RecognitionException {
+		SimpleBuyNFTStatementContext _localctx = new SimpleBuyNFTStatementContext(_ctx, getState());
+		enterRule(_localctx, 54, RULE_simpleBuyNFTStatement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(282);
+			match(T__23);
+			setState(283);
+			match(LBRACK);
+			setState(284);
+			match(DEC_INT);
+			setState(285);
+			match(RBRACK);
+			setState(286);
+			match(T__24);
+			setState(287);
+			match(LBRACK);
+			setState(288);
+			match(KEY);
+			setState(289);
+			match(RBRACK);
+			setState(290);
+			match(T__25);
+			setState(291);
+			amount();
+			setState(292);
+			match(T__9);
+			setState(293);
+			wallet();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class SimpleSellNFTStatementContext extends ParserRuleContext {
+		public List<TerminalNode> LBRACK() { return getTokens(IntentDSLParser.LBRACK); }
+		public TerminalNode LBRACK(int i) {
+			return getToken(IntentDSLParser.LBRACK, i);
+		}
+		public TerminalNode DEC_INT() { return getToken(IntentDSLParser.DEC_INT, 0); }
+		public List<TerminalNode> RBRACK() { return getTokens(IntentDSLParser.RBRACK); }
+		public TerminalNode RBRACK(int i) {
+			return getToken(IntentDSLParser.RBRACK, i);
+		}
+		public TerminalNode KEY() { return getToken(IntentDSLParser.KEY, 0); }
+		public WalletContext wallet() {
+			return getRuleContext(WalletContext.class,0);
+		}
+		public AmountContext amount() {
+			return getRuleContext(AmountContext.class,0);
+		}
+		public SimpleSellNFTStatementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_simpleSellNFTStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).enterSimpleSellNFTStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).exitSimpleSellNFTStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof IntentDSLVisitor ) return ((IntentDSLVisitor<? extends T>)visitor).visitSimpleSellNFTStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final SimpleSellNFTStatementContext simpleSellNFTStatement() throws RecognitionException {
+		SimpleSellNFTStatementContext _localctx = new SimpleSellNFTStatementContext(_ctx, getState());
+		enterRule(_localctx, 56, RULE_simpleSellNFTStatement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(295);
+			match(T__26);
+			setState(296);
+			match(LBRACK);
+			setState(297);
+			match(DEC_INT);
+			setState(298);
+			match(RBRACK);
+			setState(299);
+			match(T__24);
+			setState(300);
+			match(LBRACK);
+			setState(301);
+			match(KEY);
+			setState(302);
+			match(RBRACK);
+			setState(303);
+			match(T__9);
+			setState(304);
+			wallet();
+			setState(305);
+			match(T__27);
+			setState(306);
+			amount();
 			}
 		}
 		catch (RecognitionException re) {
@@ -2010,25 +2263,25 @@ public class IntentDSLParser extends Parser {
 
 	public final StakeStatementContext stakeStatement() throws RecognitionException {
 		StakeStatementContext _localctx = new StakeStatementContext(_ctx, getState());
-		enterRule(_localctx, 52, RULE_stakeStatement);
+		enterRule(_localctx, 58, RULE_stakeStatement);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(268);
+			setState(308);
 			match(T__22);
-			setState(269);
+			setState(309);
 			amount();
-			setState(270);
+			setState(310);
 			match(T__9);
-			setState(271);
+			setState(311);
 			wallet();
-			setState(273);
+			setState(313);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__23) {
+			if (_la==T__28) {
 				{
-				setState(272);
+				setState(312);
 				stakeStrategy();
 				}
 			}
@@ -2075,29 +2328,29 @@ public class IntentDSLParser extends Parser {
 
 	public final StakeStrategyContext stakeStrategy() throws RecognitionException {
 		StakeStrategyContext _localctx = new StakeStrategyContext(_ctx, getState());
-		enterRule(_localctx, 54, RULE_stakeStrategy);
+		enterRule(_localctx, 60, RULE_stakeStrategy);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(275);
-			match(T__23);
-			setState(279);
+			setState(315);
+			match(T__28);
+			setState(319);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 4227858432L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 135291469824L) != 0)) {
 				{
 				{
-				setState(276);
+				setState(316);
 				stakeStrategyQualifiers();
 				}
 				}
-				setState(281);
+				setState(321);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(282);
-			match(T__24);
+			setState(322);
+			match(T__29);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2134,14 +2387,14 @@ public class IntentDSLParser extends Parser {
 
 	public final StakeStrategyQualifiersContext stakeStrategyQualifiers() throws RecognitionException {
 		StakeStrategyQualifiersContext _localctx = new StakeStrategyQualifiersContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_stakeStrategyQualifiers);
+		enterRule(_localctx, 62, RULE_stakeStrategyQualifiers);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(284);
+			setState(324);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 4227858432L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 135291469824L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -2195,34 +2448,34 @@ public class IntentDSLParser extends Parser {
 
 	public final BuyNFTStatementContext buyNFTStatement() throws RecognitionException {
 		BuyNFTStatementContext _localctx = new BuyNFTStatementContext(_ctx, getState());
-		enterRule(_localctx, 58, RULE_buyNFTStatement);
+		enterRule(_localctx, 64, RULE_buyNFTStatement);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(286);
-			match(T__31);
-			setState(290);
+			setState(326);
+			match(T__36);
+			setState(330);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==NFTQualifiers) {
 				{
 				{
-				setState(287);
+				setState(327);
 				match(NFTQualifiers);
 				}
 				}
-				setState(292);
+				setState(332);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(293);
-			match(T__32);
-			setState(294);
+			setState(333);
+			match(T__37);
+			setState(334);
 			amount();
-			setState(295);
+			setState(335);
 			match(T__9);
-			setState(296);
+			setState(336);
 			wallet();
 			}
 		}
@@ -2243,14 +2496,12 @@ public class IntentDSLParser extends Parser {
 		public TerminalNode LBRACK(int i) {
 			return getToken(IntentDSLParser.LBRACK, i);
 		}
-		public List<TerminalNode> KEY() { return getTokens(IntentDSLParser.KEY); }
-		public TerminalNode KEY(int i) {
-			return getToken(IntentDSLParser.KEY, i);
-		}
+		public TerminalNode DEC_INT() { return getToken(IntentDSLParser.DEC_INT, 0); }
 		public List<TerminalNode> RBRACK() { return getTokens(IntentDSLParser.RBRACK); }
 		public TerminalNode RBRACK(int i) {
 			return getToken(IntentDSLParser.RBRACK, i);
 		}
+		public TerminalNode KEY() { return getToken(IntentDSLParser.KEY, 0); }
 		public WalletContext wallet() {
 			return getRuleContext(WalletContext.class,0);
 		}
@@ -2278,37 +2529,37 @@ public class IntentDSLParser extends Parser {
 
 	public final SellNFTStatementContext sellNFTStatement() throws RecognitionException {
 		SellNFTStatementContext _localctx = new SellNFTStatementContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_sellNFTStatement);
+		enterRule(_localctx, 66, RULE_sellNFTStatement);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(298);
-			match(T__33);
-			setState(299);
+			setState(338);
+			match(T__26);
+			setState(339);
 			match(LBRACK);
-			setState(300);
-			match(KEY);
-			setState(301);
+			setState(340);
+			match(DEC_INT);
+			setState(341);
 			match(RBRACK);
-			setState(302);
-			match(T__34);
-			setState(303);
+			setState(342);
+			match(T__24);
+			setState(343);
 			match(LBRACK);
-			setState(304);
+			setState(344);
 			match(KEY);
-			setState(305);
+			setState(345);
 			match(RBRACK);
-			setState(306);
+			setState(346);
 			match(T__9);
-			setState(307);
+			setState(347);
 			wallet();
-			setState(309);
+			setState(349);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__23) {
+			if (_la==T__28) {
 				{
-				setState(308);
+				setState(348);
 				sellNFTStartegy();
 				}
 			}
@@ -2355,29 +2606,29 @@ public class IntentDSLParser extends Parser {
 
 	public final SellNFTStartegyContext sellNFTStartegy() throws RecognitionException {
 		SellNFTStartegyContext _localctx = new SellNFTStartegyContext(_ctx, getState());
-		enterRule(_localctx, 62, RULE_sellNFTStartegy);
+		enterRule(_localctx, 68, RULE_sellNFTStartegy);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(311);
-			match(T__23);
-			setState(315);
+			setState(351);
+			match(T__28);
+			setState(355);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__35 || _la==T__36) {
+			while (_la==T__38 || _la==T__39) {
 				{
 				{
-				setState(312);
+				setState(352);
 				sellNFTStrategyQualifiers();
 				}
 				}
-				setState(317);
+				setState(357);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(318);
-			match(T__24);
+			setState(358);
+			match(T__29);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2414,14 +2665,14 @@ public class IntentDSLParser extends Parser {
 
 	public final SellNFTStrategyQualifiersContext sellNFTStrategyQualifiers() throws RecognitionException {
 		SellNFTStrategyQualifiersContext _localctx = new SellNFTStrategyQualifiersContext(_ctx, getState());
-		enterRule(_localctx, 64, RULE_sellNFTStrategyQualifiers);
+		enterRule(_localctx, 70, RULE_sellNFTStrategyQualifiers);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(320);
+			setState(360);
 			_la = _input.LA(1);
-			if ( !(_la==T__35 || _la==T__36) ) {
+			if ( !(_la==T__38 || _la==T__39) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -2469,13 +2720,13 @@ public class IntentDSLParser extends Parser {
 
 	public final WalletBalanceContext walletBalance() throws RecognitionException {
 		WalletBalanceContext _localctx = new WalletBalanceContext(_ctx, getState());
-		enterRule(_localctx, 66, RULE_walletBalance);
+		enterRule(_localctx, 72, RULE_walletBalance);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(322);
+			setState(362);
 			match(BALANCE);
-			setState(323);
+			setState(363);
 			wallet();
 			}
 		}
@@ -2520,17 +2771,17 @@ public class IntentDSLParser extends Parser {
 
 	public final AssetPriceContext assetPrice() throws RecognitionException {
 		AssetPriceContext _localctx = new AssetPriceContext(_ctx, getState());
-		enterRule(_localctx, 68, RULE_assetPrice);
+		enterRule(_localctx, 74, RULE_assetPrice);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(325);
+			setState(365);
 			match(PRICE);
-			setState(326);
+			setState(366);
 			asset();
-			setState(327);
+			setState(367);
 			match(T__14);
-			setState(328);
+			setState(368);
 			platform();
 			}
 		}
@@ -2574,13 +2825,13 @@ public class IntentDSLParser extends Parser {
 
 	public final AmountContext amount() throws RecognitionException {
 		AmountContext _localctx = new AmountContext(_ctx, getState());
-		enterRule(_localctx, 70, RULE_amount);
+		enterRule(_localctx, 76, RULE_amount);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(330);
+			setState(370);
 			binaryExpression();
-			setState(331);
+			setState(371);
 			asset();
 			}
 		}
@@ -2630,14 +2881,14 @@ public class IntentDSLParser extends Parser {
 
 	public final AssetContext asset() throws RecognitionException {
 		AssetContext _localctx = new AssetContext(_ctx, getState());
-		enterRule(_localctx, 72, RULE_asset);
+		enterRule(_localctx, 78, RULE_asset);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(333);
+			setState(373);
 			_la = _input.LA(1);
-			if ( !(((((_la - 61)) & ~0x3f) == 0 && ((1L << (_la - 61)) & 4095L) != 0)) ) {
+			if ( !(((((_la - 64)) & ~0x3f) == 0 && ((1L << (_la - 64)) & 4095L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -2645,59 +2896,6 @@ public class IntentDSLParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class PairContext extends ParserRuleContext {
-		public List<AssetContext> asset() {
-			return getRuleContexts(AssetContext.class);
-		}
-		public AssetContext asset(int i) {
-			return getRuleContext(AssetContext.class,i);
-		}
-		public TerminalNode LOGIC_AND() { return getToken(IntentDSLParser.LOGIC_AND, 0); }
-		public PairContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_pair; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).enterPair(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof IntentDSLListener ) ((IntentDSLListener)listener).exitPair(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof IntentDSLVisitor ) return ((IntentDSLVisitor<? extends T>)visitor).visitPair(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final PairContext pair() throws RecognitionException {
-		PairContext _localctx = new PairContext(_ctx, getState());
-		enterRule(_localctx, 74, RULE_pair);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(335);
-			asset();
-			setState(336);
-			match(LOGIC_AND);
-			setState(337);
-			asset();
 			}
 		}
 		catch (RecognitionException re) {
@@ -2738,17 +2936,17 @@ public class IntentDSLParser extends Parser {
 
 	public final WalletContext wallet() throws RecognitionException {
 		WalletContext _localctx = new WalletContext(_ctx, getState());
-		enterRule(_localctx, 76, RULE_wallet);
+		enterRule(_localctx, 80, RULE_wallet);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(339);
+			setState(375);
 			match(WALLET);
-			setState(340);
+			setState(376);
 			match(LBRACK);
-			setState(341);
+			setState(377);
 			match(KEY);
-			setState(342);
+			setState(378);
 			match(RBRACK);
 			}
 		}
@@ -2795,14 +2993,14 @@ public class IntentDSLParser extends Parser {
 
 	public final PlatformContext platform() throws RecognitionException {
 		PlatformContext _localctx = new PlatformContext(_ctx, getState());
-		enterRule(_localctx, 78, RULE_platform);
+		enterRule(_localctx, 82, RULE_platform);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(344);
+			setState(380);
 			_la = _input.LA(1);
-			if ( !(((((_la - 73)) & ~0x3f) == 0 && ((1L << (_la - 73)) & 511L) != 0)) ) {
+			if ( !(((((_la - 76)) & ~0x3f) == 0 && ((1L << (_la - 76)) & 511L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -2824,7 +3022,7 @@ public class IntentDSLParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\\\u015b\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001_\u017f\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -2835,202 +3033,223 @@ public class IntentDSLParser extends Parser {
 		"\u0002\u0019\u0007\u0019\u0002\u001a\u0007\u001a\u0002\u001b\u0007\u001b"+
 		"\u0002\u001c\u0007\u001c\u0002\u001d\u0007\u001d\u0002\u001e\u0007\u001e"+
 		"\u0002\u001f\u0007\u001f\u0002 \u0007 \u0002!\u0007!\u0002\"\u0007\"\u0002"+
-		"#\u0007#\u0002$\u0007$\u0002%\u0007%\u0002&\u0007&\u0002\'\u0007\'\u0001"+
-		"\u0000\u0004\u0000R\b\u0000\u000b\u0000\f\u0000S\u0001\u0001\u0001\u0001"+
-		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0003\u0002`\b\u0002\u0001\u0003\u0001\u0003"+
-		"\u0001\u0003\u0005\u0003e\b\u0003\n\u0003\f\u0003h\t\u0003\u0001\u0004"+
-		"\u0001\u0004\u0003\u0004l\b\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
-		"\u0003\u0004q\b\u0004\u0005\u0004s\b\u0004\n\u0004\f\u0004v\t\u0004\u0001"+
-		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0003"+
-		"\u0006\u0084\b\u0006\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0005"+
-		"\u0007\u008a\b\u0007\n\u0007\f\u0007\u008d\t\u0007\u0001\b\u0001\b\u0001"+
-		"\b\u0001\b\u0005\b\u0093\b\b\n\b\f\b\u0096\t\b\u0001\t\u0005\t\u0099\b"+
-		"\t\n\t\f\t\u009c\t\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0001\n\u0003"+
-		"\n\u00a4\b\n\u0001\n\u0001\n\u0003\n\u00a8\b\n\u0001\u000b\u0001\u000b"+
-		"\u0001\f\u0001\f\u0001\r\u0001\r\u0001\u000e\u0001\u000e\u0001\u000f\u0001"+
-		"\u000f\u0001\u0010\u0001\u0010\u0001\u0011\u0001\u0011\u0001\u0011\u0001"+
-		"\u0011\u0003\u0011\u00ba\b\u0011\u0001\u0011\u0001\u0011\u0001\u0011\u0003"+
-		"\u0011\u00bf\b\u0011\u0001\u0011\u0001\u0011\u0001\u0012\u0001\u0012\u0001"+
-		"\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001"+
-		"\u0012\u0001\u0012\u0003\u0012\u00cd\b\u0012\u0001\u0013\u0001\u0013\u0001"+
-		"\u0013\u0001\u0013\u0001\u0013\u0001\u0014\u0001\u0014\u0001\u0014\u0001"+
-		"\u0014\u0001\u0014\u0001\u0014\u0001\u0014\u0001\u0015\u0001\u0015\u0001"+
-		"\u0015\u0001\u0015\u0001\u0015\u0001\u0015\u0001\u0015\u0001\u0016\u0001"+
-		"\u0016\u0001\u0016\u0001\u0016\u0001\u0016\u0001\u0016\u0001\u0016\u0001"+
-		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
-		"\u0017\u0001\u0017\u0001\u0017\u0001\u0018\u0001\u0018\u0001\u0018\u0001"+
-		"\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001"+
-		"\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001"+
-		"\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001"+
-		"\u0019\u0003\u0019\u0108\b\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001"+
-		"\u001a\u0001\u001a\u0001\u001a\u0001\u001a\u0001\u001a\u0003\u001a\u0112"+
-		"\b\u001a\u0001\u001b\u0001\u001b\u0005\u001b\u0116\b\u001b\n\u001b\f\u001b"+
-		"\u0119\t\u001b\u0001\u001b\u0001\u001b\u0001\u001c\u0001\u001c\u0001\u001d"+
-		"\u0001\u001d\u0005\u001d\u0121\b\u001d\n\u001d\f\u001d\u0124\t\u001d\u0001"+
-		"\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001e\u0001"+
-		"\u001e\u0001\u001e\u0001\u001e\u0001\u001e\u0001\u001e\u0001\u001e\u0001"+
-		"\u001e\u0001\u001e\u0001\u001e\u0001\u001e\u0003\u001e\u0136\b\u001e\u0001"+
-		"\u001f\u0001\u001f\u0005\u001f\u013a\b\u001f\n\u001f\f\u001f\u013d\t\u001f"+
-		"\u0001\u001f\u0001\u001f\u0001 \u0001 \u0001!\u0001!\u0001!\u0001\"\u0001"+
-		"\"\u0001\"\u0001\"\u0001\"\u0001#\u0001#\u0001#\u0001$\u0001$\u0001%\u0001"+
-		"%\u0001%\u0001%\u0001&\u0001&\u0001&\u0001&\u0001&\u0001\'\u0001\'\u0001"+
-		"\'\u0000\u0000(\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014"+
-		"\u0016\u0018\u001a\u001c\u001e \"$&(*,.02468:<>@BDFHJLN\u0000\n\u0001"+
-		"\u0000*+\u0001\u0000-2\u0001\u000057\u0001\u000034\u0002\u0000,,34\u0001"+
-		"\u0000RS\u0001\u0000\u001a\u001f\u0001\u0000$%\u0001\u0000=H\u0001\u0000"+
-		"IQ\u0154\u0000Q\u0001\u0000\u0000\u0000\u0002U\u0001\u0000\u0000\u0000"+
-		"\u0004_\u0001\u0000\u0000\u0000\u0006a\u0001\u0000\u0000\u0000\bk\u0001"+
-		"\u0000\u0000\u0000\nw\u0001\u0000\u0000\u0000\f\u0083\u0001\u0000\u0000"+
-		"\u0000\u000e\u0085\u0001\u0000\u0000\u0000\u0010\u008e\u0001\u0000\u0000"+
-		"\u0000\u0012\u009a\u0001\u0000\u0000\u0000\u0014\u00a7\u0001\u0000\u0000"+
-		"\u0000\u0016\u00a9\u0001\u0000\u0000\u0000\u0018\u00ab\u0001\u0000\u0000"+
-		"\u0000\u001a\u00ad\u0001\u0000\u0000\u0000\u001c\u00af\u0001\u0000\u0000"+
-		"\u0000\u001e\u00b1\u0001\u0000\u0000\u0000 \u00b3\u0001\u0000\u0000\u0000"+
-		"\"\u00b9\u0001\u0000\u0000\u0000$\u00cc\u0001\u0000\u0000\u0000&\u00ce"+
-		"\u0001\u0000\u0000\u0000(\u00d3\u0001\u0000\u0000\u0000*\u00da\u0001\u0000"+
-		"\u0000\u0000,\u00e1\u0001\u0000\u0000\u0000.\u00e8\u0001\u0000\u0000\u0000"+
-		"0\u00f1\u0001\u0000\u0000\u00002\u00fa\u0001\u0000\u0000\u00004\u010c"+
-		"\u0001\u0000\u0000\u00006\u0113\u0001\u0000\u0000\u00008\u011c\u0001\u0000"+
-		"\u0000\u0000:\u011e\u0001\u0000\u0000\u0000<\u012a\u0001\u0000\u0000\u0000"+
-		">\u0137\u0001\u0000\u0000\u0000@\u0140\u0001\u0000\u0000\u0000B\u0142"+
-		"\u0001\u0000\u0000\u0000D\u0145\u0001\u0000\u0000\u0000F\u014a\u0001\u0000"+
-		"\u0000\u0000H\u014d\u0001\u0000\u0000\u0000J\u014f\u0001\u0000\u0000\u0000"+
-		"L\u0153\u0001\u0000\u0000\u0000N\u0158\u0001\u0000\u0000\u0000PR\u0003"+
-		"\"\u0011\u0000QP\u0001\u0000\u0000\u0000RS\u0001\u0000\u0000\u0000SQ\u0001"+
-		"\u0000\u0000\u0000ST\u0001\u0000\u0000\u0000T\u0001\u0001\u0000\u0000"+
-		"\u0000UV\u0003\u0006\u0003\u0000V\u0003\u0001\u0000\u0000\u0000WX\u0005"+
-		"\u0001\u0000\u0000X`\u0005V\u0000\u0000YZ\u0005\u0002\u0000\u0000Z`\u0005"+
-		"V\u0000\u0000[\\\u0005\u0003\u0000\u0000\\]\u0005V\u0000\u0000]^\u0005"+
-		"\u0004\u0000\u0000^`\u0005V\u0000\u0000_W\u0001\u0000\u0000\u0000_Y\u0001"+
-		"\u0000\u0000\u0000_[\u0001\u0000\u0000\u0000`\u0005\u0001\u0000\u0000"+
-		"\u0000af\u0003\b\u0004\u0000bc\u0005+\u0000\u0000ce\u0003\b\u0004\u0000"+
-		"db\u0001\u0000\u0000\u0000eh\u0001\u0000\u0000\u0000fd\u0001\u0000\u0000"+
-		"\u0000fg\u0001\u0000\u0000\u0000g\u0007\u0001\u0000\u0000\u0000hf\u0001"+
-		"\u0000\u0000\u0000il\u0003\n\u0005\u0000jl\u0003\u0004\u0002\u0000ki\u0001"+
-		"\u0000\u0000\u0000kj\u0001\u0000\u0000\u0000lt\u0001\u0000\u0000\u0000"+
-		"mp\u0005*\u0000\u0000nq\u0003\n\u0005\u0000oq\u0003\u0004\u0002\u0000"+
-		"pn\u0001\u0000\u0000\u0000po\u0001\u0000\u0000\u0000qs\u0001\u0000\u0000"+
-		"\u0000rm\u0001\u0000\u0000\u0000sv\u0001\u0000\u0000\u0000tr\u0001\u0000"+
-		"\u0000\u0000tu\u0001\u0000\u0000\u0000u\t\u0001\u0000\u0000\u0000vt\u0001"+
-		"\u0000\u0000\u0000wx\u0003\f\u0006\u0000xy\u0003\u0018\f\u0000yz\u0003"+
-		"\f\u0006\u0000z\u000b\u0001\u0000\u0000\u0000{\u0084\u0003B!\u0000|\u0084"+
-		"\u0003D\"\u0000}~\u0003 \u0010\u0000~\u007f\u0003H$\u0000\u007f\u0084"+
-		"\u0001\u0000\u0000\u0000\u0080\u0084\u0003 \u0010\u0000\u0081\u0084\u0005"+
-		":\u0000\u0000\u0082\u0084\u0005;\u0000\u0000\u0083{\u0001\u0000\u0000"+
-		"\u0000\u0083|\u0001\u0000\u0000\u0000\u0083}\u0001\u0000\u0000\u0000\u0083"+
-		"\u0080\u0001\u0000\u0000\u0000\u0083\u0081\u0001\u0000\u0000\u0000\u0083"+
-		"\u0082\u0001\u0000\u0000\u0000\u0084\r\u0001\u0000\u0000\u0000\u0085\u008b"+
-		"\u0003\u0010\b\u0000\u0086\u0087\u0003\u001a\r\u0000\u0087\u0088\u0003"+
-		"\u0010\b\u0000\u0088\u008a\u0001\u0000\u0000\u0000\u0089\u0086\u0001\u0000"+
-		"\u0000\u0000\u008a\u008d\u0001\u0000\u0000\u0000\u008b\u0089\u0001\u0000"+
-		"\u0000\u0000\u008b\u008c\u0001\u0000\u0000\u0000\u008c\u000f\u0001\u0000"+
-		"\u0000\u0000\u008d\u008b\u0001\u0000\u0000\u0000\u008e\u0094\u0003\u0012"+
-		"\t\u0000\u008f\u0090\u0003\u001c\u000e\u0000\u0090\u0091\u0003\u0012\t"+
-		"\u0000\u0091\u0093\u0001\u0000\u0000\u0000\u0092\u008f\u0001\u0000\u0000"+
-		"\u0000\u0093\u0096\u0001\u0000\u0000\u0000\u0094\u0092\u0001\u0000\u0000"+
-		"\u0000\u0094\u0095\u0001\u0000\u0000\u0000\u0095\u0011\u0001\u0000\u0000"+
-		"\u0000\u0096\u0094\u0001\u0000\u0000\u0000\u0097\u0099\u0003\u001e\u000f"+
-		"\u0000\u0098\u0097\u0001\u0000\u0000\u0000\u0099\u009c\u0001\u0000\u0000"+
-		"\u0000\u009a\u0098\u0001\u0000\u0000\u0000\u009a\u009b\u0001\u0000\u0000"+
-		"\u0000\u009b\u009d\u0001\u0000\u0000\u0000\u009c\u009a\u0001\u0000\u0000"+
-		"\u0000\u009d\u009e\u0003\u0014\n\u0000\u009e\u0013\u0001\u0000\u0000\u0000"+
-		"\u009f\u00a8\u0003 \u0010\u0000\u00a0\u00a3\u0005&\u0000\u0000\u00a1\u00a4"+
-		"\u0003\u000e\u0007\u0000\u00a2\u00a4\u0003\u0012\t\u0000\u00a3\u00a1\u0001"+
-		"\u0000\u0000\u0000\u00a3\u00a2\u0001\u0000\u0000\u0000\u00a4\u00a5\u0001"+
-		"\u0000\u0000\u0000\u00a5\u00a6\u0005\'\u0000\u0000\u00a6\u00a8\u0001\u0000"+
-		"\u0000\u0000\u00a7\u009f\u0001\u0000\u0000\u0000\u00a7\u00a0\u0001\u0000"+
-		"\u0000\u0000\u00a8\u0015\u0001\u0000\u0000\u0000\u00a9\u00aa\u0007\u0000"+
-		"\u0000\u0000\u00aa\u0017\u0001\u0000\u0000\u0000\u00ab\u00ac\u0007\u0001"+
-		"\u0000\u0000\u00ac\u0019\u0001\u0000\u0000\u0000\u00ad\u00ae\u0007\u0002"+
-		"\u0000\u0000\u00ae\u001b\u0001\u0000\u0000\u0000\u00af\u00b0\u0007\u0003"+
-		"\u0000\u0000\u00b0\u001d\u0001\u0000\u0000\u0000\u00b1\u00b2\u0007\u0004"+
-		"\u0000\u0000\u00b2\u001f\u0001\u0000\u0000\u0000\u00b3\u00b4\u0007\u0005"+
-		"\u0000\u0000\u00b4!\u0001\u0000\u0000\u0000\u00b5\u00b6\u0005\u0005\u0000"+
-		"\u0000\u00b6\u00b7\u0003\u0002\u0001\u0000\u00b7\u00b8\u0005\u0006\u0000"+
-		"\u0000\u00b8\u00ba\u0001\u0000\u0000\u0000\u00b9\u00b5\u0001\u0000\u0000"+
-		"\u0000\u00b9\u00ba\u0001\u0000\u0000\u0000\u00ba\u00bb\u0001\u0000\u0000"+
-		"\u0000\u00bb\u00be\u0003$\u0012\u0000\u00bc\u00bd\u0005\u0007\u0000\u0000"+
-		"\u00bd\u00bf\u0003\u0002\u0001\u0000\u00be\u00bc\u0001\u0000\u0000\u0000"+
-		"\u00be\u00bf\u0001\u0000\u0000\u0000\u00bf\u00c0\u0001\u0000\u0000\u0000"+
-		"\u00c0\u00c1\u0005W\u0000\u0000\u00c1#\u0001\u0000\u0000\u0000\u00c2\u00cd"+
-		"\u0003&\u0013\u0000\u00c3\u00cd\u0003(\u0014\u0000\u00c4\u00cd\u0003*"+
-		"\u0015\u0000\u00c5\u00cd\u0003,\u0016\u0000\u00c6\u00cd\u0003.\u0017\u0000"+
-		"\u00c7\u00cd\u00030\u0018\u0000\u00c8\u00cd\u00032\u0019\u0000\u00c9\u00cd"+
-		"\u00034\u001a\u0000\u00ca\u00cd\u0003:\u001d\u0000\u00cb\u00cd\u0003<"+
-		"\u001e\u0000\u00cc\u00c2\u0001\u0000\u0000\u0000\u00cc\u00c3\u0001\u0000"+
-		"\u0000\u0000\u00cc\u00c4\u0001\u0000\u0000\u0000\u00cc\u00c5\u0001\u0000"+
-		"\u0000\u0000\u00cc\u00c6\u0001\u0000\u0000\u0000\u00cc\u00c7\u0001\u0000"+
-		"\u0000\u0000\u00cc\u00c8\u0001\u0000\u0000\u0000\u00cc\u00c9\u0001\u0000"+
-		"\u0000\u0000\u00cc\u00ca\u0001\u0000\u0000\u0000\u00cc\u00cb\u0001\u0000"+
-		"\u0000\u0000\u00cd%\u0001\u0000\u0000\u0000\u00ce\u00cf\u0005\b\u0000"+
-		"\u0000\u00cf\u00d0\u0005(\u0000\u0000\u00d0\u00d1\u0005T\u0000\u0000\u00d1"+
-		"\u00d2\u0005)\u0000\u0000\u00d2\'\u0001\u0000\u0000\u0000\u00d3\u00d4"+
-		"\u0005\t\u0000\u0000\u00d4\u00d5\u0003F#\u0000\u00d5\u00d6\u0005\n\u0000"+
-		"\u0000\u00d6\u00d7\u0003L&\u0000\u00d7\u00d8\u0005\u0004\u0000\u0000\u00d8"+
-		"\u00d9\u0003L&\u0000\u00d9)\u0001\u0000\u0000\u0000\u00da\u00db\u0005"+
-		"\u000b\u0000\u0000\u00db\u00dc\u0003F#\u0000\u00dc\u00dd\u0005\f\u0000"+
-		"\u0000\u00dd\u00de\u0003L&\u0000\u00de\u00df\u0005\n\u0000\u0000\u00df"+
-		"\u00e0\u0003N\'\u0000\u00e0+\u0001\u0000\u0000\u0000\u00e1\u00e2\u0005"+
-		"\r\u0000\u0000\u00e2\u00e3\u0003F#\u0000\u00e3\u00e4\u0005\n\u0000\u0000"+
-		"\u00e4\u00e5\u0003L&\u0000\u00e5\u00e6\u0005\u0004\u0000\u0000\u00e6\u00e7"+
-		"\u0003N\'\u0000\u00e7-\u0001\u0000\u0000\u0000\u00e8\u00e9\u0005\u000e"+
-		"\u0000\u0000\u00e9\u00ea\u0003F#\u0000\u00ea\u00eb\u0005\n\u0000\u0000"+
-		"\u00eb\u00ec\u0003L&\u0000\u00ec\u00ed\u0005\f\u0000\u0000\u00ed\u00ee"+
-		"\u0003H$\u0000\u00ee\u00ef\u0005\u000f\u0000\u0000\u00ef\u00f0\u0003N"+
-		"\'\u0000\u00f0/\u0001\u0000\u0000\u0000\u00f1\u00f2\u0005\u0010\u0000"+
-		"\u0000\u00f2\u00f3\u0003F#\u0000\u00f3\u00f4\u0005\u0011\u0000\u0000\u00f4"+
-		"\u00f5\u0003F#\u0000\u00f5\u00f6\u0005\u0004\u0000\u0000\u00f6\u00f7\u0003"+
-		"N\'\u0000\u00f7\u00f8\u0005\u0012\u0000\u0000\u00f8\u00f9\u0003L&\u0000"+
-		"\u00f91\u0001\u0000\u0000\u0000\u00fa\u00fb\u0005\u0013\u0000\u0000\u00fb"+
-		"\u00fc\u0003F#\u0000\u00fc\u00fd\u0005\u0011\u0000\u0000\u00fd\u00fe\u0003"+
-		"F#\u0000\u00fe\u00ff\u0005\n\u0000\u0000\u00ff\u0100\u0003N\'\u0000\u0100"+
-		"\u0101\u0005\u0014\u0000\u0000\u0101\u0102\u0005R\u0000\u0000\u0102\u0107"+
-		"\u0005\u0015\u0000\u0000\u0103\u0104\u0005\u0016\u0000\u0000\u0104\u0105"+
-		"\u0005(\u0000\u0000\u0105\u0106\u0005U\u0000\u0000\u0106\u0108\u0005)"+
-		"\u0000\u0000\u0107\u0103\u0001\u0000\u0000\u0000\u0107\u0108\u0001\u0000"+
-		"\u0000\u0000\u0108\u0109\u0001\u0000\u0000\u0000\u0109\u010a\u0005\n\u0000"+
-		"\u0000\u010a\u010b\u0003L&\u0000\u010b3\u0001\u0000\u0000\u0000\u010c"+
-		"\u010d\u0005\u0017\u0000\u0000\u010d\u010e\u0003F#\u0000\u010e\u010f\u0005"+
-		"\n\u0000\u0000\u010f\u0111\u0003L&\u0000\u0110\u0112\u00036\u001b\u0000"+
-		"\u0111\u0110\u0001\u0000\u0000\u0000\u0111\u0112\u0001\u0000\u0000\u0000"+
-		"\u01125\u0001\u0000\u0000\u0000\u0113\u0117\u0005\u0018\u0000\u0000\u0114"+
-		"\u0116\u00038\u001c\u0000\u0115\u0114\u0001\u0000\u0000\u0000\u0116\u0119"+
-		"\u0001\u0000\u0000\u0000\u0117\u0115\u0001\u0000\u0000\u0000\u0117\u0118"+
-		"\u0001\u0000\u0000\u0000\u0118\u011a\u0001\u0000\u0000\u0000\u0119\u0117"+
-		"\u0001\u0000\u0000\u0000\u011a\u011b\u0005\u0019\u0000\u0000\u011b7\u0001"+
-		"\u0000\u0000\u0000\u011c\u011d\u0007\u0006\u0000\u0000\u011d9\u0001\u0000"+
-		"\u0000\u0000\u011e\u0122\u0005 \u0000\u0000\u011f\u0121\u0005[\u0000\u0000"+
-		"\u0120\u011f\u0001\u0000\u0000\u0000\u0121\u0124\u0001\u0000\u0000\u0000"+
-		"\u0122\u0120\u0001\u0000\u0000\u0000\u0122\u0123\u0001\u0000\u0000\u0000"+
-		"\u0123\u0125\u0001\u0000\u0000\u0000\u0124\u0122\u0001\u0000\u0000\u0000"+
-		"\u0125\u0126\u0005!\u0000\u0000\u0126\u0127\u0003F#\u0000\u0127\u0128"+
-		"\u0005\n\u0000\u0000\u0128\u0129\u0003L&\u0000\u0129;\u0001\u0000\u0000"+
-		"\u0000\u012a\u012b\u0005\"\u0000\u0000\u012b\u012c\u0005(\u0000\u0000"+
-		"\u012c\u012d\u0005U\u0000\u0000\u012d\u012e\u0005)\u0000\u0000\u012e\u012f"+
-		"\u0005#\u0000\u0000\u012f\u0130\u0005(\u0000\u0000\u0130\u0131\u0005U"+
-		"\u0000\u0000\u0131\u0132\u0005)\u0000\u0000\u0132\u0133\u0005\n\u0000"+
-		"\u0000\u0133\u0135\u0003L&\u0000\u0134\u0136\u0003>\u001f\u0000\u0135"+
-		"\u0134\u0001\u0000\u0000\u0000\u0135\u0136\u0001\u0000\u0000\u0000\u0136"+
-		"=\u0001\u0000\u0000\u0000\u0137\u013b\u0005\u0018\u0000\u0000\u0138\u013a"+
-		"\u0003@ \u0000\u0139\u0138\u0001\u0000\u0000\u0000\u013a\u013d\u0001\u0000"+
-		"\u0000\u0000\u013b\u0139\u0001\u0000\u0000\u0000\u013b\u013c\u0001\u0000"+
-		"\u0000\u0000\u013c\u013e\u0001\u0000\u0000\u0000\u013d\u013b\u0001\u0000"+
-		"\u0000\u0000\u013e\u013f\u0005\u0019\u0000\u0000\u013f?\u0001\u0000\u0000"+
-		"\u0000\u0140\u0141\u0007\u0007\u0000\u0000\u0141A\u0001\u0000\u0000\u0000"+
-		"\u0142\u0143\u00058\u0000\u0000\u0143\u0144\u0003L&\u0000\u0144C\u0001"+
-		"\u0000\u0000\u0000\u0145\u0146\u00059\u0000\u0000\u0146\u0147\u0003H$"+
-		"\u0000\u0147\u0148\u0005\u000f\u0000\u0000\u0148\u0149\u0003N\'\u0000"+
-		"\u0149E\u0001\u0000\u0000\u0000\u014a\u014b\u0003\u000e\u0007\u0000\u014b"+
-		"\u014c\u0003H$\u0000\u014cG\u0001\u0000\u0000\u0000\u014d\u014e\u0007"+
-		"\b\u0000\u0000\u014eI\u0001\u0000\u0000\u0000\u014f\u0150\u0003H$\u0000"+
-		"\u0150\u0151\u0005*\u0000\u0000\u0151\u0152\u0003H$\u0000\u0152K\u0001"+
-		"\u0000\u0000\u0000\u0153\u0154\u0005<\u0000\u0000\u0154\u0155\u0005(\u0000"+
-		"\u0000\u0155\u0156\u0005U\u0000\u0000\u0156\u0157\u0005)\u0000\u0000\u0157"+
-		"M\u0001\u0000\u0000\u0000\u0158\u0159\u0007\t\u0000\u0000\u0159O\u0001"+
-		"\u0000\u0000\u0000\u0015S_fkpt\u0083\u008b\u0094\u009a\u00a3\u00a7\u00b9"+
-		"\u00be\u00cc\u0107\u0111\u0117\u0122\u0135\u013b";
+		"#\u0007#\u0002$\u0007$\u0002%\u0007%\u0002&\u0007&\u0002\'\u0007\'\u0002"+
+		"(\u0007(\u0002)\u0007)\u0001\u0000\u0004\u0000V\b\u0000\u000b\u0000\f"+
+		"\u0000W\u0001\u0001\u0001\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0001"+
+		"\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002d\b"+
+		"\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0005\u0003i\b\u0003\n\u0003"+
+		"\f\u0003l\t\u0003\u0001\u0004\u0001\u0004\u0003\u0004p\b\u0004\u0001\u0004"+
+		"\u0001\u0004\u0001\u0004\u0003\u0004u\b\u0004\u0005\u0004w\b\u0004\n\u0004"+
+		"\f\u0004z\t\u0004\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001"+
+		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
+		"\u0006\u0001\u0006\u0003\u0006\u0088\b\u0006\u0001\u0007\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0005\u0007\u008e\b\u0007\n\u0007\f\u0007\u0091\t\u0007"+
+		"\u0001\b\u0001\b\u0001\b\u0001\b\u0005\b\u0097\b\b\n\b\f\b\u009a\t\b\u0001"+
+		"\t\u0005\t\u009d\b\t\n\t\f\t\u00a0\t\t\u0001\t\u0001\t\u0001\n\u0001\n"+
+		"\u0001\n\u0001\n\u0003\n\u00a8\b\n\u0001\n\u0001\n\u0003\n\u00ac\b\n\u0001"+
+		"\u000b\u0001\u000b\u0001\f\u0001\f\u0001\r\u0001\r\u0001\u000e\u0001\u000e"+
+		"\u0001\u000f\u0001\u000f\u0001\u0010\u0001\u0010\u0001\u0011\u0001\u0011"+
+		"\u0001\u0011\u0001\u0011\u0003\u0011\u00be\b\u0011\u0001\u0011\u0001\u0011"+
+		"\u0001\u0011\u0003\u0011\u00c3\b\u0011\u0001\u0011\u0001\u0011\u0001\u0012"+
+		"\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012"+
+		"\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012\u0001\u0012"+
+		"\u0003\u0012\u00d4\b\u0012\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013"+
+		"\u0001\u0013\u0001\u0014\u0001\u0014\u0001\u0014\u0001\u0014\u0001\u0014"+
+		"\u0001\u0014\u0001\u0014\u0001\u0015\u0001\u0015\u0001\u0015\u0001\u0015"+
+		"\u0001\u0015\u0001\u0015\u0001\u0015\u0001\u0016\u0001\u0016\u0001\u0016"+
+		"\u0001\u0016\u0001\u0016\u0001\u0016\u0001\u0016\u0001\u0017\u0001\u0017"+
+		"\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017"+
+		"\u0001\u0017\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018"+
+		"\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0019\u0001\u0019"+
+		"\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019"+
+		"\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0003\u0019"+
+		"\u010f\b\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u001a\u0001\u001a"+
+		"\u0001\u001a\u0001\u001a\u0001\u001a\u0001\u001a\u0001\u001a\u0001\u001b"+
+		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
+		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
+		"\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c"+
+		"\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c"+
+		"\u0001\u001c\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d"+
+		"\u0003\u001d\u013a\b\u001d\u0001\u001e\u0001\u001e\u0005\u001e\u013e\b"+
+		"\u001e\n\u001e\f\u001e\u0141\t\u001e\u0001\u001e\u0001\u001e\u0001\u001f"+
+		"\u0001\u001f\u0001 \u0001 \u0005 \u0149\b \n \f \u014c\t \u0001 \u0001"+
+		" \u0001 \u0001 \u0001 \u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0001"+
+		"!\u0001!\u0001!\u0001!\u0001!\u0003!\u015e\b!\u0001\"\u0001\"\u0005\""+
+		"\u0162\b\"\n\"\f\"\u0165\t\"\u0001\"\u0001\"\u0001#\u0001#\u0001$\u0001"+
+		"$\u0001$\u0001%\u0001%\u0001%\u0001%\u0001%\u0001&\u0001&\u0001&\u0001"+
+		"\'\u0001\'\u0001(\u0001(\u0001(\u0001(\u0001(\u0001)\u0001)\u0001)\u0000"+
+		"\u0000*\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018"+
+		"\u001a\u001c\u001e \"$&(*,.02468:<>@BDFHJLNPR\u0000\n\u0001\u0000-.\u0001"+
+		"\u000005\u0001\u00008:\u0001\u000067\u0002\u0000//67\u0001\u0000UV\u0001"+
+		"\u0000\u001f$\u0001\u0000\'(\u0001\u0000@K\u0001\u0000LT\u0179\u0000U"+
+		"\u0001\u0000\u0000\u0000\u0002Y\u0001\u0000\u0000\u0000\u0004c\u0001\u0000"+
+		"\u0000\u0000\u0006e\u0001\u0000\u0000\u0000\bo\u0001\u0000\u0000\u0000"+
+		"\n{\u0001\u0000\u0000\u0000\f\u0087\u0001\u0000\u0000\u0000\u000e\u0089"+
+		"\u0001\u0000\u0000\u0000\u0010\u0092\u0001\u0000\u0000\u0000\u0012\u009e"+
+		"\u0001\u0000\u0000\u0000\u0014\u00ab\u0001\u0000\u0000\u0000\u0016\u00ad"+
+		"\u0001\u0000\u0000\u0000\u0018\u00af\u0001\u0000\u0000\u0000\u001a\u00b1"+
+		"\u0001\u0000\u0000\u0000\u001c\u00b3\u0001\u0000\u0000\u0000\u001e\u00b5"+
+		"\u0001\u0000\u0000\u0000 \u00b7\u0001\u0000\u0000\u0000\"\u00bd\u0001"+
+		"\u0000\u0000\u0000$\u00d3\u0001\u0000\u0000\u0000&\u00d5\u0001\u0000\u0000"+
+		"\u0000(\u00da\u0001\u0000\u0000\u0000*\u00e1\u0001\u0000\u0000\u0000,"+
+		"\u00e8\u0001\u0000\u0000\u0000.\u00ef\u0001\u0000\u0000\u00000\u00f8\u0001"+
+		"\u0000\u0000\u00002\u0101\u0001\u0000\u0000\u00004\u0113\u0001\u0000\u0000"+
+		"\u00006\u011a\u0001\u0000\u0000\u00008\u0127\u0001\u0000\u0000\u0000:"+
+		"\u0134\u0001\u0000\u0000\u0000<\u013b\u0001\u0000\u0000\u0000>\u0144\u0001"+
+		"\u0000\u0000\u0000@\u0146\u0001\u0000\u0000\u0000B\u0152\u0001\u0000\u0000"+
+		"\u0000D\u015f\u0001\u0000\u0000\u0000F\u0168\u0001\u0000\u0000\u0000H"+
+		"\u016a\u0001\u0000\u0000\u0000J\u016d\u0001\u0000\u0000\u0000L\u0172\u0001"+
+		"\u0000\u0000\u0000N\u0175\u0001\u0000\u0000\u0000P\u0177\u0001\u0000\u0000"+
+		"\u0000R\u017c\u0001\u0000\u0000\u0000TV\u0003\"\u0011\u0000UT\u0001\u0000"+
+		"\u0000\u0000VW\u0001\u0000\u0000\u0000WU\u0001\u0000\u0000\u0000WX\u0001"+
+		"\u0000\u0000\u0000X\u0001\u0001\u0000\u0000\u0000YZ\u0003\u0006\u0003"+
+		"\u0000Z\u0003\u0001\u0000\u0000\u0000[\\\u0005\u0001\u0000\u0000\\d\u0005"+
+		"Y\u0000\u0000]^\u0005\u0002\u0000\u0000^d\u0005Y\u0000\u0000_`\u0005\u0003"+
+		"\u0000\u0000`a\u0005Y\u0000\u0000ab\u0005\u0004\u0000\u0000bd\u0005Y\u0000"+
+		"\u0000c[\u0001\u0000\u0000\u0000c]\u0001\u0000\u0000\u0000c_\u0001\u0000"+
+		"\u0000\u0000d\u0005\u0001\u0000\u0000\u0000ej\u0003\b\u0004\u0000fg\u0005"+
+		".\u0000\u0000gi\u0003\b\u0004\u0000hf\u0001\u0000\u0000\u0000il\u0001"+
+		"\u0000\u0000\u0000jh\u0001\u0000\u0000\u0000jk\u0001\u0000\u0000\u0000"+
+		"k\u0007\u0001\u0000\u0000\u0000lj\u0001\u0000\u0000\u0000mp\u0003\n\u0005"+
+		"\u0000np\u0003\u0004\u0002\u0000om\u0001\u0000\u0000\u0000on\u0001\u0000"+
+		"\u0000\u0000px\u0001\u0000\u0000\u0000qt\u0005-\u0000\u0000ru\u0003\n"+
+		"\u0005\u0000su\u0003\u0004\u0002\u0000tr\u0001\u0000\u0000\u0000ts\u0001"+
+		"\u0000\u0000\u0000uw\u0001\u0000\u0000\u0000vq\u0001\u0000\u0000\u0000"+
+		"wz\u0001\u0000\u0000\u0000xv\u0001\u0000\u0000\u0000xy\u0001\u0000\u0000"+
+		"\u0000y\t\u0001\u0000\u0000\u0000zx\u0001\u0000\u0000\u0000{|\u0003\f"+
+		"\u0006\u0000|}\u0003\u0018\f\u0000}~\u0003\f\u0006\u0000~\u000b\u0001"+
+		"\u0000\u0000\u0000\u007f\u0088\u0003H$\u0000\u0080\u0088\u0003J%\u0000"+
+		"\u0081\u0082\u0003 \u0010\u0000\u0082\u0083\u0003N\'\u0000\u0083\u0088"+
+		"\u0001\u0000\u0000\u0000\u0084\u0088\u0003 \u0010\u0000\u0085\u0088\u0005"+
+		"=\u0000\u0000\u0086\u0088\u0005>\u0000\u0000\u0087\u007f\u0001\u0000\u0000"+
+		"\u0000\u0087\u0080\u0001\u0000\u0000\u0000\u0087\u0081\u0001\u0000\u0000"+
+		"\u0000\u0087\u0084\u0001\u0000\u0000\u0000\u0087\u0085\u0001\u0000\u0000"+
+		"\u0000\u0087\u0086\u0001\u0000\u0000\u0000\u0088\r\u0001\u0000\u0000\u0000"+
+		"\u0089\u008f\u0003\u0010\b\u0000\u008a\u008b\u0003\u001a\r\u0000\u008b"+
+		"\u008c\u0003\u0010\b\u0000\u008c\u008e\u0001\u0000\u0000\u0000\u008d\u008a"+
+		"\u0001\u0000\u0000\u0000\u008e\u0091\u0001\u0000\u0000\u0000\u008f\u008d"+
+		"\u0001\u0000\u0000\u0000\u008f\u0090\u0001\u0000\u0000\u0000\u0090\u000f"+
+		"\u0001\u0000\u0000\u0000\u0091\u008f\u0001\u0000\u0000\u0000\u0092\u0098"+
+		"\u0003\u0012\t\u0000\u0093\u0094\u0003\u001c\u000e\u0000\u0094\u0095\u0003"+
+		"\u0012\t\u0000\u0095\u0097\u0001\u0000\u0000\u0000\u0096\u0093\u0001\u0000"+
+		"\u0000\u0000\u0097\u009a\u0001\u0000\u0000\u0000\u0098\u0096\u0001\u0000"+
+		"\u0000\u0000\u0098\u0099\u0001\u0000\u0000\u0000\u0099\u0011\u0001\u0000"+
+		"\u0000\u0000\u009a\u0098\u0001\u0000\u0000\u0000\u009b\u009d\u0003\u001e"+
+		"\u000f\u0000\u009c\u009b\u0001\u0000\u0000\u0000\u009d\u00a0\u0001\u0000"+
+		"\u0000\u0000\u009e\u009c\u0001\u0000\u0000\u0000\u009e\u009f\u0001\u0000"+
+		"\u0000\u0000\u009f\u00a1\u0001\u0000\u0000\u0000\u00a0\u009e\u0001\u0000"+
+		"\u0000\u0000\u00a1\u00a2\u0003\u0014\n\u0000\u00a2\u0013\u0001\u0000\u0000"+
+		"\u0000\u00a3\u00ac\u0003 \u0010\u0000\u00a4\u00a7\u0005)\u0000\u0000\u00a5"+
+		"\u00a8\u0003\u000e\u0007\u0000\u00a6\u00a8\u0003\u0012\t\u0000\u00a7\u00a5"+
+		"\u0001\u0000\u0000\u0000\u00a7\u00a6\u0001\u0000\u0000\u0000\u00a8\u00a9"+
+		"\u0001\u0000\u0000\u0000\u00a9\u00aa\u0005*\u0000\u0000\u00aa\u00ac\u0001"+
+		"\u0000\u0000\u0000\u00ab\u00a3\u0001\u0000\u0000\u0000\u00ab\u00a4\u0001"+
+		"\u0000\u0000\u0000\u00ac\u0015\u0001\u0000\u0000\u0000\u00ad\u00ae\u0007"+
+		"\u0000\u0000\u0000\u00ae\u0017\u0001\u0000\u0000\u0000\u00af\u00b0\u0007"+
+		"\u0001\u0000\u0000\u00b0\u0019\u0001\u0000\u0000\u0000\u00b1\u00b2\u0007"+
+		"\u0002\u0000\u0000\u00b2\u001b\u0001\u0000\u0000\u0000\u00b3\u00b4\u0007"+
+		"\u0003\u0000\u0000\u00b4\u001d\u0001\u0000\u0000\u0000\u00b5\u00b6\u0007"+
+		"\u0004\u0000\u0000\u00b6\u001f\u0001\u0000\u0000\u0000\u00b7\u00b8\u0007"+
+		"\u0005\u0000\u0000\u00b8!\u0001\u0000\u0000\u0000\u00b9\u00ba\u0005\u0005"+
+		"\u0000\u0000\u00ba\u00bb\u0003\u0002\u0001\u0000\u00bb\u00bc\u0005\u0006"+
+		"\u0000\u0000\u00bc\u00be\u0001\u0000\u0000\u0000\u00bd\u00b9\u0001\u0000"+
+		"\u0000\u0000\u00bd\u00be\u0001\u0000\u0000\u0000\u00be\u00bf\u0001\u0000"+
+		"\u0000\u0000\u00bf\u00c2\u0003$\u0012\u0000\u00c0\u00c1\u0005\u0007\u0000"+
+		"\u0000\u00c1\u00c3\u0003\u0002\u0001\u0000\u00c2\u00c0\u0001\u0000\u0000"+
+		"\u0000\u00c2\u00c3\u0001\u0000\u0000\u0000\u00c3\u00c4\u0001\u0000\u0000"+
+		"\u0000\u00c4\u00c5\u0005Z\u0000\u0000\u00c5#\u0001\u0000\u0000\u0000\u00c6"+
+		"\u00d4\u0003&\u0013\u0000\u00c7\u00d4\u0003(\u0014\u0000\u00c8\u00d4\u0003"+
+		"*\u0015\u0000\u00c9\u00d4\u0003,\u0016\u0000\u00ca\u00d4\u0003.\u0017"+
+		"\u0000\u00cb\u00d4\u00030\u0018\u0000\u00cc\u00d4\u00032\u0019\u0000\u00cd"+
+		"\u00d4\u0003:\u001d\u0000\u00ce\u00d4\u0003@ \u0000\u00cf\u00d4\u0003"+
+		"B!\u0000\u00d0\u00d4\u00034\u001a\u0000\u00d1\u00d4\u00036\u001b\u0000"+
+		"\u00d2\u00d4\u00038\u001c\u0000\u00d3\u00c6\u0001\u0000\u0000\u0000\u00d3"+
+		"\u00c7\u0001\u0000\u0000\u0000\u00d3\u00c8\u0001\u0000\u0000\u0000\u00d3"+
+		"\u00c9\u0001\u0000\u0000\u0000\u00d3\u00ca\u0001\u0000\u0000\u0000\u00d3"+
+		"\u00cb\u0001\u0000\u0000\u0000\u00d3\u00cc\u0001\u0000\u0000\u0000\u00d3"+
+		"\u00cd\u0001\u0000\u0000\u0000\u00d3\u00ce\u0001\u0000\u0000\u0000\u00d3"+
+		"\u00cf\u0001\u0000\u0000\u0000\u00d3\u00d0\u0001\u0000\u0000\u0000\u00d3"+
+		"\u00d1\u0001\u0000\u0000\u0000\u00d3\u00d2\u0001\u0000\u0000\u0000\u00d4"+
+		"%\u0001\u0000\u0000\u0000\u00d5\u00d6\u0005\b\u0000\u0000\u00d6\u00d7"+
+		"\u0005+\u0000\u0000\u00d7\u00d8\u0005W\u0000\u0000\u00d8\u00d9\u0005,"+
+		"\u0000\u0000\u00d9\'\u0001\u0000\u0000\u0000\u00da\u00db\u0005\t\u0000"+
+		"\u0000\u00db\u00dc\u0003L&\u0000\u00dc\u00dd\u0005\n\u0000\u0000\u00dd"+
+		"\u00de\u0003P(\u0000\u00de\u00df\u0005\u0004\u0000\u0000\u00df\u00e0\u0003"+
+		"P(\u0000\u00e0)\u0001\u0000\u0000\u0000\u00e1\u00e2\u0005\u000b\u0000"+
+		"\u0000\u00e2\u00e3\u0003L&\u0000\u00e3\u00e4\u0005\f\u0000\u0000\u00e4"+
+		"\u00e5\u0003P(\u0000\u00e5\u00e6\u0005\n\u0000\u0000\u00e6\u00e7\u0003"+
+		"R)\u0000\u00e7+\u0001\u0000\u0000\u0000\u00e8\u00e9\u0005\r\u0000\u0000"+
+		"\u00e9\u00ea\u0003L&\u0000\u00ea\u00eb\u0005\n\u0000\u0000\u00eb\u00ec"+
+		"\u0003P(\u0000\u00ec\u00ed\u0005\u0004\u0000\u0000\u00ed\u00ee\u0003R"+
+		")\u0000\u00ee-\u0001\u0000\u0000\u0000\u00ef\u00f0\u0005\u000e\u0000\u0000"+
+		"\u00f0\u00f1\u0003L&\u0000\u00f1\u00f2\u0005\n\u0000\u0000\u00f2\u00f3"+
+		"\u0003P(\u0000\u00f3\u00f4\u0005\f\u0000\u0000\u00f4\u00f5\u0003N\'\u0000"+
+		"\u00f5\u00f6\u0005\u000f\u0000\u0000\u00f6\u00f7\u0003R)\u0000\u00f7/"+
+		"\u0001\u0000\u0000\u0000\u00f8\u00f9\u0005\u0010\u0000\u0000\u00f9\u00fa"+
+		"\u0003L&\u0000\u00fa\u00fb\u0005\u0011\u0000\u0000\u00fb\u00fc\u0003L"+
+		"&\u0000\u00fc\u00fd\u0005\u0004\u0000\u0000\u00fd\u00fe\u0003R)\u0000"+
+		"\u00fe\u00ff\u0005\u0012\u0000\u0000\u00ff\u0100\u0003P(\u0000\u01001"+
+		"\u0001\u0000\u0000\u0000\u0101\u0102\u0005\u0013\u0000\u0000\u0102\u0103"+
+		"\u0003L&\u0000\u0103\u0104\u0005\u0011\u0000\u0000\u0104\u0105\u0003L"+
+		"&\u0000\u0105\u0106\u0005\n\u0000\u0000\u0106\u0107\u0003R)\u0000\u0107"+
+		"\u0108\u0005\u0014\u0000\u0000\u0108\u0109\u0005U\u0000\u0000\u0109\u010e"+
+		"\u0005\u0015\u0000\u0000\u010a\u010b\u0005\u0016\u0000\u0000\u010b\u010c"+
+		"\u0005+\u0000\u0000\u010c\u010d\u0005X\u0000\u0000\u010d\u010f\u0005,"+
+		"\u0000\u0000\u010e\u010a\u0001\u0000\u0000\u0000\u010e\u010f\u0001\u0000"+
+		"\u0000\u0000\u010f\u0110\u0001\u0000\u0000\u0000\u0110\u0111\u0005\n\u0000"+
+		"\u0000\u0111\u0112\u0003P(\u0000\u01123\u0001\u0000\u0000\u0000\u0113"+
+		"\u0114\u0005\u0017\u0000\u0000\u0114\u0115\u0003L&\u0000\u0115\u0116\u0005"+
+		"\n\u0000\u0000\u0116\u0117\u0003P(\u0000\u0117\u0118\u0005\u000f\u0000"+
+		"\u0000\u0118\u0119\u0003R)\u0000\u01195\u0001\u0000\u0000\u0000\u011a"+
+		"\u011b\u0005\u0018\u0000\u0000\u011b\u011c\u0005+\u0000\u0000\u011c\u011d"+
+		"\u0005U\u0000\u0000\u011d\u011e\u0005,\u0000\u0000\u011e\u011f\u0005\u0019"+
+		"\u0000\u0000\u011f\u0120\u0005+\u0000\u0000\u0120\u0121\u0005X\u0000\u0000"+
+		"\u0121\u0122\u0005,\u0000\u0000\u0122\u0123\u0005\u001a\u0000\u0000\u0123"+
+		"\u0124\u0003L&\u0000\u0124\u0125\u0005\n\u0000\u0000\u0125\u0126\u0003"+
+		"P(\u0000\u01267\u0001\u0000\u0000\u0000\u0127\u0128\u0005\u001b\u0000"+
+		"\u0000\u0128\u0129\u0005+\u0000\u0000\u0129\u012a\u0005U\u0000\u0000\u012a"+
+		"\u012b\u0005,\u0000\u0000\u012b\u012c\u0005\u0019\u0000\u0000\u012c\u012d"+
+		"\u0005+\u0000\u0000\u012d\u012e\u0005X\u0000\u0000\u012e\u012f\u0005,"+
+		"\u0000\u0000\u012f\u0130\u0005\n\u0000\u0000\u0130\u0131\u0003P(\u0000"+
+		"\u0131\u0132\u0005\u001c\u0000\u0000\u0132\u0133\u0003L&\u0000\u01339"+
+		"\u0001\u0000\u0000\u0000\u0134\u0135\u0005\u0017\u0000\u0000\u0135\u0136"+
+		"\u0003L&\u0000\u0136\u0137\u0005\n\u0000\u0000\u0137\u0139\u0003P(\u0000"+
+		"\u0138\u013a\u0003<\u001e\u0000\u0139\u0138\u0001\u0000\u0000\u0000\u0139"+
+		"\u013a\u0001\u0000\u0000\u0000\u013a;\u0001\u0000\u0000\u0000\u013b\u013f"+
+		"\u0005\u001d\u0000\u0000\u013c\u013e\u0003>\u001f\u0000\u013d\u013c\u0001"+
+		"\u0000\u0000\u0000\u013e\u0141\u0001\u0000\u0000\u0000\u013f\u013d\u0001"+
+		"\u0000\u0000\u0000\u013f\u0140\u0001\u0000\u0000\u0000\u0140\u0142\u0001"+
+		"\u0000\u0000\u0000\u0141\u013f\u0001\u0000\u0000\u0000\u0142\u0143\u0005"+
+		"\u001e\u0000\u0000\u0143=\u0001\u0000\u0000\u0000\u0144\u0145\u0007\u0006"+
+		"\u0000\u0000\u0145?\u0001\u0000\u0000\u0000\u0146\u014a\u0005%\u0000\u0000"+
+		"\u0147\u0149\u0005^\u0000\u0000\u0148\u0147\u0001\u0000\u0000\u0000\u0149"+
+		"\u014c\u0001\u0000\u0000\u0000\u014a\u0148\u0001\u0000\u0000\u0000\u014a"+
+		"\u014b\u0001\u0000\u0000\u0000\u014b\u014d\u0001\u0000\u0000\u0000\u014c"+
+		"\u014a\u0001\u0000\u0000\u0000\u014d\u014e\u0005&\u0000\u0000\u014e\u014f"+
+		"\u0003L&\u0000\u014f\u0150\u0005\n\u0000\u0000\u0150\u0151\u0003P(\u0000"+
+		"\u0151A\u0001\u0000\u0000\u0000\u0152\u0153\u0005\u001b\u0000\u0000\u0153"+
+		"\u0154\u0005+\u0000\u0000\u0154\u0155\u0005U\u0000\u0000\u0155\u0156\u0005"+
+		",\u0000\u0000\u0156\u0157\u0005\u0019\u0000\u0000\u0157\u0158\u0005+\u0000"+
+		"\u0000\u0158\u0159\u0005X\u0000\u0000\u0159\u015a\u0005,\u0000\u0000\u015a"+
+		"\u015b\u0005\n\u0000\u0000\u015b\u015d\u0003P(\u0000\u015c\u015e\u0003"+
+		"D\"\u0000\u015d\u015c\u0001\u0000\u0000\u0000\u015d\u015e\u0001\u0000"+
+		"\u0000\u0000\u015eC\u0001\u0000\u0000\u0000\u015f\u0163\u0005\u001d\u0000"+
+		"\u0000\u0160\u0162\u0003F#\u0000\u0161\u0160\u0001\u0000\u0000\u0000\u0162"+
+		"\u0165\u0001\u0000\u0000\u0000\u0163\u0161\u0001\u0000\u0000\u0000\u0163"+
+		"\u0164\u0001\u0000\u0000\u0000\u0164\u0166\u0001\u0000\u0000\u0000\u0165"+
+		"\u0163\u0001\u0000\u0000\u0000\u0166\u0167\u0005\u001e\u0000\u0000\u0167"+
+		"E\u0001\u0000\u0000\u0000\u0168\u0169\u0007\u0007\u0000\u0000\u0169G\u0001"+
+		"\u0000\u0000\u0000\u016a\u016b\u0005;\u0000\u0000\u016b\u016c\u0003P("+
+		"\u0000\u016cI\u0001\u0000\u0000\u0000\u016d\u016e\u0005<\u0000\u0000\u016e"+
+		"\u016f\u0003N\'\u0000\u016f\u0170\u0005\u000f\u0000\u0000\u0170\u0171"+
+		"\u0003R)\u0000\u0171K\u0001\u0000\u0000\u0000\u0172\u0173\u0003\u000e"+
+		"\u0007\u0000\u0173\u0174\u0003N\'\u0000\u0174M\u0001\u0000\u0000\u0000"+
+		"\u0175\u0176\u0007\b\u0000\u0000\u0176O\u0001\u0000\u0000\u0000\u0177"+
+		"\u0178\u0005?\u0000\u0000\u0178\u0179\u0005+\u0000\u0000\u0179\u017a\u0005"+
+		"X\u0000\u0000\u017a\u017b\u0005,\u0000\u0000\u017bQ\u0001\u0000\u0000"+
+		"\u0000\u017c\u017d\u0007\t\u0000\u0000\u017dS\u0001\u0000\u0000\u0000"+
+		"\u0015Wcjotx\u0087\u008f\u0098\u009e\u00a7\u00ab\u00bd\u00c2\u00d3\u010e"+
+		"\u0139\u013f\u014a\u015d\u0163";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

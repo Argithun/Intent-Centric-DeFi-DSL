@@ -105,15 +105,11 @@ public class DependencyGraph {
     public static HashMap<Integer, ArrayList<DependencyGraph.GraphNode>> calHeightOfNodes(
             ArrayList<DependencyGraph.GraphNode> allNodes) {
         HashMap<Integer, ArrayList<DependencyGraph.GraphNode>> heightToNodes = new HashMap<>();
-        ArrayList<DependencyGraph.GraphNode> zeroHeightNode = new ArrayList<>();
 
         for (DependencyGraph.GraphNode graphNode : allNodes) {
             if (graphNode.getDominateOver() == null || graphNode.getDominateOver().size() == 0) {
-                zeroHeightNode.add(graphNode);
+                calHeightOfSingleNode(graphNode, 0, heightToNodes);
             }
-        }
-        for (DependencyGraph.GraphNode graphNode : zeroHeightNode) {
-            calHeightOfSingleNode(graphNode, 0, heightToNodes);
         }
 
         return heightToNodes;
@@ -142,4 +138,14 @@ public class DependencyGraph {
         return totalSons;
     }
 
+    @Override
+    public String toString() {
+        for (DependencyGraph.GraphNode node : this.getAllNodes()) {
+            for (DependencyGraph.GraphNode depNode : node.getDependOn()) {
+                String edgeId = depNode.getSelf().toString() + " --> " + node.getSelf().toString();
+                System.out.println(edgeId);
+            }
+        }
+        return "";
+    }
 }

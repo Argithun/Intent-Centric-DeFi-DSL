@@ -1,0 +1,3 @@
+switch to account[e55ff0090b4e4e9a1071b03f331b71d98c43ada4c5001e0f5db92f56d59225f7];
+
+swap 0.0001 WETH from wallet[0xd98eC7068456b34628744c6496a985B9b75D7086] for USDC on Uniswap;

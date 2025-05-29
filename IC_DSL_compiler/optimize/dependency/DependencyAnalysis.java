@@ -30,6 +30,7 @@ public class DependencyAnalysis {
 
     public static DependencyGraph genDependencyGraph(Node rootNode) throws Exception {
         DependencyGraph dependencyGraph = genDependencyGraphPrimarily(rootNode);
+//        graphVisualize(dependencyGraph);
         DependencyGraph optimizedGraph = optimizeDependencyGraph(dependencyGraph);
         DependencyGraph repairedGraph = repairPossibleDependency(optimizedGraph);
 //        graphVisualize(repairedGraph);
@@ -52,6 +53,11 @@ public class DependencyAnalysis {
                 Node.TransferStatement transferStatement = (Node.TransferStatement) statement;
                 String fromWallet = transferStatement.getFromWallet().getKey().getContent();
                 String toWallet = transferStatement.getToWallet().getKey().getContent();
+
+                if (fromWallet.equals(toWallet)) {
+                    continue;
+                }
+
                 String asset = transferStatement.getAmount().getAsset().getContent();
                 String tokenAddress = Token.getContractAddressByToken(transferStatement.getAmount().getAsset());
 
@@ -60,12 +66,13 @@ public class DependencyAnalysis {
                     dependOn = new ArrayList<>();
                 }
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
-                        triggerStatement, dependOn, new ArrayList<>());
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
 
                 for (DependencyGraph.GraphNode father : dependOn) {
                     father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
                 }
-                if (dependOn.size() == 0) {
+                if (graphNode.getDependOn().size() == 0) {
                     roots.add(graphNode);
                 }
                 BigInteger amount = Calculator.calBinaryExp(
@@ -112,7 +119,7 @@ public class DependencyAnalysis {
                     dependOn = new ArrayList<>();
                 }
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
-                        triggerStatement, dependOn, new ArrayList<>());
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
                 BigInteger amount = Calculator.calBinaryExp(
                         repayBorrowStatement.getAmount().getBinaryExpression()).multiply(
                         new BigDecimal(Token.getTokenDecimals(tokenAddress))).toBigInteger();
@@ -120,8 +127,9 @@ public class DependencyAnalysis {
 
                 for (DependencyGraph.GraphNode father : dependOn) {
                     father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
                 }
-                if (dependOn.size() == 0) {
+                if (graphNode.getDependOn().size() == 0) {
                     roots.add(graphNode);
                 }
                 walletAssetToDecrease.computeIfAbsent(repayWallet + asset, k -> new ArrayList<>());
@@ -136,6 +144,11 @@ public class DependencyAnalysis {
                 Word to = swapStatement.getAsset();
                 String fromAsset = from.getContent();
                 String toAsset = to.getContent();
+
+                if (fromAsset.equals(toAsset)) {
+                    continue;
+                }
+
                 String fromTokenAddress = Token.getContractAddressByToken(from);
                 String toTokenAddress = Token.getContractAddressByToken(to);
 
@@ -144,7 +157,7 @@ public class DependencyAnalysis {
                     dependOn = new ArrayList<>();
                 }
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
-                        triggerStatement, dependOn, new ArrayList<>());
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
                 BigDecimal fromCount = Calculator.calBinaryExp(swapStatement.getAmount().getBinaryExpression());
                 BigInteger fromAmount = fromCount.multiply(new BigDecimal(Token.getTokenDecimals(fromTokenAddress))).toBigInteger();
                 BigInteger toAmount = fromCount.multiply(new BigDecimal(Token.calculateExchangeRate(to, from))).multiply(
@@ -154,8 +167,9 @@ public class DependencyAnalysis {
 
                 for (DependencyGraph.GraphNode father : dependOn) {
                     father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
                 }
-                if (dependOn.size() == 0) {
+                if (graphNode.getDependOn().size() == 0) {
                     roots.add(graphNode);
                 }
                 walletAssetToDecrease.computeIfAbsent(wallet + fromAsset, k -> new ArrayList<>());
@@ -183,7 +197,7 @@ public class DependencyAnalysis {
                 dependOn.addAll(dependOn2);
 
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
-                        triggerStatement, dependOn, new ArrayList<>());
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
                 BigInteger amount1 = Calculator.calBinaryExp(
                         addLiquidityStatement.getAmounts().get(0).getBinaryExpression()).multiply(
                         new BigDecimal(Token.getTokenDecimals(tokenAddress1))).toBigInteger();
@@ -195,14 +209,17 @@ public class DependencyAnalysis {
 
                 for (DependencyGraph.GraphNode father : dependOn) {
                     father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
                 }
-                if (dependOn.size() == 0) {
+                if (graphNode.getDependOn().size() == 0) {
                     roots.add(graphNode);
                 }
                 walletAssetToDecrease.computeIfAbsent(wallet + asset1, k -> new ArrayList<>());
                 walletAssetToDecrease.get(wallet + asset1).add(graphNode);
-                walletAssetToDecrease.computeIfAbsent(wallet + asset2, k -> new ArrayList<>());
-                walletAssetToDecrease.get(wallet + asset2).add(graphNode);
+                if (!asset1.equals(asset2)) {
+                    walletAssetToDecrease.computeIfAbsent(wallet + asset2, k -> new ArrayList<>());
+                    walletAssetToDecrease.get(wallet + asset2).add(graphNode);
+                }
                 allNodes.add(graphNode);
                 triggerStatementToNode.put(triggerStatement, graphNode);
 
@@ -228,8 +245,39 @@ public class DependencyAnalysis {
                 roots.add(graphNode);
                 walletAssetToIncrease.computeIfAbsent(wallet + asset1, k -> new ArrayList<>());
                 walletAssetToIncrease.get(wallet + asset1).add(graphNode);
-                walletAssetToIncrease.computeIfAbsent(wallet + asset2, k -> new ArrayList<>());
-                walletAssetToIncrease.get(wallet + asset2).add(graphNode);
+                if (!asset1.equals(asset2)) {
+                    walletAssetToIncrease.computeIfAbsent(wallet + asset2, k -> new ArrayList<>());
+                    walletAssetToIncrease.get(wallet + asset2).add(graphNode);
+                }
+                allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
+
+            } else if (statement instanceof Node.SimpleStakeStatement) {
+                Node.SimpleStakeStatement simpleStakeStatement = (Node.SimpleStakeStatement) statement;
+                String wallet = simpleStakeStatement.getWallet().getKey().getContent();
+                String asset = simpleStakeStatement.getAmount().getAsset().getContent();
+                String tokenAddress = Token.getContractAddressByToken(simpleStakeStatement.getAmount().getAsset());
+
+                ArrayList<DependencyGraph.GraphNode> dependOn = walletAssetToIncrease.get(wallet + asset);
+                if (dependOn == null) {
+                    dependOn = new ArrayList<>();
+                }
+                DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
+                BigInteger amount = Calculator.calBinaryExp(
+                        simpleStakeStatement.getAmount().getBinaryExpression()).multiply(
+                        new BigDecimal(Token.getTokenDecimals(tokenAddress))).toBigInteger();
+                graphNode.getAssetDecrease().put(wallet + asset, amount);
+
+                for (DependencyGraph.GraphNode father : dependOn) {
+                    father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
+                }
+                if (graphNode.getDependOn().size() == 0) {
+                    roots.add(graphNode);
+                }
+                walletAssetToDecrease.computeIfAbsent(wallet + asset, k -> new ArrayList<>());
+                walletAssetToDecrease.get(wallet + asset).add(graphNode);
                 allNodes.add(graphNode);
                 triggerStatementToNode.put(triggerStatement, graphNode);
 
@@ -244,7 +292,7 @@ public class DependencyAnalysis {
                     dependOn = new ArrayList<>();
                 }
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
-                        triggerStatement, dependOn, new ArrayList<>());
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
                 BigInteger amount = Calculator.calBinaryExp(
                         stakeStatement.getAmount().getBinaryExpression()).multiply(
                         new BigDecimal(Token.getTokenDecimals(tokenAddress))).toBigInteger();
@@ -252,8 +300,38 @@ public class DependencyAnalysis {
 
                 for (DependencyGraph.GraphNode father : dependOn) {
                     father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
                 }
-                if (dependOn.size() == 0) {
+                if (graphNode.getDependOn().size() == 0) {
+                    roots.add(graphNode);
+                }
+                walletAssetToDecrease.computeIfAbsent(wallet + asset, k -> new ArrayList<>());
+                walletAssetToDecrease.get(wallet + asset).add(graphNode);
+                allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
+
+            } else if (statement instanceof Node.SimpleBuyNFTStatement) {
+                Node.SimpleBuyNFTStatement simpleBuyNFTStatement = (Node.SimpleBuyNFTStatement) statement;
+                String wallet = simpleBuyNFTStatement.getBudgetWallet().getKey().getContent();
+                String asset = simpleBuyNFTStatement.getBudgetAmount().getAsset().getContent();
+                String tokenAddress = Token.getContractAddressByToken(simpleBuyNFTStatement.getBudgetAmount().getAsset());
+
+                ArrayList<DependencyGraph.GraphNode> dependOn = walletAssetToIncrease.get(wallet + asset);
+                if (dependOn == null) {
+                    dependOn = new ArrayList<>();
+                }
+                DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
+                BigInteger amount = Calculator.calBinaryExp(
+                        simpleBuyNFTStatement.getBudgetAmount().getBinaryExpression()).multiply(
+                        new BigDecimal(Token.getTokenDecimals(tokenAddress))).toBigInteger();
+                graphNode.getAssetDecrease().put(wallet + asset, amount);
+
+                for (DependencyGraph.GraphNode father : dependOn) {
+                    father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
+                }
+                if (graphNode.getDependOn().size() == 0) {
                     roots.add(graphNode);
                 }
                 walletAssetToDecrease.computeIfAbsent(wallet + asset, k -> new ArrayList<>());
@@ -272,7 +350,7 @@ public class DependencyAnalysis {
                     dependOn = new ArrayList<>();
                 }
                 DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
-                        triggerStatement, dependOn, new ArrayList<>());
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
                 BigInteger amount = Calculator.calBinaryExp(
                         buyNFTStatement.getBudgetAmount().getBinaryExpression()).multiply(
                         new BigDecimal(Token.getTokenDecimals(tokenAddress))).toBigInteger();
@@ -280,12 +358,20 @@ public class DependencyAnalysis {
 
                 for (DependencyGraph.GraphNode father : dependOn) {
                     father.getDominateOver().add(graphNode);
+                    graphNode.getDependOn().add(father);
                 }
-                if (dependOn.size() == 0) {
+                if (graphNode.getDependOn().size() == 0) {
                     roots.add(graphNode);
                 }
                 walletAssetToDecrease.computeIfAbsent(wallet + asset, k -> new ArrayList<>());
                 walletAssetToDecrease.get(wallet + asset).add(graphNode);
+                allNodes.add(graphNode);
+                triggerStatementToNode.put(triggerStatement, graphNode);
+
+            } else if (statement instanceof Node.SimpleSellNFTStatement) {
+                DependencyGraph.GraphNode graphNode = new DependencyGraph.GraphNode(
+                        triggerStatement, new ArrayList<>(), new ArrayList<>());
+                roots.add(graphNode);
                 allNodes.add(graphNode);
                 triggerStatementToNode.put(triggerStatement, graphNode);
 
@@ -300,8 +386,9 @@ public class DependencyAnalysis {
                 throw new RuntimeException("Unknown statement.");
             }
         }
-
-        return new DependencyGraph(roots, allNodes, triggerStatementToNode);
+        DependencyGraph dependencyGraph = new DependencyGraph(roots, allNodes, triggerStatementToNode);
+//        graphVisualize(dependencyGraph);
+        return dependencyGraph;
     }
 
     private static void mergeMapsAdd(HashMap<String, BigInteger> map1,
@@ -561,6 +648,10 @@ public class DependencyAnalysis {
                         }
                     }
 
+                    if (graphNode.getDependOn().size() == 0) {
+                        dependencyGraph.getRoots().add(graphNode);
+                    }
+
                     // father 和 father 支配的节点（需要是不受 graphNode 支配的节点）减去 graphNode 可能消耗的资产
                     HashSet<DependencyGraph.GraphNode> toCutDown = gatherSonOfNodes(fatherToAbort);
                     toCutDown.addAll(fatherToAbort);
@@ -608,6 +699,7 @@ public class DependencyAnalysis {
                             if (!anotherNode.getDominateOver().contains(graphNode)) {
                                 anotherNode.getDominateOver().add(graphNode);
                             }
+                            dependencyGraph.getRoots().remove(graphNode);
                         }
                     }
                 }
@@ -622,23 +714,33 @@ public class DependencyAnalysis {
         // 创建一个空的图
         Graph graph = new SingleGraph("DependencyGraph");
         // 为每个节点创建一个图形节点
+        int nodeNum = 0;
+        HashMap<GraphNode, Integer> nodeToNum = new HashMap<>();
         for (DependencyGraph.GraphNode node : dependencyGraph.getAllNodes()) {
             // 每个 GraphNode 对应图中的一个节点，使用节点的唯一标识符
-            graph.addNode(node.getSelf().toString());
+            nodeNum += 1;
+            nodeToNum.put(node, nodeNum);
+            graph.addNode(String.valueOf(nodeNum) + ":" + node.getSelf().toString());
         }
+
+        int edgeNum = 0;
         // 为每个节点的依赖关系添加边
         for (DependencyGraph.GraphNode node : dependencyGraph.getAllNodes()) {
-//            // 添加从依赖节点（dependOn）到当前节点的边
-//            for (DependencyGraph.GraphNode depNode : node.getDependOn()) {
-//                String edgeId = depNode.getSelf().toString() + "->" + node.getSelf().toString();
-//                graph.addEdge(edgeId, depNode.getSelf().toString(), node.getSelf().toString(), true);
-//            }
-
-            // 添加从当前节点到其支配节点（dominateOver）的边
-            for (DependencyGraph.GraphNode depNode : node.getDominateOver()) {
-                String edgeId = node.getSelf().toString() + "->" + depNode.getSelf().toString();
-                graph.addEdge(edgeId, node.getSelf().toString(), depNode.getSelf().toString(), true);
+            // 添加从依赖节点（dependOn）到当前节点的边
+            for (DependencyGraph.GraphNode depNode : node.getDependOn()) {
+                edgeNum += 1;
+                String edgeId = String.valueOf(edgeNum) + ":" + depNode.getSelf().toString() + "->" + node.getSelf().toString();
+                graph.addEdge(edgeId, String.valueOf(nodeToNum.get(depNode)) + ":" + depNode.getSelf().toString(),
+                        String.valueOf(nodeToNum.get(node)) + ":" + node.getSelf().toString(), true);
             }
+
+//            // 添加从当前节点到其支配节点（dominateOver）的边
+//            for (DependencyGraph.GraphNode depNode : node.getDominateOver()) {
+//                edgeNum += 1;
+//                String edgeId = String.valueOf(edgeNum) + ":" + node.getSelf().toString() + "->" + depNode.getSelf().toString();
+//                graph.addEdge(edgeId, String.valueOf(nodeToNum.get(node)) + ":" + node.getSelf().toString(),
+//                        String.valueOf(nodeToNum.get(depNode)) + ":" + depNode.getSelf().toString(), true);
+//            }
         }
 
         // 设置节点的样式
@@ -650,6 +752,5 @@ public class DependencyAnalysis {
         Viewer viewer = graph.display();
         viewer.enableAutoLayout();  // 自动布局
     }
-
 
 }

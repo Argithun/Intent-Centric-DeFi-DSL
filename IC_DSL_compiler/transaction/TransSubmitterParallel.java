@@ -29,7 +29,6 @@ public class TransSubmitterParallel {
 
     public static void submitTransactionsParallel(DependencyGraph dependencyGraph) {
         notExecuted = ConcurrentHashMap.newKeySet();
-        ArrayList<DependencyGraph.GraphNode> roots = dependencyGraph.getRoots();
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<Boolean>> futures = new ArrayList<>();
         Map<DependencyGraph.GraphNode, CountDownLatch> nodeLatches = new HashMap<>();
@@ -40,8 +39,10 @@ public class TransSubmitterParallel {
         }
 
         // 提交根节点（这些节点没有依赖，直接可以执行）
-        for (DependencyGraph.GraphNode root : roots) {
-            futures.add(executorService.submit(() -> submitNode(dependencyGraph, root, nodeLatches)));
+        for (DependencyGraph.GraphNode root : dependencyGraph.getAllNodes()) {
+            if (root.getDependOn().size() == 0) {
+                futures.add(executorService.submit(() -> submitNode(dependencyGraph, root, nodeLatches, executorService)));
+            }
         }
 
         // 等待所有交易完成
@@ -66,7 +67,7 @@ public class TransSubmitterParallel {
     }
 
     private static boolean submitNode(DependencyGraph dependencyGraph, DependencyGraph.GraphNode node,
-                                      Map<DependencyGraph.GraphNode, CountDownLatch> nodeLatches) {
+                                      Map<DependencyGraph.GraphNode, CountDownLatch> nodeLatches, ExecutorService executorService) {
         // 等待所有依赖节点完成
         try {
             CountDownLatch latch = nodeLatches.get(node);
@@ -75,8 +76,13 @@ public class TransSubmitterParallel {
             if (notExecuted.contains(node.getSelf())) {
                 System.out.println("[SKIP]\n" + node.getSelf().toString() +
                         "due to transaction which it depends on failed.");
+                // 通知所有受支配节点（dominatedNodes）
                 for (DependencyGraph.GraphNode dominatedNode : node.getDominateOver()) {
-                    nodeLatches.get(dominatedNode).countDown();
+                    CountDownLatch childLatch = nodeLatches.get(dominatedNode);
+                    childLatch.countDown();
+                    if (childLatch.getCount() == 0) {
+                        executorService.submit(() -> submitNode(dependencyGraph, dominatedNode, nodeLatches, executorService));
+                    }
                 }
                 return false;
             }
@@ -84,19 +90,21 @@ public class TransSubmitterParallel {
             // 执行交易
             boolean success = submitSingleStatement(node.getSelf());
             if (success) {
-                // 如果当前交易成功，通知所有依赖于当前交易的节点可以继续执行
-                for (DependencyGraph.GraphNode dominatedNode : node.getDominateOver()) {
-                    nodeLatches.get(dominatedNode).countDown();
-                }
                 System.out.println("[SUCCESS]\n" + node.getSelf().toString());
             } else {
                 System.out.println("[FAIL] Sorry, the statement:\n" +
                         node.getSelf().toString() +
                         "failed! And transactions which depend on it won't be executed.");
-                for (DependencyGraph.GraphNode dominatedNode : node.getDominateOver()) {
-                    nodeLatches.get(dominatedNode).countDown();
-                }
                 gatherNotExecuted(node);
+            }
+
+            // 通知所有受支配节点（dominatedNodes）
+            for (DependencyGraph.GraphNode dominatedNode : node.getDominateOver()) {
+                CountDownLatch childLatch = nodeLatches.get(dominatedNode);
+                childLatch.countDown();
+                if (childLatch.getCount() == 0) {
+                    executorService.submit(() -> submitNode(dependencyGraph, dominatedNode, nodeLatches, executorService));
+                }
             }
 
             return success;
@@ -105,10 +113,14 @@ public class TransSubmitterParallel {
             System.out.println("[FAIL] Sorry, the statement:\n" +
                     node.getSelf().toString() +
                     "failed! And transactions which depend on it won't be executed.");
-            for (DependencyGraph.GraphNode dominatedNode : node.getDominateOver()) {
-                nodeLatches.get(dominatedNode).countDown();
-            }
             gatherNotExecuted(node);
+            for (DependencyGraph.GraphNode dominatedNode : node.getDominateOver()) {
+                CountDownLatch childLatch = nodeLatches.get(dominatedNode);
+                childLatch.countDown();
+                if (childLatch.getCount() == 0) {
+                    executorService.submit(() -> submitNode(dependencyGraph, dominatedNode, nodeLatches, executorService));
+                }
+            }
             return false;
         }
     }
@@ -253,7 +265,7 @@ public class TransSubmitterParallel {
             } else {
                 System.out.println("Transaction still pending... checking again.");
             }
-            Thread.sleep(60000);
+            Thread.sleep(30000);
         }
     }
 

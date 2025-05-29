@@ -329,6 +329,42 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSimpleStakeStatement(IntentDSLParser.SimpleStakeStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSimpleStakeStatement(IntentDSLParser.SimpleStakeStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSimpleBuyNFTStatement(IntentDSLParser.SimpleBuyNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSimpleBuyNFTStatement(IntentDSLParser.SimpleBuyNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSimpleSellNFTStatement(IntentDSLParser.SimpleSellNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSimpleSellNFTStatement(IntentDSLParser.SimpleSellNFTStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStakeStatement(IntentDSLParser.StakeStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -456,18 +492,6 @@ public class IntentDSLBaseListener implements IntentDSLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAsset(IntentDSLParser.AssetContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPair(IntentDSLParser.PairContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPair(IntentDSLParser.PairContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

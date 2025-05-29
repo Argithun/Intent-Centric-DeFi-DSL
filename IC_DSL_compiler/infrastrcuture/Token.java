@@ -146,6 +146,7 @@ public class Token {
     public static double calculateExchangeRate(Word from, Word to) {
         double fromPrice = getTokenNumEqualOneUSDT(from);
         double toPrice = getTokenNumEqualOneUSDT(to);
+
         return toPrice / fromPrice;
     }
 

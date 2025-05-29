@@ -35,12 +35,21 @@ public class NonceManager {
             } else if (statement instanceof Node.RemoveLiquidityStatement) {
                 Node.RemoveLiquidityStatement removeLiquidityStatement = (Node.RemoveLiquidityStatement) statement;
                 setNonceOfAccount(removeLiquidityStatement.getWallets().get(0).getKey().getContent());
+            } else if (statement instanceof Node.SimpleStakeStatement) {
+                Node.SimpleStakeStatement simpleStakeStatement = (Node.SimpleStakeStatement) statement;
+                setNonceOfAccount(simpleStakeStatement.getWallet().getKey().getContent());
             } else if (statement instanceof Node.StakeStatement) {
                 Node.StakeStatement stakeStatement = (Node.StakeStatement) statement;
                 setNonceOfAccount(stakeStatement.getWallet().getKey().getContent());
+            } else if (statement instanceof Node.SimpleSellNFTStatement) {
+                Node.SimpleSellNFTStatement simpleSellNFTStatement = (Node.SimpleSellNFTStatement) statement;
+                setNonceOfAccount(simpleSellNFTStatement.getFromWallet().getKey().getContent());
             } else if (statement instanceof Node.SellNFTStatement) {
                 Node.SellNFTStatement sellNFTStatement = (Node.SellNFTStatement) statement;
                 setNonceOfAccount(sellNFTStatement.getFromWallet().getKey().getContent());
+            } else if (statement instanceof Node.SimpleBuyNFTStatement) {
+                Node.SimpleBuyNFTStatement simpleBuyNFTStatement = (Node.SimpleBuyNFTStatement) statement;
+                setNonceOfAccount(simpleBuyNFTStatement.getBudgetWallet().getKey().getContent());
             } else if (statement instanceof Node.BuyNFTStatement) {
                 Node.BuyNFTStatement buyNFTStatement = (Node.BuyNFTStatement) statement;
                 setNonceOfAccount(buyNFTStatement.getBudgetWallet().getKey().getContent());

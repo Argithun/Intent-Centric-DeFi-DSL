@@ -268,6 +268,36 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 */
 	void exitRemoveLiquidityStatement(IntentDSLParser.RemoveLiquidityStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#simpleStakeStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSimpleStakeStatement(IntentDSLParser.SimpleStakeStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#simpleStakeStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSimpleStakeStatement(IntentDSLParser.SimpleStakeStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#simpleBuyNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSimpleBuyNFTStatement(IntentDSLParser.SimpleBuyNFTStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#simpleBuyNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSimpleBuyNFTStatement(IntentDSLParser.SimpleBuyNFTStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IntentDSLParser#simpleSellNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSimpleSellNFTStatement(IntentDSLParser.SimpleSellNFTStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IntentDSLParser#simpleSellNFTStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSimpleSellNFTStatement(IntentDSLParser.SimpleSellNFTStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#stakeStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -377,16 +407,6 @@ public interface IntentDSLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAsset(IntentDSLParser.AssetContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link IntentDSLParser#pair}.
-	 * @param ctx the parse tree
-	 */
-	void enterPair(IntentDSLParser.PairContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IntentDSLParser#pair}.
-	 * @param ctx the parse tree
-	 */
-	void exitPair(IntentDSLParser.PairContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IntentDSLParser#wallet}.
 	 * @param ctx the parse tree

@@ -22,7 +22,7 @@ public class SellNFTTransaction extends BasicOp {
         // https://docs.opensea.io/reference/post_listing
         Node.SellNFTStatement sellNFTStatement = (Node.SellNFTStatement) statement;
 
-        String NFTTokenId = sellNFTStatement.getNFTTokenID().getContent();
+        String NFTTokenId = sellNFTStatement.getNFTTokenID();
         String NFTCollectionID = sellNFTStatement.getNFTCollectionID().getContent();
         String fromWalletAddress = sellNFTStatement.getFromWallet().getKey().getContent();
         ArrayList<String> sellStrategies = sellNFTStatement.getStrategy();

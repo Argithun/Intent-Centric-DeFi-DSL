@@ -8,65 +8,58 @@ import tool.PrivateKeyManager;
 import transaction.TransSubmitter;
 import transaction.TransSubmitterParallel;
 
-import java.io.File;
-
 
 public class Compiler {
     public static void main(String[] args) throws Exception {
-        System.out.println("Current working directory: " + new File(".").getAbsolutePath());
-//        Node intentAst = AstBuilder.buildAst("graph.ic");
-        Node intentAst = AstBuilder.buildAst("main.ic");
+
+        // Node intentAst = AstBuilder.buildAst("graph.ic");
+         Node intentAst = AstBuilder.buildAst("main.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_10_0.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_10_0.3.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_10_0.5.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_10_0.7.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_10_1.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_30_0.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_30_0.3.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_30_0.5.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_30_0.7.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_30_1.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_50_0.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_50_0.3.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_50_0.5.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_50_0.7.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_50_1.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_70_0.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_70_0.3.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_70_0.5.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_70_0.7.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_70_1.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_100_0.0.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_100_0.3.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_100_0.5.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_100_0.7.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_language/main_100_1.0.ic");
+
+        // Node intentAst = AstBuilder.buildAst("./test_transaction/transfer.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_transaction/swap.ic");
+        // Node intentAst = AstBuilder.buildAst("./test_transaction/main_10.ic");
+
         PrivateKeyManager.setPrivateKey(intentAst);
         NonceManager.initAccountToNonce(intentAst);
         DependencyGraph dependencyGraph = DependencyAnalysis.genDependencyGraph(intentAst);
 
-//        if (Settings.PARALLEL_MODE) {
-//            TransSubmitterParallel.submitTransactionsParallel(dependencyGraph);
-//        } else {
-//            TransSubmitter.submitTransactions(intentAst, dependencyGraph);
-//        }
+        // System.out.println("Start submit ...");
+        // long startTime = System.currentTimeMillis();  // 记录开始时间
 
-// ------------------------------------- for test ---------------------------------- //
+        if (Settings.PARALLEL_MODE) {
+            TransSubmitterParallel.submitTransactionsParallel(dependencyGraph);
+        } else {
+            TransSubmitter.submitTransactions(intentAst, dependencyGraph);
+        }
 
-//        Web3j web3j = Web3jBuilder.buildWeb3j();
-//        EthGetBalance ethGetBalance = web3j.ethGetBalance("0xd98eC7068456b34628744c6496a985B9b75D7086", DefaultBlockParameterName.LATEST).send();
-//        System.out.println(ethGetBalance.getBalance());
+        // long endTime = System.currentTimeMillis();  // 记录结束时间
+        // System.out.println("执行时间: " + (endTime - startTime) + " ms");
 
-//        Web3j web3j = Web3jBuilder.buildWeb3j();
-//        ContractFuncService erc20 = new ContractFuncService(
-//                "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
-//                web3j,
-//                new ReadonlyTransactionManager(web3j, "0xd98eC7068456b34628744c6496a985B9b75D7086"),
-//                new DefaultGasProvider()
-//        );
-//        System.out.println(erc20.balanceOf("0xd98eC7068456b34628744c6496a985B9b75D7086").send());
-//        System.out.println(Token.getTokenDecimals("0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8"));
-
-//        Signature.keccak256Hash("decreaseLiquidity((uint256,uint128,uint256,uint256,uint256))");
-//        Signature.keccak256Hash("removeLiquidity(address,address,uint256,uint256,uint256,address,uint256)");
-//        Signature.keccak256Hash("addLiquidity(address,address,uint256,uint256,uint256,uint256,address,uint256)");
-//        Signature.keccak256Hash("mint((address,address,uint24,int24,int24,uint256,uint256,uint256,uint256,address,uint256))");
-//        Signature.keccak256Hash("borrow(address,uint256,uint256,uint16,address)");
-//        Signature.keccak256Hash("repayBorrow()");
-//        Signature.keccak256Hash("approve(address,uint256)");
-//        Signature.keccak256Hash("transfer(address,uint256)");
-//        Signature.keccak256Hash("mint(uint256)");
-//        Signature.keccak256Hash("withdraw(uint256)");
-//        Signature.keccak256Hash("swap(address,(address,address,address,address,uint256,uint256,uint256,bytes),bytes)");
-
-//        System.out.println(Token.getTokenDecimals("0x6B175474E89094C44Da98b954EedeAC495271d0F"));
-
-//        ArrayList<String> ret = QueryService.selectNFTCollection(new ArrayList<>());
-//        System.out.println(ret.get(0));
-//        System.out.println(ret.get(1));
-//        System.out.println(ret.get(2));
-//        System.out.println(ret.get(3));
-
-//        System.out.println(QueryService.getOpenseaSlug("ethereum", "0x1a17531d136a3a4e0ef05575867fc7c59dae3069"));
-
-//        System.out.println(QueryService.getCounter("0xd98eC7068456b34628744c6496a985B9b75D7086"));
-
-//        System.out.println(QueryService.getNFTCollectionInfoByAddress("0x1a17531d136a3a4e0ef05575867fc7c59dae3069"));
     }
 
 

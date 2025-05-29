@@ -94,7 +94,7 @@ public class Node {
 
         @Override
         public String toString() {
-            return "switch to account[" + privateKey + "]";
+            return "switch to account[" + privateKey.getContent() + "]";
         }
     }
 
@@ -153,7 +153,7 @@ public class Node {
         @Override
         public String toString() {
             return "borrow " + borrowAmount.toString() + " for " + forWallet.toString() +
-                    " from " + platform.toString();
+                    " from " + platform.getContent();
         }
     }
 
@@ -182,7 +182,7 @@ public class Node {
 
         @Override
         public String toString() {
-            return "repay " + amount.toString() + " from " + wallet.toString() + " to " + platform.toString();
+            return "repay " + amount.toString() + " from " + wallet.toString() + " to " + platform.getContent();
         }
     }
 
@@ -217,7 +217,8 @@ public class Node {
 
         @Override
         public String toString() {
-            return "swap " + amount.toString() + " from " + wallet.toString() + " for " + asset.getContent() + " on " + platform.toString();
+            return "swap " + amount.toString() + " from " + wallet.toString() +
+                    " for " + asset.getContent() + " on " + platform.getContent();
         }
     }
 
@@ -247,7 +248,7 @@ public class Node {
         @Override
         public String toString() {
             return "add liquidity " + amounts.get(0).toString() + ", " + amounts.get(1).toString() +
-                    " to " + platform.toString() + " receiving liquidity token to " + wallets.get(0).toString();
+                    " to " + platform.getContent() + " receiving liquidity token to " + wallets.get(0).toString();
         }
     }
 
@@ -289,8 +290,38 @@ public class Node {
 
         public String toString() {
             return "remove liquidity " + amounts.get(0).toString() + ", " + amounts.get(1).toString() +
-                    " from " + platform.toString() + " returning liquidity token from " + wallets.get(0).toString();
+                    " from " + platform.getContent() + " returning " + liquidityNum.toString() +
+                    " liquidity from " + wallets.get(0).toString();
 
+        }
+    }
+
+    public static class SimpleStakeStatement implements Statement {
+        private Amount amount;
+        private Wallet wallet;
+        private Word platform;
+
+        public SimpleStakeStatement(Amount amount, Wallet wallet, Word platform) {
+            this.amount = amount;
+            this.wallet = wallet;
+            this.platform = platform;
+        }
+
+        public Amount getAmount() {
+            return amount;
+        }
+
+        public Wallet getWallet() {
+            return wallet;
+        }
+
+        public Word getPlatform() {
+            return platform;
+        }
+
+        @Override
+        public String toString() {
+            return "stake " + amount.toString() + " from " + wallet.toString() + " on " + platform.getContent();
         }
     }
 
@@ -329,6 +360,42 @@ public class Node {
                 ret.append("strategy");
             }
             return ret.toString();
+        }
+    }
+
+    public static class SimpleBuyNFTStatement implements Statement {
+        private String NFTTokenID;
+        private Word NFTCollectionID;
+        private Amount budgetAmount;
+        private Wallet budgetWallet;
+
+        public SimpleBuyNFTStatement(String NFTTokenID, Word NFTCollectionID, Amount budgetAmount, Wallet budgetWallet) {
+            this.NFTTokenID = NFTTokenID;
+            this.NFTCollectionID = NFTCollectionID;
+            this.budgetAmount = budgetAmount;
+            this.budgetWallet = budgetWallet;
+        }
+
+        public String getNFTTokenID() {
+            return NFTTokenID;
+        }
+
+        public Word getNFTCollectionID() {
+            return NFTCollectionID;
+        }
+
+        public Amount getBudgetAmount() {
+            return budgetAmount;
+        }
+
+        public Wallet getBudgetWallet() {
+            return budgetWallet;
+        }
+
+        @Override
+        public String toString() {
+            return "buy NFT[" + NFTTokenID + "] in collection[" + NFTCollectionID.toString() + "]" +
+                    " using at most " + budgetAmount.toString() + " from " + budgetWallet.toString();
         }
     }
 
@@ -375,20 +442,56 @@ public class Node {
         }
     }
 
+    public static class SimpleSellNFTStatement implements Statement {
+        private String NFTTokenID;
+        private Word NFTCollectionID;
+        private Wallet fromWallet;
+        private Amount preferPrice;
+
+        public SimpleSellNFTStatement(String NFTTokenID, Word NFTCollectionID, Wallet fromWallet, Amount preferPrice) {
+            this.NFTTokenID = NFTTokenID;
+            this.NFTCollectionID = NFTCollectionID;
+            this.fromWallet = fromWallet;
+            this.preferPrice = preferPrice;
+        }
+
+        public String getNFTTokenID() {
+            return NFTTokenID;
+        }
+
+        public Word getNFTCollectionID() {
+            return NFTCollectionID;
+        }
+
+        public Wallet getFromWallet() {
+            return fromWallet;
+        }
+
+        public Amount getPreferPrice() {
+            return preferPrice;
+        }
+
+        @Override
+        public String toString() {
+            return "sell NFT[" + NFTTokenID + "]in collection[" + NFTCollectionID.getContent() + "]" +
+                    " from " + fromWallet.toString() + " for at least " + preferPrice.toString();
+        }
+    }
+
     public static class SellNFTStatement implements Statement {
-        private Word NFTTokenID;
+        private String NFTTokenID;
         private Word NFTCollectionID;
         private Wallet fromWallet;
         private ArrayList<String> strategy;
 
-        public SellNFTStatement(Word NFTTokenID, Word NFTCollectionID, Wallet wallet, ArrayList<String> startegy) {
+        public SellNFTStatement(String NFTTokenID, Word NFTCollectionID, Wallet wallet, ArrayList<String> startegy) {
             this.NFTTokenID = NFTTokenID;
             this.NFTCollectionID = NFTCollectionID;
             this.fromWallet = wallet;
             this.strategy = startegy;
         }
 
-        public Word getNFTTokenID() {
+        public String getNFTTokenID() {
             return NFTTokenID;
         }
 
@@ -406,7 +509,7 @@ public class Node {
 
         @Override
         public String toString() {
-            StringBuilder ret = new StringBuilder("sell NFT [" + NFTTokenID.getContent() +
+            StringBuilder ret = new StringBuilder("sell NFT [" + NFTTokenID +
                     "] in collection[" + NFTCollectionID.getContent() + "] ");
             if (strategy != null && strategy.size() > 0) {
                 ret.append("using ");

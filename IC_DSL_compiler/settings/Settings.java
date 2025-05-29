@@ -11,6 +11,9 @@ public class Settings {
     // Parallel Mode to Submit Transaction
     public static final boolean PARALLEL_MODE = false;
 
+    // Use pre-execution to check transaction before submittal
+    public static final boolean IF_PRE_EXECUTION = false;
+
     // Your Infura API Key
     public static final String INFURA_API_KEY = "ddae120beb6046179b8ac42d1fb79336";
 
@@ -23,6 +26,7 @@ public class Settings {
     // Your Computer Web Proxy
     public static final boolean IF_USE_PROXY = true;
     public static final String PROXY_HOST_NAME = "127.0.0.1";
+//    public static final String PROXY_HOST_NAME = "10.192.19.76";
 //    public static final String PROXY_HOST_NAME = "192.168.50.82";
 
 

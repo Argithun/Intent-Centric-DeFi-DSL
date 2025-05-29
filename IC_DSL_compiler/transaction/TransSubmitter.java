@@ -1,6 +1,7 @@
 package transaction;
 
 import ast.Node;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infrastrcuture.Web3jBuilder;
 import optimize.dependency.DependencyGraph;
 import org.web3j.crypto.Credentials;
@@ -14,11 +15,15 @@ import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Numeric;
+import settings.Settings;
 import tool.AfterConditionCheck;
+import tool.PredictConditionCheck;
 import tool.PrivateKeyManager;
 import tool.TriggerConditionCheck;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -167,10 +172,31 @@ public class TransSubmitter {
         Web3j web3j = Web3jBuilder.buildWeb3j();
 
         Credentials credentials = Credentials.create(privateKey);
-
         // 对交易进行签名
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
         String signedTransactionData = Numeric.toHexString(signedMessage);
+
+        // 预执行预测交易是否存在失败风险
+        if (Settings.IF_PRE_EXECUTION) {
+            HashMap<String, Object> txJson = new HashMap<>();
+            String from = credentials.getAddress().toLowerCase();
+            String to = rawTransaction.getTo().toLowerCase();
+            String hash = Integer.toString(rawTransaction.hashCode());
+            txJson.put("from", from);
+            txJson.put("to", to);
+            txJson.put("nonce", rawTransaction.getNonce().toString());
+            txJson.put("gas", rawTransaction.getGasLimit().toString());
+            txJson.put("gasPrice", rawTransaction.getGasPrice().toString());
+            txJson.put("value", rawTransaction.getValue().toString());
+            txJson.put("data", rawTransaction.getData());
+            txJson.put("hash", hash); // 模拟 transaction hash
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(new File("./status_predictor/predict_input.json"), txJson);
+            if (!PredictConditionCheck.checkPredictCondition(hash, "predict_input.json",
+                    "predicted_tx_set.json", "future_contexts.json")) {
+                System.out.println("[Warning] Please notice: Pre-execution shows current transaction MAY fail...");
+            }
+        }
 
         // 提交交易到区块链
         EthSendTransaction response = web3j.ethSendRawTransaction(signedTransactionData).send();
@@ -199,7 +225,7 @@ public class TransSubmitter {
             } else {
                 System.out.println("Transaction still pending... checking again.");
             }
-            Thread.sleep(60000);
+            Thread.sleep(30000);
         }
     }
 

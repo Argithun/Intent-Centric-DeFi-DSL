@@ -1,0 +1,11 @@
+switch to account[e55ff0090b4e4e9a1071b03f331b71d98c43ada4c5001e0f5db92f56d59225f7];
+sell NFT[4972] in collection[0xD323C7C5A41D26F92DB2C454052682B213C08DBC] from wallet[0x6d58760A749d18EA64BD2C553A1b256656b2F0d4];
+transfer 4 USDC from wallet[0xc48eBA6E8a0d7780833ad2DA5f02227224c5EC3C] to wallet[0x3312713e58bBFd3275bB162F998Cd6e058522092];
+stake 3 WETH from wallet[0x791F87381fb705401B8285e9d6Da7253fDaBB120];
+swap 2 WETH from wallet[0x515B6F2f3dE13974C1ce3Ca84D9fa3C6dd363c74] for WETH on Uniswap;
+repay 7 WBTC from wallet[0x3312713e58bBFd3275bB162F998Cd6e058522092] to Aave;
+remove 3 WETH, 2 USDT from Uniswap returning 1 liquidity from wallet[0x0bCDF0cd99163cB7Dedb567aa6c0Bb0824673095];
+buy mainstream NFT using at most 1 USDT from wallet[0x1D1cF581D4331E66389276027CA630bC37B30434];
+add 1 USDC, 10 WBTC to Uniswap receiving liquidity token to wallet[0xD0dbea6B4FAB0A2710f468FB18bdC8d6D85b43fA];
+add 8 USDC, 5 WBTC to Uniswap receiving liquidity token to wallet[0x07506cA27414163874da5Ad4aA48b08e972402Ef];
+swap 4 USDC from wallet[0x4274Bf7e6069664C0a50F4E7aa247dA422264C6e] for USDT on Uniswap;

@@ -141,6 +141,9 @@ statement
     | stakeStatement
     | buyNFTStatement
     | sellNFTStatement
+    | simpleStakeStatement
+    | simpleBuyNFTStatement
+    | simpleSellNFTStatement
     ;
 
 accountStatement
@@ -165,6 +168,15 @@ removeLiquidityStatement
     : 'remove' amount ',' amount 'from' platform 'returning' DEC_INT 'liquidity'
     ('of token' LBRACK KEY RBRACK)? 'from' wallet;
 
+simpleStakeStatement
+    : 'stake' amount 'from' wallet 'on' platform;
+
+simpleBuyNFTStatement
+    : 'buy NFT' LBRACK DEC_INT RBRACK 'in collection' LBRACK KEY RBRACK 'using at most' amount 'from' wallet;
+
+simpleSellNFTStatement
+    : 'sell NFT' LBRACK DEC_INT RBRACK 'in collection' LBRACK KEY RBRACK 'from' wallet 'for at least' amount;
+
 stakeStatement
     : 'stake' amount 'from' wallet (stakeStrategy)?;
 
@@ -177,9 +189,6 @@ stakeStrategyQualifiers
 buyNFTStatement
     : 'buy' (NFTQualifiers)* 'NFT using at most' amount 'from' wallet;
 
-//flashLoanArbitrageStatement
-//    : 'flash loan' amount 'for' wallet 'then arbitrage for at least' amount 'profits';
-
 NFTQualifiers
     : 'mainstream' | 'popular' | 'rare' | 'inexpensive' | 'price-increasing' | 'price-decreaseing';
 
@@ -187,7 +196,7 @@ NFTPlatform
     : 'OpenSea' | 'Rarible' | 'SuperRare' | 'Foundation' | 'Mintable' | 'BakerySwap' | 'LooksRare';
 
 sellNFTStatement
-    : 'sell NFT' LBRACK KEY RBRACK 'in collection' LBRACK KEY RBRACK 'from' wallet (sellNFTStartegy)?;
+    : 'sell NFT' LBRACK DEC_INT RBRACK 'in collection' LBRACK KEY RBRACK 'from' wallet (sellNFTStartegy)?;
 
 sellNFTStartegy
     : 'using' (sellNFTStrategyQualifiers)* 'strategy';
@@ -195,7 +204,7 @@ sellNFTStartegy
 sellNFTStrategyQualifiers
     : 'time-saving' | 'profitable';
 
-
+//----------------------------------------------------------------------//
 
 
 walletBalance
@@ -209,9 +218,6 @@ amount
 
 asset
     : USDT | USDC | ETH | DAI | BTC | WBTC | UNI | SUSHI | AAVE_token | MATIC | COMP | WETH;
-
-pair
-    : asset 'and' asset;
 
 wallet
     : WALLET LBRACK KEY RBRACK;
