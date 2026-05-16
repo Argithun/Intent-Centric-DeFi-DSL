@@ -153,8 +153,3 @@ These files are useful for reproducing trends reported in the paper (e.g., seria
 - Some components are environment-specific (e.g., API keys, proxy setup, RPC provider choice).
 - The TEE protocol described in the paper is represented in architecture and workflow; deployment-grade enclave hardening/attestation integration should be treated as future engineering work.
 
-## 10. Citation
-
-If you use this repository, please cite:
-
-- **OmniIntent: A Trusted Intent-Centric Framework for User-Friendly Web3** (Middleware 2026 submission artifact).
